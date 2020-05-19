@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 
-import { RootContext } from '@shared/RootProvider'
+import { RootContext } from '@/containers/shared/RootProvider'
 
 /**
  * 提供整个store
@@ -9,5 +9,5 @@ import { RootContext } from '@shared/RootProvider'
  * @returns
  */
 export function useRootStore() {
-    return useContext(RootContext)
+  return useContext(RootContext)
 }
