@@ -30,6 +30,7 @@ module.exports = {
         '@typescript-eslint/explicit-member-accessibility': 'off',
         '@typescript-eslint/no-empty-interface': 'off',
         '@typescript-eslint/ban-ts-ignore': 'off',
+        '@typescript-eslint/no-inferrable-types': 'off',
         'prettier/prettier': [
             'error',
             {

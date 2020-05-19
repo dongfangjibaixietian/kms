@@ -1,13 +1,31 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { observer } from 'mobx-react-lite'
 
 import styles from './index.scss'
+import { getArticleList } from '@services/api'
+import { useRootStore } from '@utils/customHooks'
 
 const Test = () => {
+    const { testNum, setTestNum } = useRootStore().testStore
+
+    const [num, setNum] = useState(0)
+
+    const getList = async () => {
+        try {
+            const res = await getArticleList()
+            console.log(res)
+        } catch (error) {}
+    }
+
     return (
         <div className={styles.test}>
-            <div>测试</div>
+            <div>{num}</div>
+            <button onClick={() => setNum(num + 1)}>+</button>
+            <div onClick={getList}>测试</div>
+            <div>{testNum}</div>
+            <button onClick={() => setTestNum(testNum + 1)}>+</button>
         </div>
     )
 }
 
-export default Test
+export default observer(Test)

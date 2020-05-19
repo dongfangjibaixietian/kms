@@ -9,27 +9,30 @@ const { FILE_EXTENSIONS } = require('./constants')
  */
 module.exports = {
     entry: {
-        app: resolve('src/index.tsx')
+        app: resolve('src/index.tsx'),
     },
     output: {
         path: resolve('dist/static'),
         filename: 'js/[name].js',
         chunkFilename: 'js/[name].js',
-        publicPath: '/'
+        publicPath: '/',
     },
     devServer: {
-        historyApiFallback: true
+        historyApiFallback: true,
     },
     resolve: {
         extensions: FILE_EXTENSIONS,
         alias: {
             '@views': resolve('src/containers/views'),
-            '@shared': resolve('src/containers/shared')
-        }
+            '@shared': resolve('src/containers/shared'),
+            '@constants': resolve('src/constants'),
+            '@services': resolve('src/services'),
+            '@store': resolve('src/store'),
+            '@utils': resolve('src/utils'),
+        },
     },
     module: {
-        rules: [...jsRules, ...styleRules]
+        rules: [...jsRules, ...styleRules],
     },
-    plugins: [...plugins]
+    plugins: [...plugins],
 }
-
