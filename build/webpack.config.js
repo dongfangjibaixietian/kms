@@ -9,7 +9,7 @@ const { FILE_EXTENSIONS } = require('./constants')
  */
 module.exports = {
     entry: {
-        app: resolve('src/index.tsx'),
+        app: resolve('src/index.jsx'),
     },
     output: {
         path: resolve('dist/static'),

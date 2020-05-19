@@ -4,6 +4,7 @@ import { observer } from 'mobx-react-lite'
 import styles from './index.scss'
 import { getArticleList } from '@services/api'
 import { useRootStore } from '@utils/customHooks'
+import NoTs from './../NoTs'
 
 const Test = () => {
     const { testNum, setTestNum } = useRootStore().testStore
@@ -24,6 +25,7 @@ const Test = () => {
             <div onClick={getList}>测试</div>
             <div>{testNum}</div>
             <button onClick={() => setTestNum(testNum + 1)}>+</button>
+            <NoTs text="asdasd" />
         </div>
     )
 }

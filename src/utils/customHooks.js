@@ -8,6 +8,6 @@ import { RootContext } from '@shared/RootProvider'
  * @export
  * @returns
  */
-export function useRootStore(): IAllStore {
+export function useRootStore() {
     return useContext(RootContext)
 }

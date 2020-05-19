@@ -5,22 +5,22 @@ module.exports = [
         test: /\.scss$/,
         use: [
             'style-loader',
-            'css-modules-typescript-loader',
+            // 'css-modules-typescript-loader',
             {
                 loader: 'css-loader',
                 options: {
                     modules: {
-                        localIdentName: "[local]_[hash:base64:10]"
-                    }
-                }
+                        localIdentName: '[local]_[hash:base64:10]',
+                    },
+                },
             },
             {
                 loader: 'sass-loader',
                 options: {
-                    includePaths: [resolve('src/styles')]
-                }
-            }
-        ]
+                    includePaths: [resolve('src/styles')],
+                },
+            },
+        ],
     },
     // antd样式文件
     {
@@ -31,14 +31,14 @@ module.exports = [
             {
                 loader: 'less-loader',
                 options: {
-                    javascriptEnabled: true
-                }
-            }
-        ]
+                    javascriptEnabled: true,
+                },
+            },
+        ],
     },
     {
         test: /\.css$/,
         include: [resolve('node_modules')],
-        use: ['style-loader', 'css-loader']
-    }
+        use: ['style-loader', 'css-loader'],
+    },
 ]

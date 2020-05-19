@@ -7,7 +7,7 @@
         "dev": "webpack-dev-server --config build/webpack.config.js --mode development",
         "commit": "git add . && git-cz",
         "init:cz": "commitizen init cz-conventional-changelog --save --save-exact",
-        "lint": "eslint src --ext .ts,.tsx && stylelint \"./src/**/*.scss\""
+        "lint": "eslint src --ext .ts,.tsx,.js,.jsx && stylelint \"./src/**/*.scss\""
     },
     "repository": {
         "type": "git",

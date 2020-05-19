@@ -1,21 +1,21 @@
-import axios, { AxiosRequestConfig } from 'axios'
+import axios from 'axios'
 import qs from 'qs'
 
 import { baseUrls } from '@constants/index'
 
-type Request = (url: string, data?: object, baseUrl?: string) => Promise<any>
+// type Request = (url: string, data?: object, baseUrl?: string) => Promise<any>
 
-interface HttpRequest {
-    get?: Request
-    post?: Request
-    delete?: Request
-    put?: Request
-}
+// interface HttpRequest {
+//     get?: Request
+//     post?: Request
+//     delete?: Request
+//     put?: Request
+// }
 
-type Method = 'get' | 'post' | 'delete' | 'put'
+// type Method = 'get' | 'post' | 'delete' | 'put'
 
-const http: HttpRequest = {}
-const methods: Method[] = ['get', 'post', 'delete', 'put']
+const http = {}
+const methods = ['get', 'post', 'delete', 'put']
 // const appEnv: string = process.env.APP_ENV
 
 const DEFAULTBASEURL = {
@@ -23,8 +23,8 @@ const DEFAULTBASEURL = {
 }
 
 methods.forEach((v) => {
-    http[v] = (url: string, data: any, baseUrl?: string) => {
-        const config: AxiosRequestConfig = {
+    http[v] = (url, data, baseUrl) => {
+        const config = {
             url,
             method: v,
             baseURL: baseUrl || DEFAULTBASEURL.baseURL,
