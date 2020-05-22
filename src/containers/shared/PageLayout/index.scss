@@ -1,0 +1,41 @@
+@import 'global.scss';
+
+.appContainer {
+  background-color: $background;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+
+  .header {
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    background-color: $background;
+  }
+
+  .pageHeader {
+    display: flex;
+    justify-content: space-between;
+    height: 64px;
+    width: 1140px;
+    background-color: $background;
+  }
+
+  .headerLeft {
+    display: flex;
+    justify-content: space-between;
+    width: 345px;
+  }
+
+  .sloganImg {
+    display: flex;
+    align-items: center;
+    padding-top: 1px;
+    margin-right: 36px;
+
+    > img {
+      width: 120px;
+      height: 34px;
+    }
+  }
+}

@@ -1,0 +1,36 @@
+@import 'global.scss';
+
+.menuWrapper {
+  :global {
+    .ant-menu {
+      background-color: $background;
+
+      .ant-menu-item {
+        padding: 0 22px;
+        border: unset;
+        font-size: 16px;
+        top: 0;
+      }
+
+      .ant-menu-item-selected,
+      .ant-menu-item-active {
+        color: #121212;
+        font-weight: 600;
+      }
+
+      .ant-menu-item-selected {
+        position: relative;
+
+        &::before {
+          content: '';
+          position: absolute;
+          bottom: 1px;
+          left: 38px;
+          height: 2px;
+          width: 32px;
+          background-color: black;
+        }
+      }
+    }
+  }
+}

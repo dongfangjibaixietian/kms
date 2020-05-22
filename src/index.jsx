@@ -4,6 +4,7 @@ import { configure } from 'mobx'
 
 import Test from '@/containers/views/Test'
 import RootProvider from '@/containers/shared/RootProvider'
+import './styles/reset.scss'
 
 configure({ enforceActions: 'observed' })
 

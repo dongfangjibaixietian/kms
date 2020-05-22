@@ -4,7 +4,7 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const { NODE_ENV } = require('./constants')
 
 module.exports =
-  NODE_ENV === ''
+  NODE_ENV === 'development'
     ? {}
     : {
         runtimeChunk: {
