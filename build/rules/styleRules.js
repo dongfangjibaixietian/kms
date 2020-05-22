@@ -1,10 +1,29 @@
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+
 const { resolve } = require('./../utils')
+const { NODE_ENV } = require('./../constants')
+const { cacheLoader, threadLoader } = require('./../loader')
+
+const getLoader = () => {
+  if (NODE_ENV === 'development') {
+    return 'style-loader'
+  } else {
+    return MiniCssExtractPlugin.loader
+  }
+}
+
+/**
+ * 开发环境不单独打包css，生产环境单独打包css
+ */
+const loader = getLoader()
 
 module.exports = [
   {
     test: /\.scss$/,
     use: [
-      'style-loader',
+      loader,
+      cacheLoader,
+      threadLoader(),
       // 'css-modules-typescript-loader',
       {
         loader: 'css-loader',
@@ -26,7 +45,7 @@ module.exports = [
   {
     test: /\.less$/,
     use: [
-      'style-loader',
+      loader,
       'css-loader',
       {
         loader: 'less-loader',
@@ -41,6 +60,6 @@ module.exports = [
   {
     test: /\.css$/,
     include: [resolve('node_modules')],
-    use: ['style-loader', 'css-loader'],
+    use: [loader, 'css-loader'],
   },
 ]

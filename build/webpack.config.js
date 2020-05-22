@@ -1,20 +1,23 @@
 const { resolve } = require('./utils')
 const jsRules = require('./rules/jsRules')
 const styleRules = require('./rules/styleRules')
+const fileRules = require('./rules/fileRules')
 const plugins = require('./plugins')
-const { FILE_EXTENSIONS } = require('./constants')
+const { FILE_EXTENSIONS, NODE_ENV } = require('./constants')
+const optimization = require('./optimization')
 
 /**
  * @type {import('webpack').Configuration}
  */
 module.exports = {
+  mode: NODE_ENV,
   entry: {
     app: resolve('src/index.jsx'),
   },
   output: {
-    path: resolve('dist/static'),
-    filename: 'js/[name].js',
-    chunkFilename: 'js/[name].js',
+    path: resolve('dist'),
+    filename: NODE_ENV === 'development' ? 'js/[name].js' : `js/[name].[chunkhash].js`,
+    chunkFilename: NODE_ENV === 'development' ? 'js/[name].js' : `js/[name].[id].[chunkhash].js`,
     publicPath: '/',
   },
   devServer: {
@@ -22,18 +25,14 @@ module.exports = {
   },
   resolve: {
     extensions: FILE_EXTENSIONS,
+    modules: [resolve('src'), resolve('node_modules')],
     alias: {
-      '@views': resolve('src/containers/views'),
-      '@shared': resolve('src/containers/shared'),
-      '@constants': resolve('src/constants'),
-      '@services': resolve('src/services'),
-      '@store': resolve('src/store'),
-      '@utils': resolve('src/utils'),
       '@': resolve('src'),
     },
   },
   module: {
-    rules: [...jsRules, ...styleRules],
+    rules: [...jsRules, ...styleRules, ...fileRules],
   },
+  optimization,
   plugins: [...plugins],
 }
