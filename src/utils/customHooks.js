@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 
-import { RootContext } from '@/containers/shared/RootProvider'
+import { RootContext } from '@/components/RootProvider'
 
 /**
  * 提供整个store

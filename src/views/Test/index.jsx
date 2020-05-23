@@ -8,22 +8,22 @@ import { observer } from 'mobx-react-lite'
 // import { getArticleList } from '@/services/api'
 // import { useRootStore } from '@/utils/customHooks'
 // import TestIcon from '@/assets/svg/test.svg'
-import PageLayout from '@/containers/shared/PageLayout'
+import PageLayout from '@/components/PageLayout'
 
 // const Loading = () => <div>loading</div>
 
 // const PageA = Loadable({
-//   loader: () => import(/* webpackChunkName: "page-a" */ '@/containers/views/PageA'),
+//   loader: () => import(/* webpackChunkName: "page-a" */ '@/views/PageA'),
 //   loading: Loading,
 // })
 
 // const PageB = Loadable({
-//   loader: () => import(/* webpackChunkName: "page-b" */ '@/containers/views/PageB'),
+//   loader: () => import(/* webpackChunkName: "page-b" */ '@/views/PageB'),
 //   loading: Loading,
 // })
 
 // const Home = Loadable({
-//   loader: () => import(/* webpackChunkName: "home" */ '@/containers/views/Home'),
+//   loader: () => import(/* webpackChunkName: "home" */ '@/views/Home'),
 //   loading: Loading,
 // })
 
