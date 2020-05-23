@@ -5,9 +5,9 @@ import style from './index.scss'
 import HeaderLeft from './components/HeaderLeft'
 import HeaderRight from './components/HeaderRight'
 
-const { Header, Footer, Content } = Layout
+const { Header, Content } = Layout
 
-const PageLayout = () => {
+const PageLayout = ({ children }) => {
   return (
     <Layout className={style.appContainer}>
       <Header className={style.header}>
@@ -16,8 +16,7 @@ const PageLayout = () => {
           <HeaderRight />
         </div>
       </Header>
-      <Content>Content</Content>
-      <Footer>Footer</Footer>
+      <Content>{children}</Content>
     </Layout>
   )
 }

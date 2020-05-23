@@ -3,6 +3,7 @@
 .menuWrapper {
   :global {
     .ant-menu {
+      border-bottom: unset;
       background-color: $background;
 
       .ant-menu-item {
