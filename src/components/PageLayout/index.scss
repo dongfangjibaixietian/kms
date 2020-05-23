@@ -20,22 +20,4 @@
     width: 1140px;
     background-color: $background;
   }
-
-  .headerLeft {
-    display: flex;
-    justify-content: space-between;
-    width: 345px;
-  }
-
-  .sloganImg {
-    display: flex;
-    align-items: center;
-    padding-top: 1px;
-    margin-right: 36px;
-
-    > img {
-      width: 120px;
-      height: 34px;
-    }
-  }
 }

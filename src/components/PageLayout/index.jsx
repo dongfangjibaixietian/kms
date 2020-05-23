@@ -2,8 +2,8 @@ import React from 'react'
 import { Layout } from 'antd'
 
 import style from './index.scss'
-import HeaderLeft from './HeaderLeft'
-import HeaderRight from './HeaderRight'
+import HeaderLeft from './components/HeaderLeft'
+import HeaderRight from './components/HeaderRight'
 
 const { Header, Footer, Content } = Layout
 

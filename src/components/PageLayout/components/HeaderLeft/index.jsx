@@ -1,7 +1,7 @@
 import React from 'react'
 
 import style from './index.scss'
-import Nav from './Nav'
+import Nav from './../Nav'
 
 const HeaderLeft = () => {
   return (
