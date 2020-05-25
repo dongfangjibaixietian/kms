@@ -31,22 +31,7 @@ const App = () => {
 
   const routesNode = renderRoutes(currentRoutes, '/')
 
-  return (
-    <BrowserRouter>{routesNode}</BrowserRouter>
-    // <Switch>
-    //   {currentRoutes.map((item) => (
-    //     <Route
-    //       exact
-    //       key={item.path}
-    //       path={item.path}
-    //       render={(props) => {
-    //         const Component = item.component
-    //         return <Component {...props} />
-    //       }}
-    //     />
-    //   ))}
-    // </Switch>
-  )
+  return <BrowserRouter>{routesNode}</BrowserRouter>
 }
 
 export default observer(App)
