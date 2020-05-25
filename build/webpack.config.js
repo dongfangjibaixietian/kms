@@ -1,9 +1,14 @@
-const { resolve } = require('./utils')
+const {
+  resolve
+} = require('./utils')
 const jsRules = require('./rules/jsRules')
 const styleRules = require('./rules/styleRules')
 const fileRules = require('./rules/fileRules')
 const plugins = require('./plugins')
-const { FILE_EXTENSIONS, NODE_ENV } = require('./constants')
+const {
+  FILE_EXTENSIONS,
+  NODE_ENV
+} = require('./constants')
 const optimization = require('./optimization')
 
 /**
@@ -35,4 +40,5 @@ module.exports = {
   },
   optimization,
   plugins: [...plugins],
+  devtool: 'source-map',
 }

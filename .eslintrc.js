@@ -31,12 +31,13 @@ module.exports = {
     '@typescript-eslint/no-empty-interface': 'off',
     '@typescript-eslint/ban-ts-ignore': 'off',
     '@typescript-eslint/no-inferrable-types': 'off',
-    'prettier/prettier': [
-      'error',
-      {
-        endOfLine: 'auto',
-      },
-    ],
+    // 'prettier/prettier': [
+    //   'error',
+    //   {
+    //     endOfLine: 'auto',
+    //   },
+    // ],
+    'prettier/prettier': 1
   },
   settings: {
     react: {

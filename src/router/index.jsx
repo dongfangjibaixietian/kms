@@ -1,12 +1,19 @@
 import React from 'react'
-
+import { useState, useMemo } from 'react'
 import Loadable from 'react-loadable'
+
+import PageLayout from '@/components/PageLayout'
 
 const Loading = () => <div>loading</div>
 
 // 首页
 const Home = Loadable({
   loader: () => import(/* webpackChunkName: "home" */ '@/views/Home'),
+  loading: Loading,
+})
+
+const AdminLayout = Loadable({
+  loader: () => import(/* webpackChunkName: "admin-layout" */ '@/components/AdminLayout'),
   loading: Loading,
 })
 
@@ -20,29 +27,62 @@ const Test = Loadable({
   loading: Loading,
 })
 
-export const routes = [
-  {
-    path: '/testa',
-    title: '工作资料',
-    name: 'testa',
-    component: Admin,
-  },
-  {
-    path: '/testb',
-    title: '测试页面',
-    name: 'testb',
-    component: Test,
-  },
-]
+const PageNotFound = Loadable({
+  loader: () => import(/* webpackChunkName: "page-not-found" */ '@/components/PageNotFound'),
+  loading: Loading,
+})
 
-const commonRoutes = [
-  {
+// type: home/admin
+const useGetRoutes = () => {
+  // 首页路由
+  const [homeRoutes, setHomeRoutes] = useState({
     path: '/',
-    title: '发现知识',
-    component: Home,
-  },
-]
+    component: PageLayout,
+    children: [
+      {
+        path: '/',
+        title: '发现知识',
+        component: Home,
+      },
+      {
+        path: '/workData',
+        title: '工作资料',
+        component: Test,
+      },
+    ],
+  })
 
-const currentRoutes = [...commonRoutes, ...routes]
+  // 管理界面路由
+  const [adminRoutes, setAdminRoutes] = useState({
+    path: 'admin',
+    component: AdminLayout,
+    children: [
+      {
+        path: '',
+        title: '首页',
+        component: Admin,
+      },
+    ],
+  })
 
-export default currentRoutes
+  const currentRoutes = useMemo(() => {
+    return [
+      adminRoutes,
+      homeRoutes,
+      {
+        path: '*',
+        component: PageNotFound,
+      },
+    ]
+  })
+
+  return {
+    currentRoutes,
+    setAdminRoutes,
+    setHomeRoutes,
+    homeRoutes,
+    adminRoutes,
+  }
+}
+
+export default useGetRoutes

@@ -4,12 +4,12 @@ import { withRouter } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
 
 import style from './index.scss'
-import { useRootStore } from '@/utils/customHooks'
+import useGetRoutes from '@/router'
 
 const MenuItem = Menu.Item
 
 const Nav = ({ history, location }) => {
-  const { currentRoutes } = useRootStore().routerStore
+  const { homeRoutes } = useGetRoutes()
 
   const goto = ({ key }) => {
     if (location.pathname === key) {
@@ -21,7 +21,7 @@ const Nav = ({ history, location }) => {
   return (
     <div className={style.menuWrapper}>
       <Menu selectedKeys={[location.pathname]} mode="horizontal">
-        {currentRoutes.map((item) =>
+        {homeRoutes.children.map((item) =>
           item.title ? (
             <MenuItem onClick={goto} key={item.path}>
               {item.title}
