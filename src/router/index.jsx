@@ -7,8 +7,8 @@ import PageLayout from '@/components/PageLayout'
 const Loading = () => <div>loading</div>
 
 // 首页
-const Home = Loadable({
-  loader: () => import(/* webpackChunkName: "home" */ '@/views/Home'),
+const Knowledge = Loadable({
+  loader: () => import(/* webpackChunkName: "home" */ '@/views/Knowledge'),
   loading: Loading,
 })
 
@@ -42,7 +42,7 @@ const useGetRoutes = () => {
       {
         path: '/',
         title: '发现知识',
-        component: Home,
+        component: Knowledge,
       },
       {
         path: '/workData',

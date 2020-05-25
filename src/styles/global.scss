@@ -1,9 +1,15 @@
 // 主色调
 $background: #f7f7f7;
-$button: #07c160;
+$button: #3370ff;
 $link: #576b95;
 $title: #121212;
 $text-30: #303030;
 $text-7f: #7f7f7f;
 $text-a3: #a3a3a3;
 $border: #f2f2f2;
+
+@mixin absoluteCenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

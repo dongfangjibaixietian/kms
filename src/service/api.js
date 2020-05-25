@@ -7,3 +7,7 @@ export const creatUser = (data = {}) => {
 export const login = (data = {}) => {
   return http.post('user/login', data)
 }
+
+export const getTagList = (data = {}) => {
+  return http.get('tag/list', data)
+}

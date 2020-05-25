@@ -16,7 +16,7 @@ const PageLayout = ({ children }) => {
           <HeaderRight />
         </div>
       </Header>
-      <Content>{children}</Content>
+      <Content className={style.appContent}>{children}</Content>
     </Layout>
   )
 }

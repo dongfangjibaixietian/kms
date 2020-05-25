@@ -21,4 +21,9 @@
     width: 1140px;
     background-color: $background;
   }
+
+  .appContent {
+    display: flex;
+    justify-content: center;
+  }
 }
