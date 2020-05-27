@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Modal, Input, Button, Select } from 'antd'
+import { withRouter } from 'react-router-dom'
 import classnames from 'classnames'
 import { DownOutlined } from '@ant-design/icons'
 
@@ -9,10 +10,13 @@ import MarkdownIcon from '@/assets/svg/markdown.svg'
 import style from './index.scss'
 import { getTagList as getTagListApi } from '@/service/api'
 import { parseTagListToTree } from '@/utils'
+import { useRootStore } from '@/utils/customHooks'
 
 const { Option, OptGroup } = Select
 
-const PublishModal = ({ visible, triggerShowPublishModal }) => {
+const PublishModal = ({ visible, triggerShowPublishModal, history }) => {
+  const { setArticleBaseInfo } = useRootStore().articleStore
+
   const [textType, setTextType] = useState(1)
 
   const [title, setTitle] = useState('')
@@ -26,6 +30,29 @@ const PublishModal = ({ visible, triggerShowPublishModal }) => {
     } catch (error) {
       console.log(error)
     }
+  }
+
+  // 选择的tagId
+  const [selectedTag, setSelectedTag] = useState([])
+
+  const selectTag = (values) => {
+    setSelectedTag(values)
+  }
+
+  // 可见范围
+  const [viewType, setViewType] = useState(1)
+
+  // 进入文章编辑页面
+  const gotoEditArticle = () => {
+    const data = {
+      viewType,
+      selectedTag,
+      title,
+      textType,
+    }
+    setArticleBaseInfo(data)
+    triggerShowPublishModal(false)
+    history.push('/editor')
   }
 
   useEffect(() => {
@@ -68,11 +95,17 @@ const PublishModal = ({ visible, triggerShowPublishModal }) => {
         </div>
         <div className={style.otherInfo}>
           <div className={style.title}>知识库标签</div>
-          <Select suffixIcon={<DownOutlined />} className={style.tagSelect} mode="multiple" style={{ width: 200 }}>
+          <Select
+            mode="multiple"
+            onChange={selectTag}
+            suffixIcon={<DownOutlined />}
+            className={style.select}
+            style={{ width: 200 }}
+          >
             {tagList.map((item, index) => (
               <OptGroup key={index} label={item.content}>
-                {item.children.map((t, i) => (
-                  <Option key={i} value={t.id}>
+                {item.children.map((t) => (
+                  <Option key={t.id} value={t.id}>
                     {t.content}
                   </Option>
                 ))}
@@ -82,10 +115,13 @@ const PublishModal = ({ visible, triggerShowPublishModal }) => {
         </div>
         <div className={style.otherInfo}>
           <div className={style.title}>可见范围</div>
-          <Input />
+          <Select value={viewType} onChange={(type) => setViewType(type)} className={style.select}>
+            <Option value={1}>仅自己可见</Option>
+            <Option value={2}>所有人可见</Option>
+          </Select>
         </div>
         <div className={style.createBtn}>
-          <Button className={style.btn} type="primary">
+          <Button onClick={gotoEditArticle} className={style.btn} type="primary">
             新建
           </Button>
         </div>
@@ -94,4 +130,4 @@ const PublishModal = ({ visible, triggerShowPublishModal }) => {
   )
 }
 
-export default PublishModal
+export default withRouter(PublishModal)

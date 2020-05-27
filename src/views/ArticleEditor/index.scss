@@ -1,0 +1,60 @@
+@import 'global.scss';
+
+.editorWrapper {
+  height: 100vh;
+
+  :global {
+    .for-preview {
+      background-color: rgb(252, 250, 242) !important;
+    }
+
+    .md-publish-btn {
+      background-color: #3370ff;
+      color: white;
+      width: 90px;
+      height: 27px;
+      position: relative;
+      top: 8px;
+      border-radius: 2px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .bf-container {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .bf-content {
+      flex: 1;
+    }
+
+    .bf-controlbar {
+      position: relative;
+
+      .control-item {
+        &:last-child {
+          &:hover {
+            background-color: unset;
+          }
+        }
+      }
+    }
+
+    .fuwenben-publish-btn {
+      width: 90px;
+      height: 27px;
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #3370ff;
+      color: white;
+      position: absolute;
+      right: 7px;
+      top: 10px;
+    }
+  }
+}

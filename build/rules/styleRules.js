@@ -46,6 +46,7 @@ module.exports = [
     test: /\.less$/,
     use: [
       loader,
+      cacheLoader,
       'css-loader',
       {
         loader: 'less-loader',

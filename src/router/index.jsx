@@ -27,6 +27,11 @@ const Test = Loadable({
   loading: Loading,
 })
 
+const ArticleEditor = Loadable({
+  loader: () => import(/* webpackChunkName: "test" */ '@/views/ArticleEditor'),
+  loading: Loading,
+})
+
 const PageNotFound = Loadable({
   loader: () => import(/* webpackChunkName: "page-not-found" */ '@/components/PageNotFound'),
   loading: Loading,
@@ -65,9 +70,16 @@ const useGetRoutes = () => {
     ],
   })
 
+  // 编辑
+  const [editorRoutes, setEditorRoutes] = useState({
+    path: 'editor',
+    component: ArticleEditor,
+  })
+
   const currentRoutes = useMemo(() => {
     return [
       adminRoutes,
+      editorRoutes,
       homeRoutes,
       {
         path: '*',
@@ -82,6 +94,7 @@ const useGetRoutes = () => {
     setHomeRoutes,
     homeRoutes,
     adminRoutes,
+    setEditorRoutes,
   }
 }
 
