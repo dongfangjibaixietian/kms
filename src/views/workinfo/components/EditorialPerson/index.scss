@@ -1,0 +1,97 @@
+@import 'global.scss';
+
+.modalWrapper {
+  
+  :global {
+    .ant-modal-content {
+      border-radius: 7px;
+    }
+
+    .ant-modal-body {
+      padding: unset;
+    }
+
+    .ant-btn {
+      background-color: $button;
+    }
+  }
+
+  .header {
+    color: #333;
+    height: 78px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  .infoWrapper {
+    padding: 0 30px;
+  }
+
+  .selectType {
+    display: flex;
+
+    .selectType {
+      background: rgba(50, 112, 255, 0.1);
+      border-color: #3270ff !important;
+    }
+
+    .mdType {
+      width: 220px;
+      height: 133px;
+      border: 1px solid rgba(217, 217, 217, 1);
+      border-radius: 6px 0 0 6px;
+      cursor: pointer;
+
+      @include absoluteCenter;
+    }
+
+    .fuwenbenType {
+      width: 220px;
+      height: 133px;
+      border: 1px solid rgba(217, 217, 217, 1);
+      border-radius: 0px 6px 6px 0px;
+      cursor: pointer;
+
+      @include absoluteCenter;
+    }
+
+    .type {
+      .text {
+        display: flex;
+        justify-content: center;
+        margin-top: -7px;
+        color: #666;
+      }
+    }
+  }
+
+  .otherInfo {
+    margin-top: 24px;
+
+    .title {
+      font-weight: 400;
+      margin-bottom: 8px;
+      color: rgba(0, 0, 0, 0.85);
+    }
+  }
+
+  .select {
+    width: 100% !important;
+  }
+
+  .createBtn {
+    display: flex;
+    justify-content: center;
+    padding-top: 30px;
+    padding-bottom: 60px;
+
+    .btn {
+      background-color: $button;
+      width: 220px;
+      height: 40px;
+    }
+  }
+}

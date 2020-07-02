@@ -3,6 +3,7 @@ import { useState, useMemo } from 'react'
 import Loadable from 'react-loadable'
 
 import PageLayout from '@/components/PageLayout'
+import workinfo from '../views/workinfo'
 
 const Loading = () => <div>loading</div>
 
@@ -23,7 +24,7 @@ const Admin = Loadable({
 })
 
 const Test = Loadable({
-  loader: () => import(/* webpackChunkName: "test" */ '@/views/Test'),
+  loader: () => import(/* webpackChunkName: "test" */ '@/views/workinfo'),
   loading: Loading,
 })
 
@@ -52,7 +53,7 @@ const useGetRoutes = () => {
       {
         path: '/workData',
         title: '工作资料',
-        component: Test,
+        component: workinfo,
       },
     ],
   })

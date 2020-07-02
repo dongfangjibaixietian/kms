@@ -28,13 +28,24 @@ const HeaderRight = ({ history }) => {
         placeholder="搜索"
         suffix={<SearchOutlined style={{ color: 'rgba(201, 201, 201)', fontSize: 20 }} />}
       />
-      <div onClick={() => triggerShowModal(1)} className={style.loginBtn}>
+      {/* <div onClick={() => triggerShowModal(1)} className={style.loginBtn}>
         登录
-      </div>
-      <div onClick={() => triggerShowModal(2)} className={style.loginBtn}>
+      </div> */}
+      {/* <div onClick={() => triggerShowModal(2)} className={style.loginBtn}>
         注册
-      </div>
-      {!!userInfo ? <div onClick={() => history.push('/admin')}>进入admin</div> : null}
+      </div> */}
+      {!!userInfo ? (
+        <div onClick={() => history.push('/admin')}>进入admin</div>
+      ) : (
+        <table>
+          <div onClick={() => triggerShowModal(1)} className={style.loginBtn}>
+            登录
+          </div>
+          <div onClick={() => triggerShowModal(2)} className={style.loginBtn}>
+            注册
+          </div>
+        </table>
+      )}
       <LoginModal type={type} setIsShowModal={setIsShowModal} visible={isShowModal} />
     </div>
   )
