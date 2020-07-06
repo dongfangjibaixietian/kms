@@ -14,9 +14,7 @@ test:
   tags:
     - shell-fe
   script:
-    - npm uninstall node-sass
-    - npm install node-sass
-    - npm install --no-optional --registry=http://172.16.7.241:4873/
+    - sudo npm install --no-optional --registry=http://172.16.7.241:4873/
     - npm run lint
 
 build:
