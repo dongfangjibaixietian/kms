@@ -5,6 +5,7 @@
     .ant-menu {
       border-bottom: unset;
       background-color: $background;
+      line-height: 64px;
 
       .ant-menu-item {
         padding: 0 22px;
@@ -13,14 +14,14 @@
         top: 0;
       }
 
-      .ant-menu-item-selected,
       .ant-menu-item-active {
         color: #121212;
-        font-weight: 600;
       }
 
       .ant-menu-item-selected {
         position: relative;
+        color: #121212;
+        font-weight: 600;
 
         &::before {
           content: '';
