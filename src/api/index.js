@@ -8,6 +8,7 @@
 
 import { Request } from '@gworld/toolset'
 import { getToken, removeToken } from '@/utils/storage'
+import { message } from 'antd'
 
 const service = new Request({
   namespace: 'gworld-kms',
@@ -19,7 +20,6 @@ const service = new Request({
   },
   partHeaders(uri) {
     console.log('接口路径partHeaders', uri)
-    console.log('getToken', getToken())
 
     return {
       Authorization: `Bearer ${getToken()}`,
@@ -30,8 +30,11 @@ const service = new Request({
     handler(code) {
       switch (code) {
         case 401:
-          console.log('登录过期，请重新登录')
+          message.error('登录过期，请重新登录')
           removeToken()
+          break
+        case 422:
+          message.error('接口参数错误')
           break
       }
     },
@@ -39,7 +42,7 @@ const service = new Request({
   handleResponseError: {
     codeIgnore: [],
     handler(code, message) {
-      console.log('接口发生错误', code, message)
+      message.error(message + ':' + code)
     },
   },
 })

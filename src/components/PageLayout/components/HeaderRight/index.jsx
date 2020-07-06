@@ -73,7 +73,13 @@ const HeaderRight = () => {
         suffix={<SearchOutlined style={{ color: 'rgba(201, 201, 201)', fontSize: 20 }} />}
       />
       {defaultView}
-      <LoginModal change={setToken} type={type} setIsShowModal={setIsShowModal} visible={isShowModal} />
+      <LoginModal
+        change={setToken}
+        type={type}
+        setIsShowModal={setIsShowModal}
+        visible={isShowModal}
+        onCancel={() => setIsShowModal(false)}
+      />
     </div>
   )
 }

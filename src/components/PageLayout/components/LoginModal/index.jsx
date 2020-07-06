@@ -5,7 +5,7 @@ import { login, userInfo, register } from '@/api/user'
 import { useRootStore } from '@/utils/customHooks'
 import { setToken } from '@/utils/storage'
 import jwtDecode from 'jwt-decode'
-const LoginModal = ({ visible, setIsShowModal, change }) => {
+const LoginModal = ({ visible, setIsShowModal, change, onCancel }) => {
   const { setUserInfo } = useRootStore().userStore
 
   const [username, setUsername] = useState('')
@@ -37,26 +37,30 @@ const LoginModal = ({ visible, setIsShowModal, change }) => {
     }
   }
 
+  // 注册的逻辑也一样
   const registerUser = async () => {
     const res = await register({
       name: username,
       password,
       email: 'xxx@xxx.com',
     })
+
     if (res.code === 0) {
       loginUser()
     }
   }
 
   return (
+    // 把这个给我改了，登录框
+    // 参考掘金的登录框 https://juejin.im/
     <Modal
       title="登录"
-      cancelText="立即注册"
       okText="确认"
       visible={visible}
       onOk={loginUser}
-      onCancel={registerUser}
+      onCancel={onCancel}
       width={400}
+      centered={true}
     >
       <div>
         用户名：
