@@ -137,7 +137,7 @@ const ArticleDetails = ({ history }) => {
                 {detail.title}
                 <img className={style.tag} width={16} src={require('@/assets/img/hot.png').default} alt="" />
                 <img className={style.tag} width={16} src={require('@/assets/img/essence.png').default} alt="" />
-                <img className={style.tag} width={16} src={require('@/assets/img/stick.png').default} alt="" />
+                <img className={style.tag} width={16} src={require('@/assets/img/Stick.png').default} alt="" />
               </div>
               <div className={style.otherInfo}>
                 <div className={style.left}>
