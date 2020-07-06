@@ -4,4 +4,5 @@ module.exports = {
   printWidth: 120,
   stylelintIntegration: true,
   endOfLine: 'auto',
+  tabWidth: 2,
 }

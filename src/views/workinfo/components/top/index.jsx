@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { Descriptions, Button } from 'antd'
+import { Button, Upload, message } from 'antd'
+import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 
 import style from './index.scss'
 import EditorialPerson from './../EditorialPerson'
@@ -49,15 +50,6 @@ const Top = () => {
               <div>粉丝</div>
             </div>
           </div>
-          {/* <Descriptions title="User Info">
-            <Descriptions.Item label="UserName" className={style.name}>Zhou Maomao</Descriptions.Item>
-            <Descriptions.Item label="Telephone">1810000000</Descriptions.Item>
-            <Descriptions.Item label="Live">Hangzhou, Zhejiang</Descriptions.Item>
-            <Descriptions.Item label="Remark">empty</Descriptions.Item>
-            <Descriptions.Item label="Address">
-              No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China
-            </Descriptions.Item>
-          </Descriptions> */}
         </div>
       </div>
       {publishModalVisible && (

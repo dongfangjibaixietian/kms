@@ -1,19 +1,20 @@
 @import 'global.scss';
 
 .modalWrapper {
-  
+
   :global {
     .ant-modal-content {
       border-radius: 7px;
     }
 
     .ant-modal-body {
+      height: 600px;
       padding: unset;
     }
 
-    .ant-btn {
-      background-color: $button;
-    }
+    // .ant-btn {
+    //   background-color: $button;
+    // }
   }
 
   .header {
@@ -27,71 +28,50 @@
   }
 
   .infoWrapper {
-    padding: 0 30px;
-  }
-
-  .selectType {
     display: flex;
-
-    .selectType {
-      background: rgba(50, 112, 255, 0.1);
-      border-color: #3270ff !important;
-    }
-
-    .mdType {
-      width: 220px;
-      height: 133px;
-      border: 1px solid rgba(217, 217, 217, 1);
-      border-radius: 6px 0 0 6px;
-      cursor: pointer;
-
-      @include absoluteCenter;
-    }
-
-    .fuwenbenType {
-      width: 220px;
-      height: 133px;
-      border: 1px solid rgba(217, 217, 217, 1);
-      border-radius: 0px 6px 6px 0px;
-      cursor: pointer;
-
-      @include absoluteCenter;
-    }
-
-    .type {
-      .text {
-        display: flex;
-        justify-content: center;
-        margin-top: -7px;
-        color: #666;
-      }
-    }
+    justify-content: space-between;
+    flex-direction: column;
+    height: 500px;
+    padding: 10px 30px;
   }
 
-  .otherInfo {
-    margin-top: 24px;
 
-    .title {
-      font-weight: 400;
-      margin-bottom: 8px;
-      color: rgba(0, 0, 0, 0.85);
-    }
+  .uplo {
+    display: flex;
+    width: 250px;
   }
 
-  .select {
-    width: 100% !important;
+  .pic {
+    flex: 1;
+    margin-top: 8px;
+    margin-right: 10px;
+    border-radius: 50%;
+    width: 88px;
+    height: 88px;
   }
+
+  .smallword {
+    margin-top: 10px;
+    width: 170px;
+  }
+
 
   .createBtn {
     display: flex;
     justify-content: center;
     padding-top: 30px;
-    padding-bottom: 60px;
+
 
     .btn {
       background-color: $button;
       width: 220px;
       height: 40px;
     }
+
+    .rightdiv {
+      padding-top: 10px;
+    }
+
+
   }
 }

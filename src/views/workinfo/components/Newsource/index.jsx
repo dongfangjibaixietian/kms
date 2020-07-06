@@ -40,7 +40,7 @@ const NewSource = ({ visible, triggerShowPublishModal, history }) => {
   const [viewType, setViewType] = useState(1)
 
   // 进入文章编辑页面
-  const gotoEditArticle = () => {
+  const createknow = () => {
     const data = {
       viewType,
       selectedTag,
@@ -101,7 +101,7 @@ const NewSource = ({ visible, triggerShowPublishModal, history }) => {
           </Select>
         </div>
         <div className={style.createBtn}>
-          <Button onClick={gotoEditArticle} className={style.btn} type="primary">
+          <Button onClick={createknow} className={style.btn} type="primary">
             新建
           </Button>
         </div>
