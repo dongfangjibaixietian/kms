@@ -8,16 +8,16 @@ import CloseIcon from '@/assets/svg/close.svg'
 import FuwenbenIcon from '@/assets/svg/fuwenben.svg'
 import MarkdownIcon from '@/assets/svg/markdown.svg'
 import style from './index.scss'
-import { getTagList as getTagListApi } from '@/service/api'
-import { parseTagListToTree } from '@/utils'
+import { tagTree as getTagListApi } from '@/api/tag'
+// import { parseTagListToTree } from '@/utils'
 import { useRootStore } from '@/utils/customHooks'
 
 const { Option, OptGroup } = Select
 
 const PublishModal = ({ visible, triggerShowPublishModal, history }) => {
   const { setArticleBaseInfo } = useRootStore().articleStore
-
-  const [textType, setTextType] = useState(1)
+  // usd: 富文本  md:MarkDown
+  const [type, setTextType] = useState('md')
 
   const [title, setTitle] = useState('')
 
@@ -26,7 +26,8 @@ const PublishModal = ({ visible, triggerShowPublishModal, history }) => {
   const getTagList = async () => {
     try {
       const res = await getTagListApi()
-      setTaglit(parseTagListToTree(res.data.tagList))
+      // setTaglit(parseTagListToTree(res.data.list))
+      setTaglit(res.data.list)
     } catch (error) {
       console.log(error)
     }
@@ -36,6 +37,7 @@ const PublishModal = ({ visible, triggerShowPublishModal, history }) => {
   const [selectedTag, setSelectedTag] = useState([])
 
   const selectTag = (values) => {
+    console.log(values)
     setSelectedTag(values)
   }
 
@@ -48,7 +50,7 @@ const PublishModal = ({ visible, triggerShowPublishModal, history }) => {
       viewType,
       selectedTag,
       title,
-      textType,
+      type,
     }
     setArticleBaseInfo(data)
     triggerShowPublishModal(false)
@@ -73,15 +75,18 @@ const PublishModal = ({ visible, triggerShowPublishModal, history }) => {
       <div className={style.header}>请选择知识库类型</div>
       <div className={style.infoWrapper}>
         <div className={style.selectType}>
-          <div onClick={() => setTextType(1)} className={classnames(style.mdType, textType === 1 && style.selectType)}>
+          <div
+            onClick={() => setTextType('md')}
+            className={classnames(style.mdType, type === 'md' && style.selectType)}
+          >
             <div className={style.type}>
               <MarkdownIcon width={80} height={80} />
               <div className={style.text}>Markdown</div>
             </div>
           </div>
           <div
-            onClick={() => setTextType(2)}
-            className={classnames(style.fuwenbenType, textType === 2 && style.selectType)}
+            onClick={() => setTextType('usd')}
+            className={classnames(style.fuwenbenType, type === 'usd' && style.selectType)}
           >
             <div className={style.type}>
               <FuwenbenIcon width={80} height={80} />

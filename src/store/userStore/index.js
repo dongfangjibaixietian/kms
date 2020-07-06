@@ -1,17 +1,22 @@
+/*
+ * @Author       : charm
+ * @Date         : 2020-06-28 16:15:01
+ * @LastEditors  : charm
+ * @LastEditTime : 2020-07-04 11:07:47
+ * @FilePath     : \gworld-pc-share\src\store\userStore\index.js
+ */
+
 import { observable, action } from 'mobx'
-import jwtDecode from 'jwt-decode'
 
-export class TestStore {
-  @observable
-  userInfo = null
+export class UserStore {
+  @observable userInfo = null
 
-  @action
-  setUserInfo = (token) => {
-    localStorage.setItem('token', token)
-    const user = jwtDecode(token)
-    console.log(user)
-    this.userInfo = user
+  @action.bound
+  setUserInfo(data) {
+    console.log(data)
+    this.userInfo = data
+    console.log(this.userInfo)
   }
 }
 
-export default new TestStore()
+export default new UserStore()

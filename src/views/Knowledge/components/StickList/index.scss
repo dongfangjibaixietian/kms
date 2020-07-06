@@ -1,0 +1,18 @@
+.stickList {
+  background-color: #fff;
+  margin-bottom: 20px;
+
+  .itemStyle {
+    justify-content: inherit;
+    height: 60px;
+
+    &:hover {
+      background-color: #eee;
+      cursor: pointer;
+    }
+  }
+
+  .tagList {
+    display: flex;
+  }
+}
