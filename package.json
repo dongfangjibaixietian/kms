@@ -19,7 +19,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@gworld/toolset": "^0.7.2",
+    "@gworld/toolset": "^0.8.0",
     "antd": "^4.2.4",
     "axios": "^0.19.2",
     "braft-editor": "^2.3.9",

@@ -6,7 +6,7 @@ import { DownOutlined } from '@ant-design/icons'
 
 import CloseIcon from '@/assets/svg/close.svg'
 import FuwenbenIcon from '@/assets/svg/fuwenben.svg'
-import MarkdownIcon from '@/assets/svg/markdown.svg'
+// import MarkdownIcon from '@/assets/svg/markdown.svg'
 import style from './index.scss'
 import { tagTree as getTagListApi } from '@/api/tag'
 // import { parseTagListToTree } from '@/utils'
@@ -17,7 +17,7 @@ const { Option, OptGroup } = Select
 const PublishModal = ({ visible, triggerShowPublishModal, history }) => {
   const { setArticleBaseInfo } = useRootStore().articleStore
   // usd: 富文本  md:MarkDown
-  const [type, setTextType] = useState('md')
+  const [type, setTextType] = useState('usd')
 
   const [title, setTitle] = useState('')
 
@@ -75,7 +75,7 @@ const PublishModal = ({ visible, triggerShowPublishModal, history }) => {
       <div className={style.header}>请选择知识库类型</div>
       <div className={style.infoWrapper}>
         <div className={style.selectType}>
-          <div
+          {/* <div
             onClick={() => setTextType('md')}
             className={classnames(style.mdType, type === 'md' && style.selectType)}
           >
@@ -83,7 +83,7 @@ const PublishModal = ({ visible, triggerShowPublishModal, history }) => {
               <MarkdownIcon width={80} height={80} />
               <div className={style.text}>Markdown</div>
             </div>
-          </div>
+          </div> */}
           <div
             onClick={() => setTextType('usd')}
             className={classnames(style.fuwenbenType, type === 'usd' && style.selectType)}

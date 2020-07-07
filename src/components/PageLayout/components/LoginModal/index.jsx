@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Modal, Input, Button, Form, message } from 'antd'
-import { UserOutlined, LockOutlined } from '@ant-design/icons'
+import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons'
 import { login, userInfo, register } from '@/api/user'
 import { useRootStore } from '@/utils/customHooks'
 import { setToken } from '@/utils/storage'
@@ -13,18 +13,21 @@ const LoginModal = ({ visible, setIsShowModal, change, onCancel, type }) => {
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('')
   const [titleType, setType] = useState(type)
 
   const closeModal = () => {
     setUsername('')
     setPassword('')
+    setEmail('')
     setIsShowModal(false)
   }
 
   const loginUser = async () => {
     try {
+      console.log('success')
       const res = await login({
-        name: username,
+        username: username,
         password: md5(password),
       })
       setToken(res.data.token)
@@ -44,9 +47,9 @@ const LoginModal = ({ visible, setIsShowModal, change, onCancel, type }) => {
   // 注册
   const registerUser = async () => {
     const res = await register({
-      name: username,
+      username: username,
       password: md5(password),
-      email: 'xxx@xxx.com',
+      email: email,
     })
 
     if (res.code === 0) {
@@ -108,23 +111,79 @@ const LoginModal = ({ visible, setIsShowModal, change, onCancel, type }) => {
       className={style.loginDialog}
     >
       <Form name="normal_login" className="login-form" initialValues={{ remember: true }} onFinish={onFinish}>
-        <Form.Item name="username" rules={[{ required: true, message: '请输入用户名!' }]}>
+        <Form.Item
+          name="username"
+          rules={[
+            ({ getFieldValue }) => ({
+              validator(rule, value) {
+                console.log(value)
+                console.log(getFieldValue('username'))
+                console.log(value.length)
+                if (value === '') {
+                  return Promise.reject('请输入用户名')
+                }
+                if (getFieldValue('username') === value && value.length >= 4) {
+                  return Promise.resolve()
+                }
+                if (titleType === 2) {
+                  return Promise.reject('用户名长度不能小于4')
+                }
+                return Promise.resolve()
+              },
+            }),
+          ]}
+        >
           <Input
             value={username}
+            allowClear
             onChange={(e) => setUsername(e.target.value)}
             prefix={<UserOutlined className="site-form-item-icon" />}
             placeholder="请输入用户名"
           />
         </Form.Item>
-        <Form.Item name="password" rules={[{ required: true, message: '请输入密码!' }]}>
+        <Form.Item
+          name="password"
+          rules={[
+            ({ getFieldValue }) => ({
+              validator(rule, value) {
+                console.log(value)
+                console.log(getFieldValue('username'))
+                console.log(value.length)
+                if (value === '') {
+                  return Promise.reject('请输入密码')
+                }
+                if (getFieldValue('password') === value && value.length >= 6) {
+                  return Promise.resolve()
+                }
+                if (titleType === 2) {
+                  return Promise.reject('密码长度不能小于6')
+                }
+                return Promise.resolve()
+              },
+            }),
+          ]}
+        >
           <Input
             value={password}
+            allowClear
             onChange={(e) => setPassword(e.target.value)}
             prefix={<LockOutlined className="site-form-item-icon" />}
             type="password"
             placeholder="请输入密码"
           />
         </Form.Item>
+        {titleType === 2 ? (
+          <Form.Item name="email" rules={[{ required: true, message: '请输入邮箱!' }]}>
+            <Input
+              value={email}
+              allowClear
+              onChange={(e) => setEmail(e.target.value)}
+              prefix={<MailOutlined className="site-form-item-icon" />}
+              placeholder="请输入邮箱"
+            />
+          </Form.Item>
+        ) : null}
+
         <Button type="primary" htmlType="submit" className={style.loginBtn}>
           {titleType === 1 ? '登录' : '注册'}
         </Button>
@@ -146,24 +205,6 @@ const LoginModal = ({ visible, setIsShowModal, change, onCancel, type }) => {
           </div>
         ) : null}
       </Form>
-      {/* <div>
-        用户名：
-        <Input value={username} placeholder="请输入用户名"  onChange={(e) => setUsername(e.target.value)} />
-      </div>
-      <div>
-        密码
-        <Input.Password value={password} placeholder="请输入密码" onChange={(e) => setPassword(e.target.value)} />
-      </div>
-      <Button type="primary" className={style.loginBtn} onClick={hanldClick}>
-        {titleType === 1 ? '登录' : '注册'}
-      </Button>
-      <div className={style.otherBox}>
-        {defaultView}
-        <div className={style.agreementBox}>
-          注册登录即表示同意
-          <span className={style.agreement}>用户协议</span>、<span className={style.agreement}>隐私政策</span>
-        </div>
-      </div> */}
     </Modal>
   )
 }

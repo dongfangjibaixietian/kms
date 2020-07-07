@@ -1,12 +1,12 @@
 import React from 'react'
 import { Route, Switch, BrowserRouter } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
-
+import { Uploader } from '@gworld/toolset'
 import useGetRoutes from '@/router'
 
 const App = () => {
   const { currentRoutes } = useGetRoutes()
-
+  Uploader.init()
   const renderRoutes = (routeMenu, path) => {
     const children = []
     const renderRoute = (item, routePath) => {

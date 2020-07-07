@@ -2,7 +2,7 @@
  * @Author       : charm
  * @Date         : 2020-07-02 10:53:19
  * @LastEditors  : charm
- * @LastEditTime : 2020-07-04 13:46:45
+ * @LastEditTime : 2020-07-07 11:29:28
  * @FilePath     : \gworld-pc-share\src\api\index.js
  */
 
@@ -41,8 +41,9 @@ const service = new Request({
   },
   handleResponseError: {
     codeIgnore: [],
-    handler(code, message) {
-      message.error(message + ':' + code)
+    handler(code, msg) {
+      console.log(msg)
+      message.error(msg + ':' + code)
     },
   },
 })

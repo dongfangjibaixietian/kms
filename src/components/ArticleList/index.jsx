@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useCallback, useReducer } from 'react'
+import React, { useEffect, useState, useCallback, useReducer, useRef, forwardRef, useImperativeHandle } from 'react'
 import { List, Avatar, Spin } from 'antd'
 import style from './index.scss'
 import { scrollEvent, formateTime } from '@/utils/index'
 import { articleList } from '@/api/article'
-const ArticleList = () => {
+const ArticleList = forwardRef((props, ref) => {
   const locale = {
     emptyText: '暂无数据',
   }
@@ -16,6 +16,12 @@ const ArticleList = () => {
     pageIndex: 1,
     pageSize: 10,
   }
+  // 是否还有更多数据
+  const [hasMore, setHasMore] = useState(true)
+  // 加载中
+  const [isLoading, setLoading] = useState(false)
+  const [dataList, setList] = useState([])
+  const childRef = useRef()
 
   const reducer = (state, action) => {
     switch (action.type) {
@@ -26,13 +32,23 @@ const ArticleList = () => {
         throw new Error()
     }
   }
-
-  // 是否还有更多数据
-  const [hasMore, setHasMore] = useState(true)
-  // 加载中
-  const [isLoading, setLoading] = useState(false)
   const [state, dispatch] = useReducer(reducer, initialState)
-  const [dataList, setList] = useState([])
+
+  useImperativeHandle(ref, () => ({
+    refresh: () => {
+      //需要处理的数据
+      console.log('refresh')
+      setHasMore(true)
+      setLoading(false)
+      setList([])
+      dispatch({
+        type: 'update',
+        payload: {
+          pageIndex: 1,
+        },
+      })
+    },
+  }))
 
   const _handleScroll = useCallback(
     (event) => {
@@ -61,8 +77,8 @@ const ArticleList = () => {
     const res = await articleList({
       searchKey: '',
       ...state,
-      isEssence: false,
-      isHot: false,
+      isEssence: props.isEssence,
+      isHot: props.isHot,
     })
 
     if (!hasMore || res.data.list.length < 10) {
@@ -82,13 +98,14 @@ const ArticleList = () => {
   }, [_handleScroll])
 
   useEffect(() => {
+    console.log(props)
     getList().then(() => {
       setLoading(false)
     })
-  }, [state.pageIndex])
+  }, [state.pageIndex, props.isEssence, props.isHot, hasMore])
 
   return (
-    <div className={style.articleList}>
+    <div className={style.articleList} ref={childRef}>
       <List
         size="large"
         locale={locale}
@@ -135,6 +152,6 @@ const ArticleList = () => {
       </div>
     </div>
   )
-}
+})
 
 export default ArticleList
