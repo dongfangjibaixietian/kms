@@ -53,10 +53,13 @@ const HeaderRight = () => {
     )
   } else {
     defaultView = (
-      <div className={style.login}>
-        <div onClick={() => triggerShowModal()} className={style.loginBtn}>
-          登录/注册
-        </div>
+      <div className={style.loginBtn}>
+        <span className={style.login} onClick={() => triggerShowModal(1)}>
+          登录
+        </span>
+        <span className={style.register} onClick={() => triggerShowModal(2)}>
+          注册
+        </span>
       </div>
     )
   }

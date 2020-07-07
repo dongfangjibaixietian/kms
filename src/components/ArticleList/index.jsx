@@ -88,7 +88,7 @@ const ArticleList = () => {
   }, [state.pageIndex])
 
   return (
-    <div className={style.ArticleList}>
+    <div className={style.articleList}>
       <List
         size="large"
         locale={locale}
@@ -102,8 +102,8 @@ const ArticleList = () => {
 
             <div className={style.articleSummary}>
               <div className={style.title}>{item.title}</div>
-              <div className={style.Description}>{item.content}</div>
-              <div className={style.ArticleRelated}>
+              <div className={style.description}>{item.content}</div>
+              <div className={style.articleRelated}>
                 <div className={style.left}>
                   <Avatar size="small" className={style.avatarImg} src={item.createUser.avatar} />
                   <span className={style.author}>{item.createUser.username}</span>

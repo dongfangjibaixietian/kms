@@ -11,18 +11,21 @@
     box-shadow: unset;
   }
 
-  .login {
-    display: flex;
-  }
-
   .loginBtn {
     color: $text-30;
     margin-left: 30px;
     cursor: pointer;
     font-size: 16px;
+    display: flex;
 
-    &:hover {
-      color: $button;
+    .login {
+      margin-right: 10px;
+    }
+
+    span {
+      &:hover {
+        color: $button;
+      }
     }
   }
 

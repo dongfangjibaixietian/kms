@@ -21,13 +21,13 @@ const PublishModal = ({ visible, triggerShowPublishModal, history }) => {
 
   const [title, setTitle] = useState('')
 
-  const [tagList, setTaglit] = useState([])
+  const [tagList, setTaglist] = useState([])
 
   const getTagList = async () => {
     try {
       const res = await getTagListApi()
-      // setTaglit(parseTagListToTree(res.data.list))
-      setTaglit(res.data.list)
+      // setTaglist(parseTagListToTree(res.data.list))
+      setTaglist(res.data.list)
     } catch (error) {
       console.log(error)
     }

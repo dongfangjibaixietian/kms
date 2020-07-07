@@ -1,0 +1,46 @@
+.loginDialog {
+  :global {
+    .ant-modal-title {
+      font-weight: bold;
+    }
+  }
+}
+
+.loginBtn {
+  width: 100%;
+  margin: 15px 0;
+}
+
+.otherBox {
+  font-size: 14px;
+  color: #767676;
+}
+
+.agreementBox {
+  margin-top: 10px;
+}
+
+.registerBtn {
+  color: #3370ff;
+  cursor: pointer;
+}
+
+.agreement {
+  color: #3370ff;
+  cursor: pointer;
+}
+
+.toLogin {
+  color: #3370ff;
+  cursor: pointer;
+  text-align: center;
+}
+
+.authLogin {
+  padding: 10px 0 0;
+  cursor: pointer;
+
+  &:hover {
+    color: #3370ff;
+  }
+}

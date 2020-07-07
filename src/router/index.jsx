@@ -42,6 +42,11 @@ const ArticleDetails = Loadable({
   loading: Loading,
 })
 
+const publishArticle = Loadable({
+  loader: () => import(/* webpackChunkName: "publish-article" */ '@/views/PublicizePage'),
+  loading: Loading,
+})
+
 // type: home/admin
 const useGetRoutes = () => {
   // 首页路由
@@ -81,6 +86,12 @@ const useGetRoutes = () => {
     component: ArticleEditor,
   })
 
+  // 发表文章
+  // const [publishRoute, setPublishArticle] = useState({
+  //   path: 'publish',
+  //   component: publishArticle,
+  // })
+
   const [articleRoutes, setArticleRoutes] = useState({
     path: '/article',
     component: PageLayout,
@@ -89,6 +100,11 @@ const useGetRoutes = () => {
         path: '/detail',
         title: '文章详情',
         component: ArticleDetails,
+      },
+      {
+        path: '/publish',
+        title: '发表文章',
+        component: publishArticle,
       },
     ],
   })
@@ -114,6 +130,7 @@ const useGetRoutes = () => {
     adminRoutes,
     setEditorRoutes,
     setArticleRoutes,
+    // setPublishArticle,
   }
 }
 

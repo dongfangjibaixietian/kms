@@ -72,11 +72,7 @@ const ArticleDetails = ({ history }) => {
       author={<a>wxxx</a>}
       avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" alt="Han Solo" />}
       content={<p>超G名片，越了解越喜欢，新奇特，功能强大，复杂的技术变得简单，做生意好帮手</p>}
-      datetime={
-        <Tooltip title={moment().subtract(2, 'days').format('YYYY-MM-DD HH:mm:ss')}>
-          <span>{moment().subtract(2, 'days').fromNow()}</span>
-        </Tooltip>
-      }
+      datetime={<span>{moment().subtract(2, 'days').format('YYYY-MM-DD HH:mm:ss')}</span>}
     >
       {children}
     </Comment>
@@ -108,7 +104,7 @@ const ArticleDetails = ({ history }) => {
     // }
     // setArticleBaseInfo(data)
     const data = {
-      type: 'usd',
+      type: 'md',
       name: 'sunny',
       id: id,
     }
@@ -177,7 +173,7 @@ const ArticleDetails = ({ history }) => {
               itemLayout="horizontal"
               dataSource={data}
               renderItem={() => (
-                <li>
+                <List.Item>
                   <ExampleComment>
                     <ExampleComment> </ExampleComment>
                   </ExampleComment>
@@ -188,7 +184,7 @@ const ArticleDetails = ({ history }) => {
                     content={item.content}
                     datetime={item.datetime}
                   /> */}
-                </li>
+                </List.Item>
               )}
             />
           </div>
