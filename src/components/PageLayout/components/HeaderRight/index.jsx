@@ -6,13 +6,17 @@ import { observer } from 'mobx-react-lite'
 import { getToken, removeToken } from '@/utils/storage'
 import style from './index.scss'
 import LoginModal from './../LoginModal'
+import { useRootStore } from '@/utils/customHooks'
 
 const HeaderRight = () => {
   const [isShowModal, setIsShowModal] = useState(false)
+  const { setSearchKey, useInfo } = useRootStore().userStore
 
   // 1: 登录 2: 注册
   const [type, setType] = useState(1)
   const [token, setToken] = useState(getToken())
+  // const [user] = useState(JSON.parse(localStorage.getItem('userInfo')))
+  const [searchVal, setSearchVal] = useState('')
 
   const triggerShowModal = (type) => {
     setType(type)
@@ -37,6 +41,13 @@ const HeaderRight = () => {
     })
   }
 
+  const searchArticle = (e) => {
+    console.log(e.target.value)
+    setSearchKey(e.target.value)
+    setSearchVal(e.target.value)
+    console.log('按下回车')
+  }
+
   const menu = (
     <Menu className={style.menu}>
       <Menu.Item className={style.item} onClick={logOUt}>
@@ -48,7 +59,7 @@ const HeaderRight = () => {
   if (token) {
     defaultView = (
       <Dropdown overlay={menu} trigger={['click']}>
-        <Avatar className={style.avatarImg} src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
+        <Avatar className={style.avatarImg} src="" />
       </Dropdown>
     )
   } else {
@@ -65,7 +76,7 @@ const HeaderRight = () => {
   }
 
   useEffect(() => {
-    console.log(token, 'use')
+    console.log(useInfo, 'use')
   }, [token])
 
   return (
@@ -73,6 +84,8 @@ const HeaderRight = () => {
       <Input
         className={style.searchInput}
         placeholder="搜索"
+        value={searchVal}
+        onChange={searchArticle}
         suffix={<SearchOutlined style={{ color: 'rgba(201, 201, 201)', fontSize: 20 }} />}
       />
       {defaultView}

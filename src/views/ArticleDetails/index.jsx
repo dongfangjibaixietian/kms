@@ -1,89 +1,183 @@
 import React, { useEffect, useState } from 'react'
-import { Comment, Avatar, List, Tooltip } from 'antd'
+import { Comment, Avatar, List } from 'antd'
 import style from './index.scss'
-import moment from 'moment'
-import { articleDetail } from '@/api/article'
+import { articleDetail, articleCollect } from '@/api/article'
+import { commentList } from '@/api/comment'
 import { getUrlSearch, formateTime } from '@/utils'
 import { useRootStore } from '@/utils/customHooks'
 import BraftEditor from 'braft-editor'
 import 'braft-editor/dist/output.css'
+import 'braft-editor/dist/index.css'
 
 const ArticleDetails = ({ history }) => {
-  const tags = [
+  const list = [
     {
-      name: '产品报告2',
-      id: 'report2',
+      id: 1,
+      content: '这个文章真的好',
+      createTime: '2020-07-02T09:19:10.000Z',
+      user: {
+        id: 10,
+        username: 'taroxin',
+        nickname: 'taroxin',
+        email: '15029352778@163.com',
+        avatar: 'https://images.gmall88.com/bee9ec5c-97af-48ce-ac7d-5dec270ec500_120x120.png',
+      },
+      targetUser: {
+        id: 11,
+        username: 'taroxin',
+        nickname: 'taroxin',
+        email: '15029352778@163.com',
+        avatar: 'https://images.gmall88.com/bee9ec5c-97af-48ce-ac7d-5dec270ec500_120x120.png',
+      },
+      children: [
+        {
+          id: 2,
+          content: '这个文章真的好',
+          createTime: '2020-07-02T09:19:40.000Z',
+          user: {
+            id: 13,
+            username: 'taroxin',
+            nickname: 'taroxin',
+            email: '15029352778@163.com',
+            avatar: 'https://images.gmall88.com/bee9ec5c-97af-48ce-ac7d-5dec270ec500_120x120.png',
+          },
+          targetUser: {
+            id: 14,
+            username: 'taroxin',
+            nickname: 'taroxin',
+            email: '15029352778@163.com',
+            avatar: 'https://images.gmall88.com/bee9ec5c-97af-48ce-ac7d-5dec270ec500_120x120.png',
+          },
+        },
+        {
+          id: 3,
+          content: '这个文章真的好',
+          createTime: '2020-07-02T09:19:40.000Z',
+          user: {
+            id: 15,
+            username: 'taroxin',
+            nickname: 'taroxin',
+            email: '15029352778@163.com',
+            avatar: 'https://images.gmall88.com/bee9ec5c-97af-48ce-ac7d-5dec270ec500_120x120.png',
+          },
+          targetUser: {
+            id: 16,
+            username: 'taroxin',
+            nickname: 'taroxin',
+            email: '15029352778@163.com',
+            avatar: 'https://images.gmall88.com/bee9ec5c-97af-48ce-ac7d-5dec270ec500_120x120.png',
+          },
+        },
+      ],
     },
     {
-      name: '活动专题2',
-      id: 'special2',
-    },
-    {
-      name: '项目政策2',
-      id: 'policy2',
-    },
-    {
-      name: '策划文档2',
-      id: 'document2',
+      id: 4,
+      content: '这个文章真的好',
+      createTime: '2020-07-02T09:19:10.000Z',
+      user: {
+        id: 22,
+        username: 'taroxin',
+        nickname: 'taroxin',
+        email: '15029352778@163.com',
+        avatar: 'https://images.gmall88.com/bee9ec5c-97af-48ce-ac7d-5dec270ec500_120x120.png',
+      },
+      targetUser: {
+        id: 23,
+        username: 'taroxin',
+        nickname: 'taroxin',
+        email: '15029352778@163.com',
+        avatar: 'https://images.gmall88.com/bee9ec5c-97af-48ce-ac7d-5dec270ec500_120x120.png',
+      },
+      children: [
+        {
+          id: 5,
+          content: '这个文章真的好',
+          createTime: '2020-07-02T09:19:40.000Z',
+          user: {
+            id: 24,
+            username: 'taroxin',
+            nickname: 'taroxin',
+            email: '15029352778@163.com',
+            avatar: 'https://images.gmall88.com/bee9ec5c-97af-48ce-ac7d-5dec270ec500_120x120.png',
+          },
+          targetUser: {
+            id: 25,
+            username: 'taroxin',
+            nickname: 'taroxin',
+            email: '15029352778@163.com',
+            avatar: 'https://images.gmall88.com/bee9ec5c-97af-48ce-ac7d-5dec270ec500_120x120.png',
+          },
+        },
+        {
+          id: 6,
+          content: '这个文章真的好',
+          createTime: '2020-07-02T09:19:40.000Z',
+          user: {
+            id: 26,
+            username: 'taroxin',
+            nickname: 'taroxin',
+            email: '15029352778@163.com',
+            avatar: 'https://images.gmall88.com/bee9ec5c-97af-48ce-ac7d-5dec270ec500_120x120.png',
+          },
+          targetUser: {
+            id: 27,
+            username: 'taroxin',
+            nickname: 'taroxin',
+            email: '15029352778@163.com',
+            avatar: 'https://images.gmall88.com/bee9ec5c-97af-48ce-ac7d-5dec270ec500_120x120.png',
+          },
+        },
+      ],
     },
   ]
-  const data = [
-    {
-      actions: [
-        <div key="comment-list-reply-to-0" className={style.reply}>
-          {' '}
-          <img width="16" src={require('@/assets/img/reply.png').default} alt="" /> 回复
-        </div>,
-      ],
-      author: 'wxxx',
-      avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-      content: <p>桥接全国人脉资源，更好的拓展市场渠道，只要懂得应用这个软件，你的生意可以拓展全国各地市场</p>,
-      datetime: (
-        <Tooltip title={moment().subtract(1, 'days').format('YYYY-MM-DD HH:mm:ss')}>
-          <span>{moment().subtract(1, 'days').fromNow()}</span>
-        </Tooltip>
-      ),
-    },
-    {
-      actions: [
-        <div key="comment-list-reply-to-0" className={style.reply}>
-          {' '}
-          <img width="16" src={require('@/assets/img/reply.png').default} alt="" /> 回复
-        </div>,
-      ],
-      author: 'wxxx',
-      avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-      content: <p>超G名片，越了解越喜欢，新奇特，功能强大，复杂的技术变得简单，做生意好帮手。</p>,
-      datetime: (
-        <Tooltip title={moment().subtract(2, 'days').format('YYYY-MM-DD HH:mm:ss')}>
-          <span>{moment().subtract(2, 'days').fromNow()}</span>
-        </Tooltip>
-      ),
-    },
-  ]
-  const ExampleComment = ({ children }) => (
-    <Comment
-      actions={[
-        <div key="comment-list-reply-to-0" className={style.reply}>
-          {' '}
-          <img width="16" src={require('@/assets/img/reply.png').default} alt="" /> 回复
-        </div>,
-      ]}
-      author={<a>wxxx</a>}
-      avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" alt="Han Solo" />}
-      content={<p>超G名片，越了解越喜欢，新奇特，功能强大，复杂的技术变得简单，做生意好帮手</p>}
-      datetime={<span>{moment().subtract(2, 'days').format('YYYY-MM-DD HH:mm:ss')}</span>}
-    >
-      {children}
-    </Comment>
-  )
+
+  const CommentTemplate = ({ item, children }) => {
+    console.log(item)
+    console.log(children)
+    return (
+      <Comment
+        actions={[
+          <div key="comment-list-reply-to-0" className={style.reply}>
+            {' '}
+            <img width="16" src={require('@/assets/img/reply.png').default} alt="" /> 回复
+          </div>,
+        ]}
+        author={<a>{item.user.username}</a>}
+        avatar={<Avatar src={item.user.avatar} />}
+        content={<p>{item.content}</p>}
+        datetime={<span>{item.createTime}</span>}
+      >
+        {children}
+      </Comment>
+    )
+  }
+
   const [id, setArtcileId] = useState('')
+  const [isCancel, setCollectStatus] = useState(false)
+  const [commontList, setcommontList] = useState([])
   const { setArticleBaseInfo } = useRootStore().articleStore
   const [detail, setArtcileDetail] = useState({
     title: '',
     content: '',
     createUser: {},
+    tags: [],
   })
+
+  const getCommentList = async () => {
+    try {
+      // 获取评论列表
+      const commentRes = await commentList({
+        articleId: id,
+        pageIndex: 1,
+        pageSize: 20,
+      })
+      console.log(commentRes)
+      setcommontList(list)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   const getArticleDetail = async () => {
     const res = await articleDetail({ id: id })
     const editorState = BraftEditor.createEditorState(res.data.rawContent)
@@ -92,8 +186,10 @@ const ArticleDetails = ({ history }) => {
 
     const result = Object.assign({}, detail, res.data)
     setArtcileDetail(result)
-    console.log(detail)
+
+    if (res.code === 0) getCommentList()
   }
+
   // 进入文章编辑页面
   const goToEditArticle = () => {
     // const data = {
@@ -104,13 +200,31 @@ const ArticleDetails = ({ history }) => {
     // }
     // setArticleBaseInfo(data)
     const data = {
-      type: 'md',
+      type: 'usd',
       name: 'sunny',
       id: id,
     }
     setArticleBaseInfo(data)
+    localStorage.setItem('type', detail.type)
     history.push({ pathname: '/editor', data })
   }
+
+  // 收藏文章
+  const collectArticle = async () => {
+    setCollectStatus(!isCancel)
+    await articleCollect({ id: id, isCancel: isCancel })
+  }
+
+  const extendControls = [
+    {
+      key: 'custom-button',
+      type: 'button',
+      text: <div className="fuwenben-publish-btn">发表</div>,
+    },
+  ]
+
+  // 需要展示的富文本按钮
+  const controls = ['bold', 'emoji', 'media']
 
   useEffect(() => {
     const searchId = getUrlSearch(window.location.search)
@@ -120,6 +234,7 @@ const ArticleDetails = ({ history }) => {
   useEffect(() => {
     id && getArticleDetail()
   }, [id])
+
   return (
     <div>
       <div className={style.articleDetails}>
@@ -144,10 +259,14 @@ const ArticleDetails = ({ history }) => {
                   <span className={style.text}>浏览</span>
                 </div>
                 <div className={style.left}>
-                  <img className={style.img} width={16} src={require('@/assets/img/collect.png').default} alt="" />
-                  <span>收藏</span>
-                  <img className={style.img} width={16} src={require('@/assets/img/remark.png').default} alt="" />
-                  <span>举报</span>
+                  <div onClick={collectArticle}>
+                    <img className={style.img} width={16} src={require('@/assets/img/collect.png').default} alt="" />
+                    <span>{isCancel ? '取消收藏' : '收藏'}</span>
+                  </div>
+                  <div>
+                    <img className={style.img} width={16} src={require('@/assets/img/remark.png').default} alt="" />
+                    <span>举报</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -166,24 +285,24 @@ const ArticleDetails = ({ history }) => {
               </div>
             </div>
           </div>
+          <div className={style.editorWrapper}>
+            <BraftEditor extendControls={extendControls} controls={controls} />
+          </div>
           <div className={style.commentArea}>
             <List
-              header={`${data.length} 个评论`}
+              header={`${commontList.length} 个评论`}
               className={style.commentList}
               itemLayout="horizontal"
-              dataSource={data}
-              renderItem={() => (
+              dataSource={commontList}
+              renderItem={(item) => (
                 <List.Item>
-                  <ExampleComment>
-                    <ExampleComment> </ExampleComment>
-                  </ExampleComment>
-                  {/* <Comment
-                    actions={item.actions}
-                    author={item.author}
-                    avatar={item.avatar}
-                    content={item.content}
-                    datetime={item.datetime}
-                  /> */}
+                  <CommentTemplate item={item}>
+                    {item.children.length > 0
+                      ? item.children.map((subItem) => (
+                          <CommentTemplate key={subItem.id} item={subItem}></CommentTemplate>
+                        ))
+                      : null}
+                  </CommentTemplate>
                 </List.Item>
               )}
             />
@@ -192,13 +311,9 @@ const ArticleDetails = ({ history }) => {
 
         <div className={style.articleRelated}>
           <div className={style.authorInfo}>
-            <Avatar
-              size="small"
-              className={style.avatarImg}
-              src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-            />
+            <Avatar size="small" className={style.avatarImg} src={detail.createUser.avatar} />
             <div className={style.authorAbout}>
-              <div>Sweet糖糖</div>
+              <div>{detail.createUser.username}</div>
               <div className={style.buttonGroup}>
                 <span className={style.attention}>关注</span>
                 <span className={style.private}>私信</span>
@@ -208,9 +323,9 @@ const ArticleDetails = ({ history }) => {
           <div className={style.item}>
             <div>文档标签</div>
             <div className={style.categoryDetails}>
-              {tags.map((tag) => (
+              {detail.tags.map((tag) => (
                 <div key={tag.id} className={style.tagItem}>
-                  {tag.name}
+                  {tag.content}
                 </div>
               ))}
             </div>

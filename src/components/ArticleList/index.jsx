@@ -3,6 +3,8 @@ import { List, Avatar, Spin } from 'antd'
 import style from './index.scss'
 import { scrollEvent, formateTime } from '@/utils/index'
 import { articleList } from '@/api/article'
+import { useRootStore } from '@/utils/customHooks'
+
 const ArticleList = forwardRef((props, ref) => {
   const locale = {
     emptyText: '暂无数据',
@@ -16,8 +18,11 @@ const ArticleList = forwardRef((props, ref) => {
     pageIndex: 1,
     pageSize: 10,
   }
+  const { searchKey } = useRootStore().userStore
+
   // 是否还有更多数据
   const [hasMore, setHasMore] = useState(true)
+  const [searchTxt] = useState(searchKey)
   // 加载中
   const [isLoading, setLoading] = useState(false)
   const [dataList, setList] = useState([])
@@ -93,16 +98,20 @@ const ArticleList = forwardRef((props, ref) => {
   }
 
   useEffect(() => {
+    console.log(searchKey, '_searchKey_keykey')
+  }, [searchTxt])
+
+  useEffect(() => {
     window.addEventListener('scroll', _handleScroll)
     return () => window.removeEventListener('scroll', _handleScroll)
   }, [_handleScroll])
 
   useEffect(() => {
-    console.log(props)
+    console.log(searchKey, '_searchKey')
     getList().then(() => {
       setLoading(false)
     })
-  }, [state.pageIndex, props.isEssence, props.isHot, hasMore])
+  }, [state.pageIndex, props.isEssence, props.isHot, hasMore, searchKey])
 
   return (
     <div className={style.articleList} ref={childRef}>

@@ -82,7 +82,6 @@
 .articleRelated {
   width: 300px;
   margin-left: 20px;
-  padding: 18px 0;
 
   .authorInfo {
     background-color: #fff;
@@ -164,6 +163,16 @@
   display: flex;
   align-items: center;
 
+  div {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+
+    &:hover {
+      color: #3370ff;
+    }
+  }
+
   .img {
     margin: 0 6px 0 20px;
   }
@@ -214,6 +223,10 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     cursor: pointer;
+
+    &:hover {
+      color: #3370ff;
+    }
   }
 }
 
@@ -230,8 +243,52 @@
   align-items: center;
   font-size: 14px;
   color: #bbb;
+  cursor: pointer;
+
+  &:hover {
+    color: #3370ff;
+  }
 
   img {
     margin-right: 6px;
+  }
+}
+
+.editorWrapper {
+  height: 120px;
+  border: 1px solid #f0f0f0;
+  background-color: #fff;
+
+  :global {
+    .bf-container {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .bf-controlbar {
+      position: relative;
+
+      .control-item {
+        &:last-child {
+          &:hover {
+            background-color: unset;
+          }
+        }
+      }
+    }
+
+    .fuwenben-publish-btn {
+      width: 90px;
+      height: 27px;
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #3370ff;
+      color: white;
+      position: absolute;
+      right: 7px;
+      top: 10px;
+    }
   }
 }
