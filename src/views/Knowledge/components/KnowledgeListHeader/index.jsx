@@ -12,6 +12,31 @@ const KnowledgeListHeader = () => {
   const triggerShowPublishModal = (isShow) => {
     setPublishModalVisible(isShow)
   }
+  const data = [
+    {
+      name: '最新',
+      sign: 'new',
+    },
+    {
+      name: '精选文章',
+      sign: 'sift',
+    },
+    {
+      name: '热门文章',
+      sign: 'hot',
+    },
+    {
+      name: '我的收藏',
+      sign: 'collect',
+    },
+  ]
+  const [sign, changeCategory] = useState('new')
+  const change = (e) => {
+    e.persist()
+    console.log(e)
+    console.log(e.target.dataset.sign)
+    changeCategory(e.target.dataset.sign)
+  }
 
   return (
     <div className={style.KnowledgeListHeader}>
@@ -26,6 +51,18 @@ const KnowledgeListHeader = () => {
         <Button onClick={() => triggerShowPublishModal(true)} type="primary" className={style.publishBtn}>
           我要发表
         </Button>
+      </div>
+      <div className={style.KnowledgeCategory} onClick={change}>
+        {data.map((item) => (
+          <div
+            key={item.sign}
+            data-sign={item.sign}
+            className={`${style.Category} ${sign == item.sign ? style.active : null}`}
+            // className={(style.Category sign == item.sign && style.active)}
+          >
+            {item.name}
+          </div>
+        ))}
       </div>
       {publishModalVisible && (
         <PublishModal triggerShowPublishModal={triggerShowPublishModal} visible={publishModalVisible} />

@@ -11,6 +11,10 @@
     box-shadow: unset;
   }
 
+  .login {
+    display: flex;
+  }
+
   .loginBtn {
     color: $text-30;
     margin-left: 30px;
@@ -21,4 +25,15 @@
       color: $button;
     }
   }
+
+  .avatarImg {
+    background-color: #e3e3e3;
+    margin-left: 20px;
+    width: 40px;
+    height: 40px;
+  }
+}
+
+.menu {
+  padding: 0 10px;
 }

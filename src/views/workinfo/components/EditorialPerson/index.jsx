@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom'
 
 import CloseIcon from '@/assets/svg/close.svg'
 import style from './index.scss'
-import { creatUser as creatUserApi } from '@/service/api'
+// import { creatUser as creatUserApi } from '@/service/api'
 import { parseTagListToTree } from '@/utils'
 import { useRootStore } from '@/utils/customHooks'
 
@@ -77,17 +77,17 @@ const EditorialPerson = ({ visible, triggerShowPublishModal, history, setIsShowM
   }
   //以上为上传文件功能
 
-  const createUser = async () => {
-    try {
-      const res = await creatUserApi({
-        name: username,
-      })
-      setUserInfo(res.data.name)
-    } catch (error) {
-      console.log(error)
-    }
-    closeModal()
-  }
+  // const createUser = async () => {
+  //   try {
+  //     const res = await creatUserApi({
+  //       name: username,
+  //     })
+  //     setUserInfo(res.data.name)
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+  //   closeModal()
+  // }
 
   return (
     <Modal
@@ -113,12 +113,12 @@ const EditorialPerson = ({ visible, triggerShowPublishModal, history, setIsShowM
           <div className={style.title2}>头像</div>
 
           <div className={style.uplo}>
-            <img className={style.pic} src="/src/assets/img/superG.png" alt="" />
+            <img className={style.pic} src="http://pic.qqtn.com/up/2017-11/2017112012062829685.jpg" alt="" />
             <div className={style.rightdiv}>
               <div className={style.but}>
                 <Upload {...props}>
                   <Button>
-                    <UploadOutlined /> Upload
+                    <UploadOutlined /> 更换头像
                   </Button>
                 </Upload>
               </div>
@@ -127,10 +127,14 @@ const EditorialPerson = ({ visible, triggerShowPublishModal, history, setIsShowM
           </div>
         </div>
         <div className={style.createBtn}>
-          <Button onClick={createUser} className={style.btn} type="primary">
+          <Button
+            // onClick={createUser}
+            className={style.btn}
+            type="primary">
             保存
           </Button>
         </div>
+        
       </div>
     </Modal>
   )

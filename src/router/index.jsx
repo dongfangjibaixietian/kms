@@ -38,6 +38,11 @@ const PageNotFound = Loadable({
   loading: Loading,
 })
 
+const ArticleDetails = Loadable({
+  loader: () => import(/* webpackChunkName: "artice-details" */ '@/views/ArticleDetails'),
+  loading: Loading,
+})
+
 // type: home/admin
 const useGetRoutes = () => {
   // 首页路由
@@ -77,8 +82,21 @@ const useGetRoutes = () => {
     component: ArticleEditor,
   })
 
+  const [articleRoutes, setArticleRoutes] = useState({
+    path: '/article',
+    component: PageLayout,
+    children: [
+      {
+        path: '/detail',
+        title: '文章详情',
+        component: ArticleDetails,
+      },
+    ],
+  })
+
   const currentRoutes = useMemo(() => {
     return [
+      articleRoutes,
       adminRoutes,
       editorRoutes,
       homeRoutes,
@@ -96,6 +114,7 @@ const useGetRoutes = () => {
     homeRoutes,
     adminRoutes,
     setEditorRoutes,
+    setArticleRoutes,
   }
 }
 

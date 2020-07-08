@@ -38,16 +38,15 @@
 
   .uplo {
     display: flex;
-    width: 250px;
   }
 
   .pic {
-    flex: 1;
+    // flex: 1;
     margin-top: 8px;
     margin-right: 10px;
     border-radius: 50%;
     width: 88px;
-    height: 88px;
+    height: 88px !important;
   }
 
   .smallword {
@@ -67,11 +66,9 @@
       width: 220px;
       height: 40px;
     }
-
-    .rightdiv {
-      padding-top: 10px;
-    }
-
-
   }
+  .rightdiv {
+    padding-top: 32px;
+    padding-left: 6px;
+}
 }

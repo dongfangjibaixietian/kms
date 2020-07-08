@@ -1,13 +1,17 @@
 import React, { useEffect, useState, useCallback, useReducer } from 'react'
-import { Button, List, Avatar, Spin } from 'antd'
-
+import { List, Avatar, Spin } from 'antd'
 import style from './index.scss'
-import NewSource from './../Newsource'
-
-const Left = () => {
+import { scrollEvent, formateTime } from '@/utils/index'
+import { articleList } from '@/api/article'
+const Article = () => {
   const locale = {
     emptyText: '暂无数据',
   }
+
+  const toArticleDetails = (item) => {
+    window.open('http://localhost:8080/' + `article/detail?id=${item.id}`)
+  }
+
   const initialState = {
     pageIndex: 1,
     pageSize: 10,
@@ -23,10 +27,6 @@ const Left = () => {
     }
   }
 
-  const [publishModalVisible, setPublishModalVisible] = useState(false)
-  const triggerShowPublishModal = (isShow) => {
-    setPublishModalVisible(isShow)
-  }
   // 是否还有更多数据
   const [hasMore, setHasMore] = useState(true)
   // 加载中
@@ -87,66 +87,45 @@ const Left = () => {
     })
   }, [state.pageIndex])
 
-  //列表数据
-  const dataone = [
-    {
-      title: '公司美术常用设计规范',
-    },
-    {
-      title: '直播“赞助礼物”资源库',
-    },
-    {
-      title: '超G名片APP特点',
-    },
-    {
-      title: '直播“赞助礼物”资源库',
-    },
-    {
-      title: '公司美术常用设计规范',
-    },
-    {
-      title: '直播“赞助礼物”资源库',
-    },
-    {
-      title: '公司美术常用设计规范',
-    },
-    {
-      title: '超G名片APP特点',
-    },
-    {
-      title: '公司美术常用设计规范',
-    },
-    {
-      title: '直播“赞助礼物”资源库',
-    },
-  ]
-
   return (
-    <div className={style.left}>
-      <div className={style.butt}>
-        <div className={style.content}>资源知识库</div>
-        <Button onClick={() => triggerShowPublishModal(true)} type="primary" className={style.publishBtn}>
-          新建知识库
-        </Button>
-      </div>
-      <div className={style.box}>
-        <div className={style.list}>
-          <List
-            itemLayout="horizontal"
-            locale={locale}
-            dataSource={dataone}
-            renderItem={(item) => (
-              <List.Item>
-                <List.Item.Meta
-                  avatar={<Avatar src="/src/assets/img/file.png" className={style.fl} />}
-                  title={<a href="https://ant.design">{item.title}</a>}
-                  description="2020-05-20"
-                />
-              </List.Item>
-            )}
-          />
-        </div>
-      </div>
+    <div className={style.ArticleList}>
+      <List
+        size="large"
+        locale={locale}
+        dataSource={dataList}
+        renderItem={(item) => (
+          <List.Item
+            className={`${style.itemStyle} ${item.poster ? style.hasImg : null}`}
+            onClick={() => toArticleDetails(item)}
+          >
+            {item.poster ? <img width={180} height={120} src={item.poster} alt="" className={style.coverImg} /> : null}
+
+            <div className={style.articleSummary}>
+              <div className={style.title}>{item.title}</div>
+              <div className={style.Description}>{item.content}</div>
+              <div className={style.ArticleRelated}>
+                <div className={style.left}>
+                  <Avatar size="small" className={style.avatarImg} src={item.createUser.avatar} />
+                  <span className={style.author}>{item.createUser.username}</span>
+                  <span className={style.text}>{formateTime(item.updateTime)}</span>
+                  <img className={style.text} width={16} src={require('@/assets/img/read.png').default} alt="" />
+                  {item.tags.map((tag) => (
+                    <span key={tag.id} className={style.text}>
+                      {tag.content}
+                    </span>
+                  ))}
+                </div>
+                <div>
+                  <img className={style.img} width={16} src={require('@/assets/img/write.png').default} alt="" />
+                  <span>编辑</span>
+                  <img className={style.img} width={16} src={require('@/assets/img/delete.png').default} alt="" />
+                  <span>删除</span>
+                </div>
+              </div>
+            </div>
+          </List.Item>
+        )}
+      />
       <div className={style.spinBox}>
         {hasMore ? (
           <Spin tip="正在加载" className={style.spin} spinning={hasMore} />
@@ -154,11 +133,8 @@ const Left = () => {
           <div>没有更多了</div>
         ) : null}
       </div>
-      {publishModalVisible && (
-        <NewSource triggerShowPublishModal={triggerShowPublishModal} visible={publishModalVisible} />
-      )}
     </div>
   )
 }
 
-export default Left
+export default Article

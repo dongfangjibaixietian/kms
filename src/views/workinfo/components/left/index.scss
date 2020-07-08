@@ -3,6 +3,8 @@
   background-color: white;
   margin-right: 20px;
   margin-top: 20px;
+  position: sticky;
+  top: 100px;
   .butt {
     margin-top: 5px;
     display: flex;
@@ -55,5 +57,29 @@
     height: 20px;
     border-radius: 0;
   }
+
+
+  .spinBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+
+    .spin {
+      display: flex;
+      color: #a3a3a3;
+
+      :global {
+        .ant-spin-text {
+          margin-left: 15px;
+        }
+
+        .ant-spin-dot-item {
+          background-color: #a3a3a3;
+        }
+      }
+    }
+  }
+
 
 }

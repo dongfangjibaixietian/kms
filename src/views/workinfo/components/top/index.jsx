@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Button, Upload, message } from 'antd'
-import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
 
 import style from './index.scss'
 import EditorialPerson from './../EditorialPerson'
@@ -18,7 +18,11 @@ const Top = () => {
         <div className={style.tabsWrapper}>
           {/* 左边的信息 */}
           <div className={style.pers}>
-            <img className={style.pic} src="/src/assets/img/superG.png" alt="" />
+            <img
+              className={style.pic}
+              src="https://p2.ssl.qhimgs1.com/sdr/400__/t012e0d9b43742ed6f8.jpg"
+              alt=""
+            />
             <div className={style.leftinfo}>
               <div className={style.nm}>马可波罗</div>
               <div className={style.intro}>暂无个人介绍</div>
