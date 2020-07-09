@@ -11,6 +11,7 @@ import style from './index.scss'
 import { tagTree as getTagListApi } from '@/api/tag'
 // import { parseTagListToTree } from '@/utils'
 import { useRootStore } from '@/utils/customHooks'
+import { setItem } from '@/utils/storage'
 
 const { Option, OptGroup } = Select
 
@@ -47,7 +48,7 @@ const PublishModal = ({ visible, triggerShowPublishModal, history }) => {
   // 存储文章类型  usd: 富文本  md:MarkDown
   const saveType = (type) => {
     setType(type)
-    localStorage.setItem('type', type)
+    setItem('type', type)
   }
 
   // 进入文章编辑页面
@@ -64,7 +65,7 @@ const PublishModal = ({ visible, triggerShowPublishModal, history }) => {
 
   useEffect(() => {
     getTagList()
-    localStorage.setItem('type', 'usd')
+    setItem('type', 'usd')
   }, [])
 
   return (

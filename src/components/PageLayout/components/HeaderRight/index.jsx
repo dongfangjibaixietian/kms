@@ -3,19 +3,21 @@ import { Input, Avatar, Dropdown, Menu, Modal } from 'antd'
 import { withRouter } from 'react-router-dom'
 import { SearchOutlined } from '@ant-design/icons'
 import { observer } from 'mobx-react-lite'
-import { getToken, removeToken } from '@/utils/storage'
+import { setItem, getItem, removeItem } from '@/utils/storage'
 import style from './index.scss'
 import LoginModal from './../LoginModal'
-import { useRootStore } from '@/utils/customHooks'
+import { userInfo } from '@/api/user'
+import jwtDecode from 'jwt-decode'
 
 const HeaderRight = () => {
   const [isShowModal, setIsShowModal] = useState(false)
-  const { setSearchKey, useInfo } = useRootStore().userStore
 
   // 1: 登录 2: 注册
   const [type, setType] = useState(1)
-  const [token, setToken] = useState(getToken())
-  // const [user] = useState(JSON.parse(localStorage.getItem('userInfo')))
+  const [token, setToken] = useState(getItem('token'))
+  const [user, setUser] = useState({
+    avatar: '',
+  })
   const [searchVal, setSearchVal] = useState('')
 
   const triggerShowModal = (type) => {
@@ -32,7 +34,9 @@ const HeaderRight = () => {
       cancelText: '取消',
       icon: '',
       onOk() {
-        removeToken('TOKEN_KEY')
+        removeItem('token')
+        removeItem('user')
+        removeItem('article')
         setToken('')
       },
       onCancel() {
@@ -59,7 +63,7 @@ const HeaderRight = () => {
   if (token) {
     defaultView = (
       <Dropdown overlay={menu} trigger={['click']}>
-        <Avatar className={style.avatarImg} src="" />
+        <Avatar className={style.avatarImg} src={user.avatar} />
       </Dropdown>
     )
   } else {
@@ -75,8 +79,25 @@ const HeaderRight = () => {
     )
   }
 
+  const getUserInfo = async () => {
+    try {
+      const user = jwtDecode(token)
+      console.log(user)
+      const info = await userInfo({
+        id: user.id,
+      })
+      console.log(info.data)
+      setItem('user', JSON.stringify(info.data))
+      setUser(info.data.user)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   useEffect(() => {
-    console.log(useInfo, 'use')
+    console.log(token, 'use')
+    if (!token) return
+    getUserInfo()
   }, [token])
 
   return (

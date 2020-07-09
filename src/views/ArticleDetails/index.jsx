@@ -4,6 +4,7 @@ import style from './index.scss'
 import { articleDetail, articleCollect } from '@/api/article'
 import { commentList } from '@/api/comment'
 import { getUrlSearch, formateTime } from '@/utils'
+import { setItem } from '@/utils/storage'
 import { useRootStore } from '@/utils/customHooks'
 import BraftEditor from 'braft-editor'
 import 'braft-editor/dist/output.css'
@@ -205,7 +206,7 @@ const ArticleDetails = ({ history }) => {
       id: id,
     }
     setArticleBaseInfo(data)
-    localStorage.setItem('type', detail.type)
+    setItem('type', detail.type)
     history.push({ pathname: '/editor', data })
   }
 

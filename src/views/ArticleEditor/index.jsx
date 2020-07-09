@@ -9,9 +9,9 @@ import { createArticle, articleDetail } from '@/api/article'
 import { Uploader } from '@gworld/toolset'
 import { randomNum } from '@/utils/index'
 import { message } from 'antd'
-
-import style from './index.scss'
 import { useRootStore } from '@/utils/customHooks'
+import { setItem, removeItem, getItem } from '@/utils/storage'
+import style from './index.scss'
 
 const toolbar = {
   h1: true, // h1
@@ -42,7 +42,7 @@ const ArticleEditor = ({ history, location }) => {
 
   // 储存文章
   const saveStorage = () => {
-    localStorage.setItem(
+    setItem(
       'article',
       JSON.stringify({
         content: editorType === 'usd' ? editorState.toHTML() : mdValue,
@@ -69,7 +69,7 @@ const ArticleEditor = ({ history, location }) => {
   // 保存文章
   const saveArticle = async () => {
     console.log(editorType)
-
+    // history.push('/publish')
     const html = marked(content)
     const imgList = [
       'http://gss0.baidu.com/7Po3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/267f9e2f07082838685c484ab999a9014c08f11f.jpg',
@@ -102,8 +102,9 @@ const ArticleEditor = ({ history, location }) => {
       if (editorType === 'usd') {
         setEditorState(ContentUtils.clear(editorState))
       }
+      // history.push('/publish')
       history.replace('/')
-      localStorage.removeItem('article')
+      removeItem('article')
     }
   }
 
@@ -187,7 +188,7 @@ const ArticleEditor = ({ history, location }) => {
 
   useEffect(() => {
     console.log(articleBaseInfo)
-    const type = localStorage.getItem('type')
+    const type = getItem('type')
     setEditorType(type)
     if (location.data) {
       const searchId = location.data.id
@@ -197,7 +198,7 @@ const ArticleEditor = ({ history, location }) => {
   }, [])
 
   useEffect(() => {
-    const articleContent = JSON.parse(localStorage.getItem('article'))
+    const articleContent = JSON.parse(getItem('article'))
     const rawContent = articleContent
       ? BraftEditor.createEditorState(articleContent.rawContent)
       : BraftEditor.createEditorState(null)

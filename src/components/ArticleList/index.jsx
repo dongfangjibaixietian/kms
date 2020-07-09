@@ -11,7 +11,7 @@ const ArticleList = forwardRef((props, ref) => {
   }
 
   const toArticleDetails = (item) => {
-    window.open(window.location + `article/detail?id=${item.id}`)
+    window.open(window.location.origin + `/article/detail?id=${item.id}`)
   }
 
   const initialState = {
