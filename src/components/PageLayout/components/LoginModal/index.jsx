@@ -13,6 +13,7 @@ const LoginModal = ({ visible, setIsShowModal, change, onCancel, type }) => {
   const [email, setEmail] = useState('')
   const [titleType, setType] = useState(type)
   const [checked, setChecked] = useState(true)
+  const [isAllowed, setAllowed] = useState(true)
   const [loginForm] = Form.useForm()
 
   const closeModal = () => {
@@ -73,6 +74,22 @@ const LoginModal = ({ visible, setIsShowModal, change, onCancel, type }) => {
   const loginOrRegister = async (val) => {
     console.log(val)
     setType(val)
+  }
+
+  const checkChange = (e) => {
+    console.log(e)
+    if (!isAllowed) {
+      setAllowed(true)
+      return
+    }
+    console.log('穿透')
+
+    setChecked(e.target.checked)
+  }
+
+  const toAgreement = (e, val) => {
+    setAllowed(false)
+    window.open(window.location.origin + `/${val}`)
   }
 
   const nameConfig = {
@@ -204,10 +221,15 @@ const LoginModal = ({ visible, setIsShowModal, change, onCancel, type }) => {
         </Button>
         <div className={style.otherBox}>
           {defaultView}
-          <Checkbox checked={checked} onChange={(e) => setChecked(e.target.checked)} className={style.agreementBox}>
+          <Checkbox checked={checked} onChange={(e) => checkChange(e)} className={style.agreementBox}>
             阅读并接受
-            <span className={style.agreement}>《超G知识库协议》</span>及
-            <span className={style.agreement}>《超G知识库隐私权保护声明》</span>
+            <span className={style.agreement} onClick={(e) => toAgreement(e, 'agreement')}>
+              《超G知识库协议》
+            </span>
+            及
+            <span className={style.agreement} onClick={(e) => toAgreement(e, 'privacy')}>
+              《超G知识库隐私权保护声明》
+            </span>
           </Checkbox>
         </div>
       </Form>

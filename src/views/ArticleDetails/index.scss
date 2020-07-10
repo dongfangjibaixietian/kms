@@ -21,7 +21,7 @@
   background-color: #fff;
   font-size: 14px;
   color: #303030;
-  padding: 20px;
+  padding: 0 20px 20px;
 }
 
 .likeShare {
@@ -76,7 +76,6 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  cursor: pointer;
 }
 
 .articleRelated {
@@ -255,18 +254,35 @@
 }
 
 .editorWrapper {
-  height: 120px;
-  border: 1px solid #f0f0f0;
   background-color: #fff;
 
   :global {
     .bf-container {
       display: flex;
-      flex-direction: column;
+      flex-direction: column-reverse;
+      padding: 5px 20px;
+
+      .public-DraftEditor-content {
+        padding: 8px 12px;
+
+        div {
+          padding-bottom: 0;
+        }
+      }
+    }
+
+    .bf-content {
+      border: 1px solid #f2f2f2;
+      padding-bottom: 0;
+      font-size: 14px;
+      min-height: 30px;
+      height: auto;
+      line-height: 1.1;
     }
 
     .bf-controlbar {
       position: relative;
+      box-shadow: none;
 
       .control-item {
         &:last-child {
@@ -289,6 +305,17 @@
       position: absolute;
       right: 7px;
       top: 10px;
+    }
+  }
+}
+
+.menu {
+  .item {
+    padding: 7px 30px;
+    text-align: center;
+
+    &:hover {
+      color: #3370ff;
     }
   }
 }

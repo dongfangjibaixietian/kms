@@ -2,15 +2,13 @@ import React, { useState, useEffect } from 'react'
 import MdEditor from 'for-editor'
 import { withRouter } from 'react-router-dom'
 import BraftEditor from 'braft-editor'
-import { ContentUtils } from 'braft-utils'
 import 'braft-editor/dist/index.css'
-import marked from 'marked'
-import { createArticle, articleDetail } from '@/api/article'
+// import marked from 'marked'
+import { articleDetail } from '@/api/article'
 import { Uploader } from '@gworld/toolset'
 import { randomNum } from '@/utils/index'
 import { message } from 'antd'
-import { useRootStore } from '@/utils/customHooks'
-import { setItem, removeItem, getItem } from '@/utils/storage'
+import { setItem, getItem } from '@/utils/storage'
 import style from './index.scss'
 
 const toolbar = {
@@ -29,10 +27,8 @@ const toolbar = {
   save: true,
 }
 
-let content = ''
 const ArticleEditor = ({ history, location }) => {
   // 拿到之前填写的信息
-  const { articleBaseInfo } = useRootStore().articleStore
 
   const [mdValue, setMdValue] = useState('')
   const [id, setArtcileId] = useState('')
@@ -61,51 +57,16 @@ const ArticleEditor = ({ history, location }) => {
   const handleChange = (value) => {
     console.log(value)
     setMdValue(value)
-    content = value
-    setTv(110)
     console.log(mdValue, 'change')
   }
 
   // 保存文章
   const saveArticle = async () => {
-    console.log(editorType)
-    // history.push('/publish')
-    const html = marked(content)
-    const imgList = [
-      'http://gss0.baidu.com/7Po3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/267f9e2f07082838685c484ab999a9014c08f11f.jpg',
-      'http://d.hiphotos.baidu.com/zhidao/pic/item/e61190ef76c6a7efd517f640fbfaaf51f3de66a6.jpg',
-      'http://img3.imgtn.bdimg.com/it/u=3773584324,1413178473&fm=26&gp=0.jpg',
-      'http://img5.imgtn.bdimg.com/it/u=1913434539,31339250&fm=11&gp=0.jpg',
-    ]
-    const titleList = [
-      'Chrome DevTools中的这些骚操作，你都知道吗？',
-      '离线预渲染OPR：0成本接入 媲美SSR效果',
-      '如何实现防抖和节流，以及他们的使用场景是什么？',
-      '很多人不知道可以使用这种 key 的方式来对 Vue 组件时行重新渲染',
-    ]
-    const tagList = [9, 10, 11, 12, 13]
-    console.log(html)
-    const postData = {
-      title: titleList[Math.floor(Math.random() * titleList.length)],
-      type: 'usd',
-      poster: imgList[Math.floor(Math.random() * imgList.length)],
-      content: editorType === 'usd' ? editorState.toHTML() : mdValue,
-      rawContent: editorType === 'usd' ? editorState.toRAW() : html,
-      tagIds: [tagList[Math.floor(Math.random() * tagList.length)]],
-      fileIds: [],
+    console.log(editorState.isEmpty())
+    if (editorState.isEmpty()) {
+      return message.error('请输入文章内容')
     }
-
-    !id && saveStorage()
-    console.log(postData)
-    const res = await createArticle(postData)
-    if (res.code === 0) {
-      if (editorType === 'usd') {
-        setEditorState(ContentUtils.clear(editorState))
-      }
-      // history.push('/publish')
-      history.replace('/')
-      removeItem('article')
-    }
+    history.push('/publish')
   }
 
   const handleSave = (value) => {
@@ -155,8 +116,6 @@ const ArticleEditor = ({ history, location }) => {
             id: param.file.id,
           },
         })
-        // 获得缩略图
-        //Uploader.getCompressImage(url, 100) // 第二个参数代表需要缩略图的宽度
       },
       () => {
         param.error({
@@ -187,7 +146,6 @@ const ArticleEditor = ({ history, location }) => {
   }
 
   useEffect(() => {
-    console.log(articleBaseInfo)
     const type = getItem('type')
     setEditorType(type)
     if (location.data) {

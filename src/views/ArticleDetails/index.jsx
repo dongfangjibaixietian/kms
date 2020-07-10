@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { Comment, Avatar, List } from 'antd'
+import { Comment, Avatar, List, Menu, Dropdown, message } from 'antd'
 import style from './index.scss'
 import { articleDetail, articleCollect } from '@/api/article'
 import { commentList } from '@/api/comment'
 import { getUrlSearch, formateTime } from '@/utils'
 import { setItem } from '@/utils/storage'
-import { useRootStore } from '@/utils/customHooks'
 import BraftEditor from 'braft-editor'
 import 'braft-editor/dist/output.css'
 import 'braft-editor/dist/index.css'
@@ -139,7 +138,6 @@ const ArticleDetails = ({ history }) => {
       <Comment
         actions={[
           <div key="comment-list-reply-to-0" className={style.reply}>
-            {' '}
             <img width="16" src={require('@/assets/img/reply.png').default} alt="" /> 回复
           </div>,
         ]}
@@ -156,7 +154,6 @@ const ArticleDetails = ({ history }) => {
   const [id, setArtcileId] = useState('')
   const [isCancel, setCollectStatus] = useState(false)
   const [commontList, setcommontList] = useState([])
-  const { setArticleBaseInfo } = useRootStore().articleStore
   const [detail, setArtcileDetail] = useState({
     title: '',
     content: '',
@@ -191,24 +188,75 @@ const ArticleDetails = ({ history }) => {
     if (res.code === 0) getCommentList()
   }
 
+  const menuList = [
+    {
+      name: '编辑文章',
+      type: 'edit',
+    },
+    {
+      name: '删除文章',
+      type: 'del',
+    },
+    {
+      name: '置顶文章',
+      type: 'stick',
+    },
+    {
+      name: '取消置顶',
+      type: 'cancelStick',
+    },
+    {
+      name: '设置为精华文章',
+      type: 'essence',
+    },
+    {
+      name: '取消精华',
+      type: 'cancelEssence',
+    },
+    {
+      name: '设为热门',
+      type: 'toHot',
+    },
+    {
+      name: '取消热门',
+      type: 'cancelHot',
+    },
+    {
+      name: '屏蔽作者',
+      type: 'mask',
+    },
+  ]
+
   // 进入文章编辑页面
   const goToEditArticle = () => {
-    // const data = {
-    //   viewType,
-    //   selectedTag,
-    //   title,
-    //   textType,
-    // }
-    // setArticleBaseInfo(data)
+    setItem('type', detail.type)
     const data = {
-      type: 'usd',
-      name: 'sunny',
       id: id,
     }
-    setArticleBaseInfo(data)
-    setItem('type', detail.type)
     history.push({ pathname: '/editor', data })
   }
+
+  const menuHandleClick = ({ key }) => {
+    console.log(key)
+    switch (key) {
+      case 'edit':
+        goToEditArticle()
+        break
+      default:
+        message.info('敬请期待')
+        break
+    }
+  }
+
+  const menu = (
+    <Menu className={style.menu} onClick={menuHandleClick}>
+      {menuList.map((item) => (
+        <Menu.Item className={style.item} key={item.type}>
+          {item.name}
+        </Menu.Item>
+      ))}
+    </Menu>
+  )
 
   // 收藏文章
   const collectArticle = async () => {
@@ -220,12 +268,12 @@ const ArticleDetails = ({ history }) => {
     {
       key: 'custom-button',
       type: 'button',
-      text: <div className="fuwenben-publish-btn">发表</div>,
+      text: <div className="fuwenben-publish-btn">评论</div>,
     },
   ]
 
   // 需要展示的富文本按钮
-  const controls = ['bold', 'emoji', 'media']
+  const controls = ['emoji']
 
   useEffect(() => {
     const searchId = getUrlSearch(window.location.search)
@@ -243,7 +291,9 @@ const ArticleDetails = ({ history }) => {
           <div className={style.main}>
             <div className={style.titleInfo}>
               <div className={style.more}>
-                <img onClick={goToEditArticle} width={16} src={require('@/assets/img/more.png').default} alt="" />
+                <Dropdown overlay={menu} trigger={['hover']} placement="bottomCenter">
+                  <img style={{ cursor: 'pointer' }} width={16} src={require('@/assets/img/more.png').default} alt="" />
+                </Dropdown>
               </div>
               <div className={style.title}>
                 {detail.title}
