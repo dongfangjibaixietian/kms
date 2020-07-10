@@ -173,6 +173,16 @@ const OnlinehardDetails = () => {
     setFlag(!flag)
   }
 
+  // const setRowClassName = (record, index) => {
+  //   //record代表表格行的内容，index代表行索引
+  //   //判断索引相等时添加行的高亮样式
+  //   console.log(123)
+  // }
+
+  const setonRow = (record, index) => {
+    console.log(index)
+  }
+
   return (
     <div className={style.harddrive}>
       <div className={style.memtit}>
@@ -195,10 +205,30 @@ const OnlinehardDetails = () => {
 
       <div className={style.tablewarp}>
         {flag ? (
-          <Table className={style.table} columns={columns} dataSource={list} onChange={onChange} />
+          <Table
+            className={style.table}
+            columns={columns}
+            dataSource={list}
+            onChange={onChange}
+            // rowClassName={setRowClassName} //表格行样式
+            onRow={setonRow}
+            // onRow={(record) => {
+            //   //表格行点击事件
+            //   return {
+            //     onClick: this.clickRow.bind(this, record.no),
+            //     clickRow(num) {
+            //       console.log(123)
+            //       this.setState({
+            //         activeIndex: num - 1, //获取点击行的索引
+            //       })
+            //     },
+            //   }
+            // }}
+          />
         ) : (
           <MemberManger />
         )}
+
         {/* <Table className={style.table} columns={columns} dataSource={list} onChange={onChange} /> */}
       </div>
 

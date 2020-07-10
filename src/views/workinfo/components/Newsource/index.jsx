@@ -4,13 +4,14 @@ import { withRouter } from 'react-router-dom'
 
 import CloseIcon from '@/assets/svg/close.svg'
 import style from './index.scss'
+import { libCreate } from '@/api/library'
 // import { getTagList as getTagListApi } from '@/service/api'
 
 import { useRootStore } from '@/utils/customHooks'
 
 const { Option } = Select
 
-const NewSource = ({ visible, triggerShowPublishModal, history }) => {
+const NewSource = ({ visible, triggerShowPublishModal, change }) => {
   const { setArticleBaseInfo } = useRootStore().articleStore
 
   const [textType] = useState(1)
@@ -30,27 +31,26 @@ const NewSource = ({ visible, triggerShowPublishModal, history }) => {
   //   }
   // }
 
-  // 选择的tagId
-  // const [selectedTag, setSelectedTag] = useState([])
-
-  // const selectTag = (values) => {
-  //   setSelectedTag(values)
-  // }
-
   // 可见范围
   const [viewType, setViewType] = useState(1)
 
-  // 进入文章编辑页面
-  const createknow = () => {
+  // 新建接口
+  const _libCreate = async () => {
     const data = {
-      viewType,
-      selectedTag,
+      // viewType,
       title,
-      textType,
+      // textType,
     }
+    console.log(data)
+
+    const res = await libCreate({
+      name: title,
+    })
+    change(res.data)
+
     setArticleBaseInfo(data)
     triggerShowPublishModal(false)
-    history.push('/editor')
+    window.location.reload
   }
 
   // useEffect(() => {
@@ -94,7 +94,7 @@ const NewSource = ({ visible, triggerShowPublishModal, history }) => {
           </div>
 
           <div className={style.createBtn}>
-            <Button onClick={createknow} className={style.btn} type="primary">
+            <Button onClick={_libCreate} className={style.btn} type="primary">
               新建
             </Button>
           </div>

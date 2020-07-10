@@ -3,6 +3,10 @@ import { Button, List, Avatar, Spin } from 'antd'
 
 import style from './index.scss'
 import NewSource from './../Newsource'
+
+import { scrollEvent, formateTime } from '@/utils/index'
+import { libList } from '@/api/library'
+import { useRootStore } from '@/utils/customHooks'
 // import { hasPrefixSuffix } from 'antd/lib/input/ClearableLabeledInput'
 
 const Left = () => {
@@ -39,6 +43,7 @@ const Left = () => {
   const [isLoading, setLoading] = useState(false)
   const [state, dispatch] = useReducer(reducer, initialState)
   const [dataList, setList] = useState([])
+  const [lib, setLib] = useState([])
 
   const _handleScroll = useCallback(
     (event) => {
@@ -64,11 +69,8 @@ const Left = () => {
     if (isLoading || !hasMore) return
     setLoading(true)
 
-    const res = await articleList({
-      searchKey: '',
+    const res = await libList({
       ...state,
-      isEssence: false,
-      isHot: false,
     })
 
     if (!hasMore || res.data.list.length < 10) {
@@ -91,8 +93,13 @@ const Left = () => {
     getList().then(() => {
       setLoading(false)
     })
-  }, [state.pageIndex])
+  }, [state.pageIndex, hasMore])
 
+  // useEffect(() => {
+  //   getList().then(() => {
+  //     setLoading(false)
+  //   })
+  // }, [lib])
   //列表数据
   const dataone = [
     {
@@ -140,28 +147,29 @@ const Left = () => {
           <List
             itemLayout="horizontal"
             locale={locale}
-            dataSource={dataone}
+            dataSource={dataList}
             renderItem={(item) => (
               <List.Item>
                 <List.Item.Meta
                   avatar={<Avatar src="/src/assets/img/file.png" className={style.fl} />}
-                  title={<a onClick={() => window.open(window.location.origin + `/online/hard`)}>{item.title}</a>}
-                  description="2020-05-20"
+                  //后端传过来的是name，其实title更好
+                  title={<a onClick={() => window.open(window.location.origin + `/online/hard`)}>{item.name}</a>}
+                  description={item.createTime}
                 />
               </List.Item>
             )}
           />
+          <div className={style.spinBox}>
+            {hasMore ? (
+              <Spin tip="正在加载" className={style.spin} spinning={hasMore} />
+            ) : dataList.length > 0 ? (
+              <div>没有更多了</div>
+            ) : null}
+          </div>
         </div>
       </div>
-      <div className={style.spinBox}>
-        {hasMore ? (
-          <Spin tip="正在加载" className={style.spin} spinning={hasMore} />
-        ) : dataList.length > 0 ? (
-          <div>没有更多了</div>
-        ) : null}
-      </div>
       {publishModalVisible && (
-        <NewSource triggerShowPublishModal={triggerShowPublishModal} visible={publishModalVisible} />
+        <NewSource change={setLib} triggerShowPublishModal={triggerShowPublishModal} visible={publishModalVisible} />
       )}
     </div>
   )

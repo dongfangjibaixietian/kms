@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Modal, Input, Button } from 'antd'
+import { Modal, Input, Button, Upload } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 import { withRouter } from 'react-router-dom'
 
@@ -43,12 +43,17 @@ const EditorialPerson = ({
 
   //以上为上传文件功能
 
+  const props = {
+    name: 'file',
+    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+  }
+
   function upload() {
     console.log(123)
     Uploader.upload({
-      file: file,
+      file: props.name,
       type: 1, // 1 图片 2 视频 3 其他
-      filename: '文件名称', // 文件名称需要自己生成，不能包含中文
+      filename: 'headicon', // 文件名称需要自己生成，不能包含中文
     }).then((url) => {
       console.log('上传后的地址', url)
 
@@ -96,9 +101,11 @@ const EditorialPerson = ({
             <img className={style.pic} src="http://pic.qqtn.com/up/2017-11/2017112012062829685.jpg" alt="" />
             <div className={style.rightdiv}>
               <div className={style.but}>
-                <Button onClick={upload}>
-                  <UploadOutlined /> 更换头像
-                </Button>
+                <Upload {...props}>
+                  <Button onClick={upload}>
+                    <UploadOutlined /> 更换头像
+                  </Button>
+                </Upload>
               </div>
               <div className={style.smallword}>支持图片类型：png,jpg,gif</div>
             </div>
