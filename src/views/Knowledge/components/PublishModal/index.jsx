@@ -11,13 +11,14 @@ import style from './index.scss'
 import { tagTree as getTagListApi } from '@/api/tag'
 // import { parseTagListToTree } from '@/utils'
 import { useRootStore } from '@/utils/customHooks'
+import { setItem } from '@/utils/storage'
 
 const { Option, OptGroup } = Select
 
 const PublishModal = ({ visible, triggerShowPublishModal, history }) => {
   const { setArticleBaseInfo } = useRootStore().articleStore
   // usd: 富文本  md:MarkDown
-  const [type, setTextType] = useState('usd')
+  const [type, setType] = useState('usd')
 
   const [title, setTitle] = useState('')
 
@@ -44,13 +45,18 @@ const PublishModal = ({ visible, triggerShowPublishModal, history }) => {
   // 可见范围
   const [viewType, setViewType] = useState(1)
 
+  // 存储文章类型  usd: 富文本  md:MarkDown
+  const saveType = (type) => {
+    setType(type)
+    setItem('type', type)
+  }
+
   // 进入文章编辑页面
   const gotoEditArticle = () => {
     const data = {
       viewType,
       selectedTag,
       title,
-      type,
     }
     setArticleBaseInfo(data)
     triggerShowPublishModal(false)
@@ -59,6 +65,7 @@ const PublishModal = ({ visible, triggerShowPublishModal, history }) => {
 
   useEffect(() => {
     getTagList()
+    setItem('type', 'usd')
   }, [])
 
   return (
@@ -76,7 +83,7 @@ const PublishModal = ({ visible, triggerShowPublishModal, history }) => {
       <div className={style.infoWrapper}>
         <div className={style.selectType}>
           {/* <div
-            onClick={() => setTextType('md')}
+            onClick={() => saveType('md')}
             className={classnames(style.mdType, type === 'md' && style.selectType)}
           >
             <div className={style.type}>
@@ -85,7 +92,7 @@ const PublishModal = ({ visible, triggerShowPublishModal, history }) => {
             </div>
           </div> */}
           <div
-            onClick={() => setTextType('usd')}
+            onClick={() => saveType('usd')}
             className={classnames(style.fuwenbenType, type === 'usd' && style.selectType)}
           >
             <div className={style.type}>

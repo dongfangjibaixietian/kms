@@ -93,13 +93,20 @@ const useGetRoutes = () => {
   const [editorRoutes, setEditorRoutes] = useState({
     path: 'editor',
     component: ArticleEditor,
+    // children: [
+    //   {
+    //     path: '/publish',
+    //     title: '发表文章',
+    //     component: publishArticle,
+    //   },
+    // ],
   })
 
   // 发表文章
-  // const [publishRoute, setPublishArticle] = useState({
-  //   path: 'publish',
-  //   component: publishArticle,
-  // })
+  const [publishRoute, setPublishArticle] = useState({
+    path: 'publish',
+    component: publishArticle,
+  })
 
   const [articleRoutes, setArticleRoutes] = useState({
     path: '/article',
@@ -109,11 +116,6 @@ const useGetRoutes = () => {
         path: '/detail',
         title: '文章详情',
         component: ArticleDetails,
-      },
-      {
-        path: '/publish',
-        title: '发表文章',
-        component: publishArticle,
       },
     ],
   })
@@ -138,6 +140,7 @@ const useGetRoutes = () => {
       articleRoutes,
       adminRoutes,
       editorRoutes,
+      publishRoute,
       homeRoutes,
 
       {

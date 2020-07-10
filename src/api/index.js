@@ -2,12 +2,12 @@
  * @Author       : charm
  * @Date         : 2020-07-02 10:53:19
  * @LastEditors  : charm
- * @LastEditTime : 2020-07-07 11:29:28
+ * @LastEditTime : 2020-07-09 17:40:00
  * @FilePath     : \gworld-pc-share\src\api\index.js
  */
 
 import { Request } from '@gworld/toolset'
-import { getToken, removeToken } from '@/utils/storage'
+import { getItem, removeItem } from '@/utils/storage'
 import { message } from 'antd'
 
 const service = new Request({
@@ -22,7 +22,7 @@ const service = new Request({
     console.log('接口路径partHeaders', uri)
 
     return {
-      Authorization: `Bearer ${getToken()}`,
+      Authorization: `Bearer ${getItem('token')}`,
     }
   },
   handleAccessDenied: {
@@ -31,7 +31,10 @@ const service = new Request({
       switch (code) {
         case 401:
           message.error('登录过期，请重新登录')
-          removeToken()
+          removeItem('token')
+          removeItem('user')
+          removeItem('article')
+          removeItem('type')
           break
         case 422:
           message.error('接口参数错误')
