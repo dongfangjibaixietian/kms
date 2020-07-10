@@ -22,7 +22,7 @@ const ArticleList = forwardRef((props, ref) => {
 
   // 是否还有更多数据
   const [hasMore, setHasMore] = useState(true)
-  const [searchTxt] = useState(searchKey)
+  const [isUnmounted, setIsUnmounted] = useState(false)
   // 加载中
   const [isLoading, setLoading] = useState(false)
   const [dataList, setList] = useState([])
@@ -98,19 +98,21 @@ const ArticleList = forwardRef((props, ref) => {
   }
 
   useEffect(() => {
-    console.log(searchKey, '_searchKey_keykey')
-  }, [searchTxt])
-
-  useEffect(() => {
     window.addEventListener('scroll', _handleScroll)
     return () => window.removeEventListener('scroll', _handleScroll)
   }, [_handleScroll])
 
   useEffect(() => {
-    console.log(searchKey, '_searchKey')
-    getList().then(() => {
-      setLoading(false)
-    })
+    console.log(isUnmounted, 'isUnmounted')
+    if (!isUnmounted) {
+      getList().then(() => {
+        setLoading(false)
+      })
+    }
+    return () => {
+      setIsUnmounted(true)
+      // isUnmounted = true
+    }
   }, [state.pageIndex, props.isEssence, props.isHot, hasMore, searchKey])
 
   return (

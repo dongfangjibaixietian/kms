@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Input, Avatar, Dropdown, Menu, Modal } from 'antd'
+import { Input, Avatar, Dropdown, Menu, Modal, message } from 'antd'
 import { withRouter } from 'react-router-dom'
 import { SearchOutlined } from '@ant-design/icons'
 import { observer } from 'mobx-react-lite'
@@ -29,7 +29,7 @@ const HeaderRight = () => {
 
   const logOUt = () => {
     confirm({
-      content: '是否确认登出',
+      content: '是否退出登录',
       okText: '确认',
       cancelText: '取消',
       icon: '',
@@ -45,6 +45,18 @@ const HeaderRight = () => {
     })
   }
 
+  const menuHandleClick = ({ key }) => {
+    console.log(key)
+    switch (key) {
+      case 'out':
+        logOUt()
+        break
+      default:
+        message.info('敬请期待')
+        break
+    }
+  }
+
   const searchArticle = (e) => {
     console.log(e.target.value)
     setSearchKey(e.target.value)
@@ -53,12 +65,22 @@ const HeaderRight = () => {
   }
 
   const menu = (
-    <Menu className={style.menu}>
-      <Menu.Item className={style.item} onClick={logOUt}>
-        登出
+    <Menu className={style.menu} onClick={menuHandleClick}>
+      <Menu.Item className={style.item} key="user">
+        个人中心
+      </Menu.Item>
+      <Menu.Item className={style.item} key="set">
+        通用设置
+      </Menu.Item>
+      <Menu.Item className={style.item} key="top">
+        置顶文章
+      </Menu.Item>
+      <Menu.Item className={style.item} key="out">
+        退出登录
       </Menu.Item>
     </Menu>
   )
+
   let defaultView
   if (token) {
     defaultView = (
@@ -96,7 +118,10 @@ const HeaderRight = () => {
 
   useEffect(() => {
     console.log(token, 'use')
-    if (!token) return
+    if (!token) {
+      setToken('')
+      return
+    }
     getUserInfo()
   }, [token])
 

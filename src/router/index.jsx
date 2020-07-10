@@ -47,6 +47,16 @@ const publishArticle = Loadable({
   loading: Loading,
 })
 
+const userAgreement = Loadable({
+  loader: () => import(/* webpackChunkName: "user-agreement" */ '@/views/UserAgreement'),
+  loading: Loading,
+})
+
+const userPrivacy = Loadable({
+  loader: () => import(/* webpackChunkName: "user-privacy" */ '@/views/UserPrivacy'),
+  loading: Loading,
+})
+
 // type: home/admin
 const useGetRoutes = () => {
   // 首页路由
@@ -84,19 +94,24 @@ const useGetRoutes = () => {
   const [editorRoutes, setEditorRoutes] = useState({
     path: 'editor',
     component: ArticleEditor,
-    // children: [
-    //   {
-    //     path: '/publish',
-    //     title: '发表文章',
-    //     component: publishArticle,
-    //   },
-    // ],
   })
 
   // 发表文章
   const [publishRoute, setPublishArticle] = useState({
     path: 'publish',
     component: publishArticle,
+  })
+
+  // 用户协议
+  const [agreementRoutes, setAgreementRoutes] = useState({
+    path: 'agreement',
+    component: userAgreement,
+  })
+
+  // 用户隐私政策
+  const [userPrivacyRoutes, setPrivacyRoutes] = useState({
+    path: 'privacy',
+    component: userPrivacy,
   })
 
   const [articleRoutes, setArticleRoutes] = useState({
@@ -116,6 +131,8 @@ const useGetRoutes = () => {
       articleRoutes,
       adminRoutes,
       editorRoutes,
+      agreementRoutes,
+      userPrivacyRoutes,
       publishRoute,
       homeRoutes,
       {
@@ -134,6 +151,8 @@ const useGetRoutes = () => {
     setEditorRoutes,
     setArticleRoutes,
     setPublishArticle,
+    setAgreementRoutes,
+    setPrivacyRoutes,
   }
 }
 

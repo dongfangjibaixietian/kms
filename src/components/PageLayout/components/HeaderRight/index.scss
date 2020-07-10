@@ -38,5 +38,11 @@
 }
 
 .menu {
-  padding: 0 10px;
+  .item {
+    padding: 7px 30px;
+
+    &:hover {
+      color: #3370ff;
+    }
+  }
 }
