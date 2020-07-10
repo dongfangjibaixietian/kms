@@ -1,60 +1,45 @@
-import React, { forwardRef } from 'react'
+import React, { forwardRef, useState, useEffect } from 'react'
 import { List, Tag } from 'antd'
+import { articleTop } from '@/api/article'
 import style from './index.scss'
 
 const StickList = forwardRef((props, ref) => {
-  const data = [
-    {
-      color: '#2db7f5',
-      name: '置顶',
-      text: '官方公告：2019超G平台战略年会暨Gworld新产品群发布',
-      tags: [
-        {
-          color: '#2db7f5',
-          name: '置顶',
-        },
-        {
-          color: '#f50',
-          name: '精',
-        },
-      ],
-    },
-    {
-      color: '#f50',
-      name: '精',
-      text: '官方公告：“超G名片”背后的故事 | 创业、创新、创举',
-      tags: [
-        {
-          color: '#f50',
-          name: '精',
-        },
-      ],
-    },
-  ]
+  const [stickList, setStickList] = useState([])
+  const getArticleTop = async () => {
+    const res = await articleTop({})
+    console.log(res)
+    if (res.code === 0) {
+      //设置获取的数据列表
+      setStickList(res.data.list)
+    }
+  }
+  useEffect(() => {
+    getArticleTop()
+  }, [])
 
   return (
-    <div className={style.stickList} ref={ref}>
-      <List
-        size="large"
-        dataSource={data}
-        renderItem={(item) => (
-          <List.Item
-            className={style.itemStyle}
-            onClick={() => {
-              window.open(window.location + 'article/detail', 'id=444')
-            }}
-          >
-            <div className={style.tagList}>
-              {item.tags.map((tag) => (
-                <div key={tag.name}>
-                  <Tag color={tag.color}>{tag.name}</Tag>
-                </div>
-              ))}
-            </div>
-            <div>{item.text}</div>
-          </List.Item>
-        )}
-      />
+    <div className={`${style.stickList} ${stickList.length > 0 ? null : style.hasContent}`} ref={ref}>
+      {stickList.length > 0 ? (
+        <List
+          size="large"
+          dataSource={stickList}
+          renderItem={(item) => (
+            <List.Item
+              className={style.itemStyle}
+              onClick={() => {
+                window.open(window.location + 'article/detail', 'id=444')
+              }}
+            >
+              <div className={style.tagList}>
+                {item.isTop ? <Tag color="2db7f5">置顶</Tag> : null}
+                {item.isEssence ? <Tag color="#f50">精</Tag> : null}
+                {item.isHot ? <Tag color="#F83255">热门</Tag> : null}
+              </div>
+              <div>{item.title}</div>
+            </List.Item>
+          )}
+        />
+      ) : null}
     </div>
   )
 })

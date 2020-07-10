@@ -1,43 +1,32 @@
 import React, { useState } from 'react'
-import { Modal, Input, Button, Upload, message } from 'antd'
+import { Modal, Input, Button } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 import { withRouter } from 'react-router-dom'
 
 import CloseIcon from '@/assets/svg/close.svg'
 import style from './index.scss'
+import { Uploader } from '@gworld/toolset'
 // import { creatUser as creatUserApi } from '@/service/api'
-import { parseTagListToTree } from '@/utils'
-import { useRootStore } from '@/utils/customHooks'
+// import { parseTagListToTree } from '@/utils'
+// import { useRootStore } from '@/utils/customHooks'
 
-const EditorialPerson = ({ visible, triggerShowPublishModal, history, setIsShowModal }) => {
-  const { setUserInfo } = useRootStore().userStore
-  const { setArticleBaseInfo } = useRootStore().articleStore
+const EditorialPerson = ({
+  visible,
+  triggerShowPublishModal,
+  // setIsShowModal
+}) => {
+  //const { setUserInfo } = useRootStore().userStore
 
-  const [textType] = useState(1)
-
-  const [username, setUsername] = useState('')
+  // const [username, setUsername] = useState('')
 
   const [title, setTitle] = useState('')
 
   const [introduction, setIntroduction] = useState('')
 
-  const closeModal = () => {
-    setUsername('')
-    setIsShowModal(false)
-  }
-
-  function getBase64(img, callback) {
-    const reader = new FileReader()
-    reader.addEventListener('load', () => callback(reader.result))
-    reader.readAsDataURL(img)
-  }
-
-  function beforeUpload(file) {
-    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
-    if (!isJpgOrPng) {
-      message.error('You can only upload JPG/PNG file!')
-    }
-  }
+  // const closeModal = () => {
+  //   setUsername('')
+  //   setIsShowModal(false)
+  // }
 
   const { TextArea } = Input
 
@@ -52,30 +41,21 @@ const EditorialPerson = ({ visible, triggerShowPublishModal, history, setIsShowM
   //   },
   // ]
 
-  const props = {
-    // 此处为上传的地址
-    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-    listType: 'picture',
-    // defaultFileList: [...fileList],
-
-    //上传文件改变时的状态
-    onChange(info) {
-      if (info.file.status === 'uploading') {
-        this.setState({ loading: true })
-        return
-      }
-      if (info.file.status === 'done') {
-        // Get this url from response in real world.
-        getBase64(info.file.originFileObj, (imageUrl) =>
-          this.setState({
-            imageUrl,
-            loading: false,
-          })
-        )
-      }
-    },
-  }
   //以上为上传文件功能
+
+  function upload() {
+    console.log(123)
+    Uploader.upload({
+      file: file,
+      type: 1, // 1 图片 2 视频 3 其他
+      filename: '文件名称', // 文件名称需要自己生成，不能包含中文
+    }).then((url) => {
+      console.log('上传后的地址', url)
+
+      // 获得缩略图
+      Uploader.getCompressImage(url, 100) // 第二个参数代表需要缩略图的宽度
+    })
+  }
 
   // const createUser = async () => {
   //   try {
@@ -116,11 +96,9 @@ const EditorialPerson = ({ visible, triggerShowPublishModal, history, setIsShowM
             <img className={style.pic} src="http://pic.qqtn.com/up/2017-11/2017112012062829685.jpg" alt="" />
             <div className={style.rightdiv}>
               <div className={style.but}>
-                <Upload {...props}>
-                  <Button>
-                    <UploadOutlined /> 更换头像
-                  </Button>
-                </Upload>
+                <Button onClick={upload}>
+                  <UploadOutlined /> 更换头像
+                </Button>
               </div>
               <div className={style.smallword}>支持图片类型：png,jpg,gif</div>
             </div>
@@ -130,11 +108,11 @@ const EditorialPerson = ({ visible, triggerShowPublishModal, history, setIsShowM
           <Button
             // onClick={createUser}
             className={style.btn}
-            type="primary">
+            type="primary"
+          >
             保存
           </Button>
         </div>
-        
       </div>
     </Modal>
   )

@@ -7,13 +7,13 @@
     }
 
     .ant-modal-body {
-      height: 698px;
+      height: 280px;
       padding: unset;
     }
 
-    .ant-btn {
-      background-color: $button;
-    }
+    // .ant-btn {
+    //   background-color: $button;
+    // }
   }
 
   .header {
@@ -27,44 +27,26 @@
   }
 
   .infoWrapper {
-    padding: 0 30px;
-  }
-
-  .title {
-    font-weight: 400;
-    margin-bottom: 8px;
-    color: rgba(0, 0, 0, 0.85);
-  }
-
-  .intro {
-    margin-top: 24px;
-    margin-bottom: 8px;
-  }
-
-  .visible {
-    margin-top: 24px;
-    margin-bottom: 8px;
-  }
-
-  .page {
-    margin-top: 24px;
-    margin-bottom: 8px;
-  }
-
-  .select {
-    width: 100% !important;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    padding: 0px 30px;
   }
 
   .createBtn {
     display: flex;
     justify-content: center;
     padding-top: 30px;
-    padding-bottom: 60px;
+    margin-top: 18px;
 
     .btn {
       background-color: $button;
       width: 220px;
       height: 40px;
     }
+  }
+
+  .title0 {
+    margin-bottom: 8px;
   }
 }

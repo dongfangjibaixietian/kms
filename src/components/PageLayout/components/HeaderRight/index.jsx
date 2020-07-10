@@ -53,10 +53,13 @@ const HeaderRight = () => {
     )
   } else {
     defaultView = (
-      <div className={style.login}>
-        <div onClick={() => triggerShowModal()} className={style.loginBtn}>
-          登录/注册
-        </div>
+      <div className={style.loginBtn}>
+        <span className={style.login} onClick={() => triggerShowModal(1)}>
+          登录
+        </span>
+        <span className={style.register} onClick={() => triggerShowModal(2)}>
+          注册
+        </span>
       </div>
     )
   }
@@ -73,7 +76,13 @@ const HeaderRight = () => {
         suffix={<SearchOutlined style={{ color: 'rgba(201, 201, 201)', fontSize: 20 }} />}
       />
       {defaultView}
-      <LoginModal change={setToken} type={type} setIsShowModal={setIsShowModal} visible={isShowModal} />
+      <LoginModal
+        change={setToken}
+        type={type}
+        setIsShowModal={setIsShowModal}
+        visible={isShowModal}
+        onCancel={() => setIsShowModal(false)}
+      />
     </div>
   )
 }

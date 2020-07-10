@@ -9,7 +9,7 @@ const Article = () => {
   }
 
   const toArticleDetails = (item) => {
-    window.open('http://localhost:8080/' + `article/detail?id=${item.id}`)
+    window.open(window.location.origin + `/article/detail?id=${item.id}`)
   }
 
   const initialState = {

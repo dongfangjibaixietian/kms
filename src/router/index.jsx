@@ -23,10 +23,10 @@ const Admin = Loadable({
   loading: Loading,
 })
 
-const Test = Loadable({
-  loader: () => import(/* webpackChunkName: "test" */ '@/views/workinfo'),
-  loading: Loading,
-})
+// const Test = Loadable({
+//   loader: () => import(/* webpackChunkName: "test" */ '@/views/workinfo'),
+//   loading: Loading,
+// })
 
 const ArticleEditor = Loadable({
   loader: () => import(/* webpackChunkName: "test" */ '@/views/ArticleEditor'),
@@ -40,6 +40,16 @@ const PageNotFound = Loadable({
 
 const ArticleDetails = Loadable({
   loader: () => import(/* webpackChunkName: "artice-details" */ '@/views/ArticleDetails'),
+  loading: Loading,
+})
+
+const OnlinehardDetails = Loadable({
+  loader: () => import(/* webpackChunkName: "onlinehard-Details" */ '@/views/OnlinehardDetails'),
+  loading: Loading,
+})
+
+const publishArticle = Loadable({
+  loader: () => import(/* webpackChunkName: "publish-article" */ '@/views/PublicizePage'),
   loading: Loading,
 })
 
@@ -60,6 +70,9 @@ const useGetRoutes = () => {
         title: '工作资料',
         component: workinfo,
       },
+      // {
+      //   path:''
+      // },
     ],
   })
 
@@ -82,6 +95,12 @@ const useGetRoutes = () => {
     component: ArticleEditor,
   })
 
+  // 发表文章
+  // const [publishRoute, setPublishArticle] = useState({
+  //   path: 'publish',
+  //   component: publishArticle,
+  // })
+
   const [articleRoutes, setArticleRoutes] = useState({
     path: '/article',
     component: PageLayout,
@@ -91,15 +110,36 @@ const useGetRoutes = () => {
         title: '文章详情',
         component: ArticleDetails,
       },
+      {
+        path: '/publish',
+        title: '发表文章',
+        component: publishArticle,
+      },
+    ],
+  })
+
+  //网盘详情路由online
+  const [onlineharddetailsRoutes, setOnlineharddetailsRoutes] = useState({
+    path: '/online',
+    component: PageLayout,
+    children: [
+      {
+        path: '/hard',
+        title: '网盘详情',
+        component: OnlinehardDetails,
+      },
     ],
   })
 
   const currentRoutes = useMemo(() => {
     return [
+      onlineharddetailsRoutes,
+
       articleRoutes,
       adminRoutes,
       editorRoutes,
       homeRoutes,
+
       {
         path: '*',
         component: PageNotFound,
@@ -115,6 +155,8 @@ const useGetRoutes = () => {
     adminRoutes,
     setEditorRoutes,
     setArticleRoutes,
+    setOnlineharddetailsRoutes,
+    // setPublishArticle,
   }
 }
 

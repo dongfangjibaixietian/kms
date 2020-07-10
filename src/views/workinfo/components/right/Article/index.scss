@@ -32,8 +32,15 @@
 .itemStyle {
   border-bottom: 1px solid #f2f2f2;
   padding: 0 30px;
-  display: block;
+  // display: block;
   cursor: pointer;
+  display: flex;
+
+  :global {
+    .ant-list-item {
+      display: flex;
+    }
+  }
 
   &:last-child {
     border-bottom: 1px solid #f2f2f2 !important;

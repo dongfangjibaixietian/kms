@@ -1,0 +1,63 @@
+image: node:latest
+
+stages:
+  - test
+  - build
+  - deploy
+
+cache:
+  paths:
+    - node_modules/
+
+test:
+  stage: test
+  tags:
+    - shell-fe
+  script:
+    - sudo npm install --no-optional --registry=http://172.16.7.241:4873/
+    - npm run lint
+
+build:
+  stage: build
+  tags:
+    - shell-fe
+  script:
+    - npm run build:prod
+  artifacts:
+    paths:
+      - dist/
+  only:
+    - master
+    - /^beta\/.*$/
+    - /^release\/.*$/
+
+deploy_test:
+  stage: deploy
+  tags:
+    - shell-fe
+  only:
+    - /^beta\/.*$/
+  environment:
+    name: Test
+    url: http://kms.gworld-inc.com/
+  script:
+    - rsync -ravtz --delete --password-file=/data/Auth/rsync/rsync.pwd dist/* gworld@172.16.1.244::gworld_pc_share/
+
+# deploy_prod:
+#   stage: deploy
+#   tags:
+#     - shell-fe
+#   only:
+#     - master
+#   environment:
+#     name: Production
+#     url: https://www.gworld.net/
+#   script:
+#     - rsync -ravtz --delete --password-file=/data/Auth/rsync/rsync.pwd dist/* gworld@172.31.0.183::gworld_net_office/
+#   after_script:
+#     - echo 'Deploy production env done !'
+#   when:
+#     on_success
+
+
+

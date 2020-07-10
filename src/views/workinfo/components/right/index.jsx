@@ -1,118 +1,20 @@
 import React, { useState } from 'react'
-import { Tabs, Table, Tag, Input, Button, Space, Select, Comment, Avatar } from 'antd'
+import { Tabs, Button, Comment, Avatar } from 'antd'
 import { EyeOutlined, TagOutlined, MessageOutlined, UpOutlined, DownOutlined } from '@ant-design/icons'
 import Article from './Article/index'
 
 import style from './index.scss'
-import HotTags from './Tag/tag'
 
 const { TabPane } = Tabs
-const { Option } = Select
 
 //以下都是成员管理功能模块
 
 const Right = () => {
-  const dataone = [
-    {
-      key: '1',
-      name: '风信你听',
-      email: 32,
-      role: '超级管理员',
-    },
-    {
-      key: '2',
-      name: '不懂要问',
-      email: 42,
-      role: '管理员',
-    },
-    {
-      key: '3',
-      name: '二郎神 · 杨戬',
-      email: 32,
-      role: '编辑者',
-    },
-    {
-      key: '4',
-      name: '马可波罗',
-      email: 32,
-      role: '查看者',
-    },
-  ]
-
-  const [list, setList] = useState(dataone)
-  // const [list, setList] = useState(data)
   const [show, setShow] = useState(true)
 
   function callback(key) {
     console.log(key)
   }
-
-  //以上成员管理功能模块
-
-  const { Search } = Input
-
-  //删除按钮功能
-
-  const handleDel = (row) => {
-    const delIndex = list.findIndex((item) => row.key === item.key)
-    const copyList = [...list]
-    copyList.splice(delIndex, 1)
-    console.log(copyList)
-    console.log(list)
-    setList(copyList)
-  }
-
-  const columns = [
-    {
-      title: '昵称',
-      dataIndex: 'name',
-      // specify the condition of filtering result
-      // here is that finding the name started with `value`
-    },
-    {
-      title: '用户名',
-      dataIndex: 'email',
-    },
-    {
-      title: '角色',
-      dataIndex: 'role',
-      filters: [
-        {
-          text: '超级管理员',
-          value: '超级管理员',
-        },
-        {
-          text: '管理员',
-          value: '管理员',
-        },
-        {
-          text: '编辑者',
-          value: '编辑者',
-        },
-        {
-          text: '查看者',
-          value: '查看者',
-        },
-      ],
-      filterMultiple: false,
-      onFilter: (value, record) => record.role.indexOf(value) === 0,
-    },
-    {
-      title: '操作',
-      key: 'action',
-      render: (text, record) => (
-        <Space size="middle">
-          <a
-            onClick={() => {
-              handleDel(record)
-            }}
-          >
-            删除
-          </a>
-        </Space>
-      ),
-    },
-  ]
 
   const data = [
     {
@@ -173,10 +75,6 @@ const Right = () => {
     </Comment>
   )
 
-  function onChange(pagination, filters, extra) {
-    console.log('params', pagination, filters, extra)
-  }
-
   function changetodown() {
     setShow(false)
     setData(data.splice(0, 6))
@@ -191,31 +89,31 @@ const Right = () => {
       <Tabs className={style.tabs} defaultActiveKey="1" onChange={callback}>
         <TabPane tab="我的文章" key="1" className={style.mypaper}>
           <div className={style.filtcategory}>
-          <div className={style.KnowledgeCategory} onClick={change}>
-            {copydata.map((item) => (
-              <div
-                key={item.sign}
-                data-sign={item.sign}
-                className={`${style.Category} ${sign == item.sign ? style.active : null}`}
-                // className={(style.Category sign == item.sign && style.active)}
-              >
-                {item.name}
-              </div>
-            ))}
-            {/* {show ? (
+            <div className={style.KnowledgeCategory} onClick={change}>
+              {copydata.map((item) => (
+                <div
+                  key={item.sign}
+                  data-sign={item.sign}
+                  className={`${style.Category} ${sign == item.sign ? style.active : null}`}
+                  // className={(style.Category sign == item.sign && style.active)}
+                >
+                  {item.name}
+                </div>
+              ))}
+              {/* {show ? (
               <UpOutlined onClick={changetodown} className={style.showicon} />
             ) : (
               <DownOutlined onClick={changetoup} className={style.showicon} />
             )} */}
-          </div>
-          <div className={style.totalshowicon}>
-          {show ? (
-              <UpOutlined onClick={changetodown} className={style.showicon} />
-            ) : (
-              <DownOutlined onClick={changetoup} className={style.showicon} />
+            </div>
+            <div className={style.totalshowicon}>
+              {show ? (
+                <UpOutlined onClick={changetodown} className={style.showicon} />
+              ) : (
+                <DownOutlined onClick={changetoup} className={style.showicon} />
               )}
             </div>
-            </div>
+          </div>
           <Article className={style.articlelist} />
           {/* <div className={style.alltag}>
                 <div className={style.firstrow}>
@@ -280,35 +178,6 @@ const Right = () => {
         </TabPane>
         <TabPane tab="我的收藏" key="4">
           <Article className={style.articlelist} />
-        </TabPane>
-        <TabPane tab="成员管理" key="5">
-          <div className={style.memman}>
-            <div className={style.memtit}>
-              <div className={style.leftmen}>
-              <div className={style.numword}>知识库成员</div>
-                <div className={style.num}>{3}</div>
-                </div>
-              <div className={style.operate}>
-                <Select
-                  showSearch
-                  style={{ width: 200 }}
-                  placeholder="请选择项目"
-                  optionFilterProp="children"
-                  // onChange={onChange}
-                  // onFocus={onFocus}
-                  // onBlur={onBlur}
-                  // onSearch={onSearch}
-                  filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                >
-                  <Option value="项目1">项目1</Option>
-                  <Option value="项目2">项目2</Option>
-                  <Option value="项目3">项目3</Option>
-                </Select>
-                ,<Button type="primary">添加成员</Button>
-              </div>
-            </div>
-            <Table columns={columns} dataSource={list} onChange={onChange} />
-          </div>
         </TabPane>
       </Tabs>
     </div>

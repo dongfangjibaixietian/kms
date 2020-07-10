@@ -2,10 +2,10 @@
  * @Author       : charm
  * @Date         : 2020-06-28 16:15:01
  * @LastEditors  : charm
- * @LastEditTime : 2020-07-04 16:56:25
+ * @LastEditTime : 2020-07-07 18:24:36
  * @FilePath     : \gworld-pc-share\src\utils\index.js
  */
-
+import { getTimestamp } from '@gworld/toolset'
 export const parseTagListToTree = (tagList) => {
   const list = []
   tagList.forEach((tag) => {
@@ -49,6 +49,16 @@ export const formateTime = (date) => {
     .toISOString()
     .replace(/T/g, ' ')
     .replace(/\.[\d]{3}Z/, '')
+}
+
+// 随机生成文件名
+export const randomNum = () => {
+  let num = ''
+  for (let i = 0; i < 4; i++) {
+    num += Math.floor(Math.random() * 10)
+  }
+  num = getTimestamp() + num
+  return num
 }
 
 //处理滚动相关数据

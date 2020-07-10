@@ -5,7 +5,6 @@
   height: 156px;
   background-color: white;
 
-
   .header {
     display: flex;
     justify-content: space-between;
@@ -18,126 +17,124 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    }
+  }
 
-    .nm {
-      width:80px;
-      height:20px;
-      font-size:20px;
-      font-family:PingFang-SC-Regular,PingFang-SC;
-      font-weight:400;
-      color:rgba(51,51,51,1);
-      line-height:20px;
-      margin-bottom: 8px;
-    }
+  .nm {
+    width: 80px;
+    height: 20px;
+    font-size: 20px;
+    font-family: PingFang-SC-Regular, PingFang-SC;
+    font-weight: 400;
+    color: rgba(51, 51, 51, 1);
+    line-height: 20px;
+    margin-bottom: 8px;
+  }
 
-    .intro {
-      font-size:12px;
-font-family:PingFang-SC-Regular,PingFang-SC;
-font-weight:400;
-color:rgba(163,163,163,1);
-line-height:20px;
-    }
+  .intro {
+    font-size: 12px;
+    font-family: PingFang-SC-Regular, PingFang-SC;
+    font-weight: 400;
+    color: rgba(163, 163, 163, 1);
+    line-height: 20px;
+  }
 
-    .pic {
-      // margin-left: 50px;
-      margin-top: 30px;
-      margin-right: 20px;
-      margin-bottom: 20px;
-      width: 96px;
-      height: 96px;
-      border-radius: 50%;
-      overflow: hidden;
-    }
-    .pers {
-      width: 300px;
-      margin-bottom: 20px;
-      display: flex;
+  .pic {
+    margin-top: 30px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+
+  .pers {
+    width: 300px;
+    margin-bottom: 20px;
+    display: flex;
     justify-content: space-between;
+  }
 
-    }
   .leftinfo {
-      flex:1;
-      margin-top: 35px;
+    flex: 1;
+    margin-top: 35px;
   }
 
   .publishBtn {
     margin-top: 10px;
-    background:rgba(245,245,245,1);
+    background: rgba(245, 245, 245, 1);
   }
 
-.rigtinfo {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 571px;
-  // margin-block-start: auto;
-}
+  .rigtinfo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 571px;
+  }
 
- .one {
-   flex: 1;
-   display: flex;
-   flex-flow: column;
-   align-items: center;
-   height: 50px;
-   border-right: 1px solid #dddddd;
+  .one {
+    flex: 1;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    height: 50px;
+    border-right: 1px solid #ddd;
+  }
 
- }
- .dataone {
-   flex: 1;
- }
+  .dataone {
+    flex: 1;
+  }
 
- .two {
-  flex: 1;
-  display: flex;
-  flex-flow: column;
-  align-items: center;
-  height: 50px;
-  border-right: 1px solid #dddddd;
- }
- .datatwo {
-  flex: 1;
-}
+  .two {
+    flex: 1;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    height: 50px;
+    border-right: 1px solid #ddd;
+  }
 
- .three {
-  flex: 1;
-  display: flex;
-  flex-flow: column;
-  align-items: center;
-  height: 50px;
-  border-right: 1px solid #dddddd;
- }
+  .datatwo {
+    flex: 1;
+  }
 
- .datathree {
-  flex: 1;
-}
+  .three {
+    flex: 1;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    height: 50px;
+    border-right: 1px solid #ddd;
+  }
 
- .four {
-  flex: 1;
-  display: flex;
-  flex-flow: column;
-  align-items: center;
-  height: 50px;
-  border-right: 1px solid #dddddd;
- }
+  .datathree {
+    flex: 1;
+  }
 
- .datafour {
-  flex: 1;
-}
+  .four {
+    flex: 1;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    height: 50px;
+    border-right: 1px solid #ddd;
+  }
 
- .five {
-  flex: 1;
-   display: flex;
-   flex-flow: column;
-   align-items: center;
-   height: 50px;
- }
+  .datafour {
+    flex: 1;
+  }
 
- .datafive {
-  flex: 1;
-}
+  .five {
+    flex: 1;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    height: 50px;
+  }
 
-
+  .datafive {
+    flex: 1;
+  }
 
   .tabs {
     :global {

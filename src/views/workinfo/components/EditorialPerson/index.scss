@@ -1,7 +1,6 @@
 @import 'global.scss';
 
 .modalWrapper {
-
   :global {
     .ant-modal-content {
       border-radius: 7px;
@@ -35,7 +34,6 @@
     padding: 10px 30px;
   }
 
-
   .uplo {
     display: flex;
   }
@@ -54,12 +52,10 @@
     width: 170px;
   }
 
-
   .createBtn {
     display: flex;
     justify-content: center;
     padding-top: 30px;
-
 
     .btn {
       background-color: $button;
@@ -67,8 +63,9 @@
       height: 40px;
     }
   }
+
   .rightdiv {
     padding-top: 32px;
     padding-left: 6px;
-}
+  }
 }

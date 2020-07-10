@@ -3,6 +3,7 @@ import { Button, List, Avatar, Spin } from 'antd'
 
 import style from './index.scss'
 import NewSource from './../Newsource'
+// import { hasPrefixSuffix } from 'antd/lib/input/ClearableLabeledInput'
 
 const Left = () => {
   const locale = {
@@ -12,6 +13,11 @@ const Left = () => {
     pageIndex: 1,
     pageSize: 10,
   }
+
+  //点击网盘跳转详情
+  // const tohref = (item) => {
+  //   window.open(window.location + `article/detail?id=${item.id}`)
+  // }
 
   const reducer = (state, action) => {
     switch (action.type) {
@@ -139,7 +145,7 @@ const Left = () => {
               <List.Item>
                 <List.Item.Meta
                   avatar={<Avatar src="/src/assets/img/file.png" className={style.fl} />}
-                  title={<a href="https://ant.design">{item.title}</a>}
+                  title={<a onClick={() => window.open(window.location.origin + `/online/hard`)}>{item.title}</a>}
                   description="2020-05-20"
                 />
               </List.Item>
