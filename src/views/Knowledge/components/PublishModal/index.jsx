@@ -8,11 +8,9 @@ import FuwenbenIcon from '@/assets/svg/fuwenben.svg'
 // import MarkdownIcon from '@/assets/svg/markdown.svg'
 import style from './index.scss'
 import { tagTree as getTagListApi } from '@/api/tag'
-import { useRootStore } from '@/utils/customHooks'
 import { setItem } from '@/utils/storage'
 
 const PublishModal = ({ visible, triggerShowPublishModal, history }) => {
-  const { setArticleBaseInfo } = useRootStore().articleStore
   // usd: 富文本  md:MarkDown
   const [type, setType] = useState('usd')
 
@@ -33,11 +31,6 @@ const PublishModal = ({ visible, triggerShowPublishModal, history }) => {
 
   // 进入文章编辑页面
   const gotoEditArticle = () => {
-    const data = {
-      viewType,
-      selectedTag,
-    }
-    setArticleBaseInfo(data)
     triggerShowPublishModal(false)
     history.push('/editor')
   }
