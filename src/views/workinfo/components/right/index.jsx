@@ -174,6 +174,37 @@ const Right = () => {
               <ExampleComment className={style.comment}></ExampleComment>
             </div>
           </div>
+          <div className={style.myquest}>
+            <div className={style.titquestion}>html5直播?</div>
+            <div className={style.textcon}>
+              我该怎么做？我试过用视频标签，但我没能用。下面是我的代码。有人能指点我正确的方向吗?
+            </div>
+            <div className={style.authorinfo}>
+              <img
+                className={style.sculpture}
+                src="http://img.52z.com/upload/news/image/20180111/20180111085521_86389.jpg"
+                alt=""
+              />
+              <div className={style.authorname}>晓峰噢</div>
+              <div className={style.time}>刚刚</div>
+
+              <TagOutlined />
+              <div className={style.questiontag}>网页开发，HTML5开发，大数据</div>
+              <div className={style.rightauthorinfo}>
+                <div>
+                  <EyeOutlined />
+                  {5656}
+                </div>
+                <div className={style.messageoutlined}>
+                  <MessageOutlined />
+                  {52}
+                </div>
+              </div>
+            </div>
+            <div className={style.comment}>
+              <ExampleComment className={style.comment}></ExampleComment>
+            </div>
+          </div>
           ,
         </TabPane>
         <TabPane tab="我的收藏" key="4">

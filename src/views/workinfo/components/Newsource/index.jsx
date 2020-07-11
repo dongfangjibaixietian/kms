@@ -34,7 +34,7 @@ const NewSource = ({ visible, triggerShowPublishModal, change }) => {
   // 可见范围
   const [viewType, setViewType] = useState(1)
 
-  // 新建接口
+  // 新建知识库接口
   const _libCreate = async () => {
     const data = {
       // viewType,
@@ -50,7 +50,7 @@ const NewSource = ({ visible, triggerShowPublishModal, change }) => {
 
     setArticleBaseInfo(data)
     triggerShowPublishModal(false)
-    window.location.reload
+    window.location.reload()
   }
 
   // useEffect(() => {

@@ -177,6 +177,7 @@ const ArticleDetails = ({ history }) => {
   }
 
   const getArticleDetail = async () => {
+    console.log(id)
     const res = await articleDetail({ id: id })
     const editorState = BraftEditor.createEditorState(res.data.rawContent)
     res.data.content = editorState.toHTML()

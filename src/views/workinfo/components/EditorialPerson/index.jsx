@@ -6,60 +6,43 @@ import { withRouter } from 'react-router-dom'
 import CloseIcon from '@/assets/svg/close.svg'
 import style from './index.scss'
 import { Uploader } from '@gworld/toolset'
+import { randomNum } from '@/utils/index'
 // import { creatUser as creatUserApi } from '@/service/api'
 // import { parseTagListToTree } from '@/utils'
 // import { useRootStore } from '@/utils/customHooks'
 
-const EditorialPerson = ({
-  visible,
-  triggerShowPublishModal,
-  // setIsShowModal
-}) => {
+const EditorialPerson = ({ visible, triggerShowPublishModal, change }) => {
   //const { setUserInfo } = useRootStore().userStore
 
-  // const [username, setUsername] = useState('')
-
   const [title, setTitle] = useState('')
+  const [url, setUrl] = useState('')
 
   const [introduction, setIntroduction] = useState('')
 
-  // const closeModal = () => {
-  //   setUsername('')
-  //   setIsShowModal(false)
-  // }
+  const saveUser = () => {
+    triggerShowPublishModal(false)
+  }
 
   const { TextArea } = Input
-
-  //以下为上传文件功能
-  // const fileList = [
-  //   {
-  //     uid: '-1',
-  //     name: 'xxx.png',
-  //     status: 'done',
-  //     url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-  //     thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-  //   },
-  // ]
-
-  //以上为上传文件功能
 
   const props = {
     name: 'file',
     action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-  }
-
-  function upload() {
-    console.log(123)
-    Uploader.upload({
-      file: props.name,
-      type: 1, // 1 图片 2 视频 3 其他
-      filename: 'headicon', // 文件名称需要自己生成，不能包含中文
-    }).then((url) => {
-      console.log('上传后的地址', url)
-
-      // 获得缩略图
-      Uploader.getCompressImage(url, 100) // 第二个参数代表需要缩略图的宽度
-    })
+    customRequest: (param) => {
+      console.log(randomNum())
+      console.log(param)
+      const fileSuffix = param.file.name.split('.')[1] || 'png'
+      console.log(fileSuffix)
+      Uploader.upload({
+        file: param.file,
+        type: 1, // 1 图片 2 视频 3 其他
+        filename: `${randomNum()}.${fileSuffix}}`, // 文件名称需要自己生成，不能包含中文
+      }).then((url) => {
+        console.log('上传后的地址', url)
+        setUrl(url)
+        change(url)
+      })
+    },
   }
 
   // const createUser = async () => {
@@ -98,11 +81,11 @@ const EditorialPerson = ({
           <div className={style.title2}>头像</div>
 
           <div className={style.uplo}>
-            <img className={style.pic} src="http://pic.qqtn.com/up/2017-11/2017112012062829685.jpg" alt="" />
+            <img className={style.pic} src={url} alt="" />
             <div className={style.rightdiv}>
               <div className={style.but}>
                 <Upload {...props}>
-                  <Button onClick={upload}>
+                  <Button>
                     <UploadOutlined /> 更换头像
                   </Button>
                 </Upload>
@@ -112,11 +95,7 @@ const EditorialPerson = ({
           </div>
         </div>
         <div className={style.createBtn}>
-          <Button
-            // onClick={createUser}
-            className={style.btn}
-            type="primary"
-          >
+          <Button onClick={saveUser} className={style.btn} type="primary">
             保存
           </Button>
         </div>

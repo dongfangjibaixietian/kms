@@ -1,9 +1,13 @@
-import React, { useState } from 'react'
-import { Table, Button, Space } from 'antd'
+import React, { useState, useReducer, useEffect } from 'react'
+import { Table, Button, Space, Upload, message } from 'antd'
+import { UploadOutlined } from '@ant-design/icons'
 
 import style from './index.scss'
 import MemberManger from './MemberManger'
 import NewFils from './NewFils/index.jsx'
+
+import { libFileList } from '@/api/library'
+import { getUrlSearch, formateTime } from '@/utils'
 
 const OnlinehardDetails = () => {
   const [publishModalVisible, setPublishModalVisible] = useState(false)
@@ -12,19 +16,89 @@ const OnlinehardDetails = () => {
     setPublishModalVisible(isShow)
   }
 
+  const initialState = {
+    pageIndex: 1,
+    pageSize: 10,
+  }
+  const reducer = (state, action) => {
+    switch (action.type) {
+      case 'update':
+        console.log({ ...state, ...action.payload }, 'update_state')
+        return { ...state, ...action.payload }
+      default:
+        throw new Error()
+    }
+  }
+
+  const [state, dispatch] = useReducer(reducer, initialState)
+  const [dataList, setList] = useState([])
+  const [lib, setLib] = useState([])
+  const [id, setOnLineHardId] = useState('')
+
+  const getFileList = async () => {
+    // if (isLoading || !hasMore) return
+    // setLoading(true)
+    console.log(1111111111)
+    console.log(id)
+    const res = await libFileList({
+      id: id,
+    })
+
+    if (!hasMore || res.data.list.length < 10) {
+      setHasMore(false)
+    }
+    console.log(res.data)
+    const result = Object.assign({}, detail, res.data)
+    setList(() => {
+      return [...dataList, ...res.data.list]
+    })
+  }
+
+  const props = {
+    name: 'file',
+    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+    headers: {
+      authorization: 'authorization-text',
+    },
+    onChange(info) {
+      if (info.file.status !== 'uploading') {
+        console.log(info.file, info.fileList)
+      }
+      if (info.file.status === 'done') {
+        message.success(`${info.file.name} file uploaded successfully`)
+      } else if (info.file.status === 'error') {
+        message.error(`${info.file.name} file upload failed.`)
+      }
+    },
+  }
+  // useEffect(() => {
+  //   getFileList().then(() => {
+  //     setLoading(false)
+  //   })
+  // }, [state])
+
+  useEffect(() => {
+    id && getFileList()
+  }, [id])
+
+  useEffect(() => {
+    const searchId = getUrlSearch(window.location.search)
+    setOnLineHardId(searchId.id)
+  }, [])
+
   const columns = [
     {
       title: '文件名',
       dataIndex: 'filename',
       width: 500,
-      render: () => {
-        return (
-          <div>
-            <img src="/src/assets/img/file.png" className={style.filepng} />
-            {'公司LOGO & ICON 合集'}
-          </div>
-        )
-      },
+      // render: () => {
+      //   return (
+      //     <div>
+      //       <img src="/src/assets/img/file.png" className={style.filepng} />
+      //       {'公司LOGO & ICON 合集'}
+      //     </div>
+      //   )
+      // },
       // specify the condition of filtering result
       // here is that finding the name started with `value`
     },
@@ -44,17 +118,30 @@ const OnlinehardDetails = () => {
       title: '管理',
       dataIndex: 'manage',
       key: 'action',
-      render: (text, record) => (
-        <Space size="middle">
-          <a
-            onClick={() => {
-              download(record)
-            }}
-          >
-            下载
-          </a>
-        </Space>
-      ),
+      render: (text, record, row) =>
+        row === 0 ? (
+          '-'
+        ) : (
+          <Space size="middle">
+            <a
+              onClick={() => {
+                download(row)
+              }}
+            >
+              下载
+            </a>
+          </Space>
+        ),
+
+      // <Space size="middle">
+      //   <a
+      //     onClick={() => {
+      //       download(row)
+      //     }}
+      //   >
+      //     下载
+      //   </a>
+      // </Space>
     },
     {
       title: '',
@@ -77,85 +164,155 @@ const OnlinehardDetails = () => {
   const dataone = [
     {
       key: '1',
-      filename: '..',
+      filename: (
+        <div>
+          <img src="/src/assets/img/file.png" className={style.filepng} />
+          {'..'}
+        </div>
+      ),
       size: '-',
       role: '-',
       uptime: '-',
       manage: '-',
+      // image: (
+      //   <div>
+      //     <img
+      //       src="/src/assets/img/moreactions.png"
+      //       onClick={() => {
+      //         console.log(123)
+      //       }}
+      //     />
+      //   </div>
+      // ),
     },
     {
       key: '2',
-      filename: '公司LOGO & ICON 合集',
+      filename: (
+        <div>
+          <img src="/src/assets/img/file.png" className={style.filepng} />
+          {'公司LOGO & ICON 合集'}
+        </div>
+      ),
       size: '62.4M',
       role: '雪狼独行',
       uptime: '30分钟前',
     },
     {
       key: '3',
-      filename: '设计规范合集（更新到2020.02.28）',
+      filename: (
+        <div>
+          <img src="/src/assets/img/file.png" className={style.filepng} />
+          {'设计规范合集（更新到2020.02.28）'}
+        </div>
+      ),
       size: '62.4M',
       role: '雪狼独行',
       uptime: '30分钟前',
     },
     {
       key: '4',
-      filename: '运动健身产品交互流程设计.jpg',
+      filename: (
+        <div>
+          <img src="/src/assets/img/document.png" className={style.filepng} />
+          {'设计规范合集（更新到2020.02.28）'}
+        </div>
+      ),
       size: '62.4M',
       role: '雪狼独行',
       uptime: '30分钟前',
     },
     {
       key: '5',
-      filename: '多端统一开发UIKIT.doc',
+      filename: (
+        <div>
+          <img src="/src/assets/img/document.png" className={style.filepng} />
+          {'设计规范合集（更新到2020.02.28）'}
+        </div>
+      ),
       size: '62.4M',
       role: '雪狼独行',
       uptime: '30分钟前',
     },
     {
       key: '6',
-      filename: '运动健身产品交互流程设计.jpg',
+      filename: (
+        <div>
+          <img src="/src/assets/img/document.png" className={style.filepng} />
+          {'设计规范合集（更新到2020.02.28）'}
+        </div>
+      ),
       size: '62.4M',
       role: '雪狼独行',
       uptime: '30分钟前',
     },
     {
       key: '7',
-      filename: '组件库：官方出品80个高品质UI设计组件.pdf',
+      filename: (
+        <div>
+          <img src="/src/assets/img/document.png" className={style.filepng} />
+          {'设计规范合集（更新到2020.02.28）'}
+        </div>
+      ),
       size: '62.4M',
       role: '雪狼独行',
       uptime: '30分钟前',
     },
     {
       key: '8',
-      filename: '可商用！2020 年免费中文字体最全合集（已分类打包）.zip',
+      filename: (
+        <div>
+          <img src="/src/assets/img/document.png" className={style.filepng} />
+          {'设计规范合集（更新到2020.02.28）'}
+        </div>
+      ),
       size: '62.4M',
       role: '雪狼独行',
       uptime: '30分钟前',
     },
     {
       key: '9',
-      filename: '春节红包（9cm_16cm含刀模）_20200130.cdr',
+      filename: (
+        <div>
+          <img src="/src/assets/img/document.png" className={style.filepng} />
+          {'设计规范合集（更新到2020.02.28）'}
+        </div>
+      ),
       size: '62.4M',
       role: '雪狼独行',
       uptime: '30分钟前',
     },
     {
       key: '10',
-      filename: '超G名片表情Emoji方案.ai',
+      filename: (
+        <div>
+          <img src="/src/assets/img/document.png" className={style.filepng} />
+          {'设计规范合集（更新到2020.02.28）'}
+        </div>
+      ),
       size: '62.4M',
       role: '雪狼独行',
       uptime: '30分钟前',
     },
     {
       key: '11',
-      filename: '春节海报PSD.psd',
+      filename: (
+        <div>
+          <img src="/src/assets/img/document.png" className={style.filepng} />
+          {'设计规范合集（更新到2020.02.28）'}
+        </div>
+      ),
       size: '62.4M',
       role: '雪狼独行',
       uptime: '30分钟前',
     },
     {
       key: '12',
-      filename: '超G名片后台管理系统(最终方案定稿)2020_02_10.sketch',
+      filename: (
+        <div>
+          <img src="/src/assets/img/document.png" className={style.filepng} />
+          {'设计规范合集（更新到2020.02.28）'}
+        </div>
+      ),
       size: '62.4M',
       role: '雪狼独行',
       uptime: '30分钟前',
@@ -168,6 +325,10 @@ const OnlinehardDetails = () => {
     console.log('params', pagination, filters, extra)
   }
 
+  const upfiles = () => {
+    console.log(123)
+  }
+
   function changeflag() {
     console.log(123)
     setFlag(!flag)
@@ -178,10 +339,6 @@ const OnlinehardDetails = () => {
   //   //判断索引相等时添加行的高亮样式
   //   console.log(123)
   // }
-
-  const setonRow = (record, index) => {
-    console.log(index)
-  }
 
   return (
     <div className={style.harddrive}>
@@ -197,39 +354,20 @@ const OnlinehardDetails = () => {
           <Button className={style.btn} onClick={() => triggerShowPublishModal(true)}>
             新建文件夹
           </Button>
-          <Button type="primary" className={style.btn}>
-            上传文件
-          </Button>
+          <Upload {...props}>
+            <Button type="primary" className={style.btn} onClick={upfiles}>
+              上传文件
+            </Button>
+          </Upload>
         </div>
       </div>
 
       <div className={style.tablewarp}>
         {flag ? (
-          <Table
-            className={style.table}
-            columns={columns}
-            dataSource={list}
-            onChange={onChange}
-            // rowClassName={setRowClassName} //表格行样式
-            onRow={setonRow}
-            // onRow={(record) => {
-            //   //表格行点击事件
-            //   return {
-            //     onClick: this.clickRow.bind(this, record.no),
-            //     clickRow(num) {
-            //       console.log(123)
-            //       this.setState({
-            //         activeIndex: num - 1, //获取点击行的索引
-            //       })
-            //     },
-            //   }
-            // }}
-          />
+          <Table className={style.table} columns={columns} dataSource={dataone} onChange={onChange} />
         ) : (
           <MemberManger />
         )}
-
-        {/* <Table className={style.table} columns={columns} dataSource={list} onChange={onChange} /> */}
       </div>
 
       <div className={style.introduction}>简介</div>

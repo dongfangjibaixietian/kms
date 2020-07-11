@@ -30,17 +30,17 @@ const NewFils = ({
   //   setIsShowModal(false)
   // }
 
-  // const createUser = async () => {
-  //   try {
-  //     const res = await creatUserApi({
-  //       name: username,
-  //     })
-  //     setUserInfo(res.data.name)
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  //   closeModal()
-  // }
+  const _createFile = async () => {
+    try {
+      const res = await creatUserApi({
+        name: username,
+      })
+      setUserInfo(res.data.name)
+    } catch (error) {
+      console.log(error)
+    }
+    closeModal()
+  }
 
   return (
     <Modal
@@ -63,11 +63,7 @@ const NewFils = ({
       </div>
 
       <div className={style.createBtn}>
-        <Button
-          // onClick={createUser}
-          className={style.btn}
-          type="primary"
-        >
+        <Button onClick={_createFile} className={style.btn} type="primary">
           保存
         </Button>
       </div>

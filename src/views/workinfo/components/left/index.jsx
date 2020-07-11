@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useReducer } from 'react'
+import React, { useEffect, useState, useCallback, useReducer, forwardRef } from 'react'
 import { Button, List, Avatar, Spin } from 'antd'
 
 import style from './index.scss'
@@ -22,6 +22,10 @@ const Left = () => {
   // const tohref = (item) => {
   //   window.open(window.location + `article/detail?id=${item.id}`)
   // }
+
+  const toLineHardDetails = (item) => {
+    window.open(window.location.origin + `/online/hard?id=${item.id}`)
+  }
 
   const reducer = (state, action) => {
     switch (action.type) {
@@ -153,7 +157,16 @@ const Left = () => {
                 <List.Item.Meta
                   avatar={<Avatar src="/src/assets/img/file.png" className={style.fl} />}
                   //后端传过来的是name，其实title更好
-                  title={<a onClick={() => window.open(window.location.origin + `/online/hard`)}>{item.name}</a>}
+                  title={
+                    <a
+                      onClick={
+                        () => toLineHardDetails(item)
+                        // window.open(window.location.origin + `/online/hard`)
+                      }
+                    >
+                      {item.name}
+                    </a>
+                  }
                   description={item.createTime}
                 />
               </List.Item>

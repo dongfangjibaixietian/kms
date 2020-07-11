@@ -6,6 +6,10 @@
       border-radius: 7px;
     }
 
+    .ant-upload-list-item {
+      display: none;
+    }
+
     .ant-modal-body {
       height: 600px;
       padding: unset;
