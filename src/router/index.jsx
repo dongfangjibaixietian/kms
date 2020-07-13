@@ -3,6 +3,7 @@ import { useState, useMemo } from 'react'
 import Loadable from 'react-loadable'
 
 import PageLayout from '@/components/PageLayout'
+import workinfo from '../views/workinfo'
 
 const Loading = () => <div>loading</div>
 
@@ -22,10 +23,10 @@ const Admin = Loadable({
   loading: Loading,
 })
 
-const Test = Loadable({
-  loader: () => import(/* webpackChunkName: "test" */ '@/views/Test'),
-  loading: Loading,
-})
+// const Test = Loadable({
+//   loader: () => import(/* webpackChunkName: "test" */ '@/views/workinfo'),
+//   loading: Loading,
+// })
 
 const ArticleEditor = Loadable({
   loader: () => import(/* webpackChunkName: "test" */ '@/views/ArticleEditor'),
@@ -39,6 +40,11 @@ const PageNotFound = Loadable({
 
 const ArticleDetails = Loadable({
   loader: () => import(/* webpackChunkName: "artice-details" */ '@/views/ArticleDetails'),
+  loading: Loading,
+})
+
+const OnlinehardDetails = Loadable({
+  loader: () => import(/* webpackChunkName: "onlinehard-Details" */ '@/views/OnlinehardDetails'),
   loading: Loading,
 })
 
@@ -72,8 +78,11 @@ const useGetRoutes = () => {
       {
         path: '/workData',
         title: '工作资料',
-        component: Test,
+        component: workinfo,
       },
+      // {
+      //   path:''
+      // },
     ],
   })
 
@@ -126,8 +135,23 @@ const useGetRoutes = () => {
     ],
   })
 
+  //网盘详情路由online
+  const [onlineharddetailsRoutes, setOnlineharddetailsRoutes] = useState({
+    path: '/online',
+    component: PageLayout,
+    children: [
+      {
+        path: '/hard',
+        title: '网盘详情',
+        component: OnlinehardDetails,
+      },
+    ],
+  })
+
   const currentRoutes = useMemo(() => {
     return [
+      onlineharddetailsRoutes,
+
       articleRoutes,
       adminRoutes,
       editorRoutes,
@@ -135,6 +159,7 @@ const useGetRoutes = () => {
       userPrivacyRoutes,
       publishRoute,
       homeRoutes,
+
       {
         path: '*',
         component: PageNotFound,
@@ -150,9 +175,8 @@ const useGetRoutes = () => {
     adminRoutes,
     setEditorRoutes,
     setArticleRoutes,
-    setPublishArticle,
-    setAgreementRoutes,
-    setPrivacyRoutes,
+    setOnlineharddetailsRoutes,
+    // setPublishArticle,
   }
 }
 

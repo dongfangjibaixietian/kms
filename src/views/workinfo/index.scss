@@ -1,0 +1,14 @@
+@import 'global.scss';
+
+.Knowledge {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+  flex-direction: column;
+}
+
+.second {
+  display: flex;
+  flex: 1;
+  // background-color: white;
+}

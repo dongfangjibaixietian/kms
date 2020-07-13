@@ -23,3 +23,12 @@ export function userInfo(data) {
     data,
   })
 }
+
+//用户被点赞数，阅读数等信息
+export function userOtherInfo(data) {
+  return request({
+    url: '/kms/api/user/otherInfo',
+    method: 'GET',
+    data,
+  })
+}

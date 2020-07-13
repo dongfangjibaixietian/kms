@@ -1,0 +1,166 @@
+@import 'global.scss';
+
+.KnowledgeListHeader {
+  width: 1230px;
+  height: 156px;
+  background-color: white;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 20px 0 30px;
+  }
+
+  .tabsWrapper {
+    width: 1230px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .nm {
+    width: 80px;
+    height: 20px;
+    font-size: 20px;
+    font-family: PingFang-SC-Regular, PingFang-SC;
+    font-weight: 400;
+    color: rgba(51, 51, 51, 1);
+    line-height: 20px;
+    margin-bottom: 8px;
+  }
+
+  .intro {
+    font-size: 12px;
+    font-family: PingFang-SC-Regular, PingFang-SC;
+    font-weight: 400;
+    color: rgba(163, 163, 163, 1);
+    line-height: 20px;
+  }
+
+  .pic {
+    margin-top: 30px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+
+  .pers {
+    width: 300px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .leftinfo {
+    flex: 1;
+    margin-top: 35px;
+  }
+
+  .publishBtn {
+    margin-top: 10px;
+    background: rgba(245, 245, 245, 1);
+  }
+
+  .rigtinfo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 571px;
+  }
+
+  .one {
+    flex: 1;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    height: 50px;
+    border-right: 1px solid #ddd;
+  }
+
+  .dataone {
+    flex: 1;
+  }
+
+  .two {
+    flex: 1;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    height: 50px;
+    border-right: 1px solid #ddd;
+  }
+
+  .datatwo {
+    flex: 1;
+  }
+
+  .three {
+    flex: 1;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    height: 50px;
+    border-right: 1px solid #ddd;
+  }
+
+  .datathree {
+    flex: 1;
+  }
+
+  .four {
+    flex: 1;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    height: 50px;
+    border-right: 1px solid #ddd;
+  }
+
+  .datafour {
+    flex: 1;
+  }
+
+  .five {
+    flex: 1;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    height: 50px;
+  }
+
+  .datafive {
+    flex: 1;
+  }
+
+  .tabs {
+    :global {
+      .ant-tabs-bar {
+        margin-bottom: 0;
+        border-bottom: unset;
+      }
+
+      .ant-tabs-tab {
+        height: 72px;
+        line-height: 72px;
+        padding: unset;
+
+        &:hover {
+          color: #121212;
+        }
+      }
+
+      .ant-tabs-tab-active {
+        color: #121212;
+        font-weight: 600;
+      }
+
+      .ant-tabs-ink-bar {
+        background-color: #121212;
+      }
+    }
+  }
+}

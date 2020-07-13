@@ -1,0 +1,52 @@
+@import 'global.scss';
+
+.modalWrapper {
+  :global {
+    .ant-modal-content {
+      border-radius: 7px;
+    }
+
+    .ant-modal-body {
+      height: 280px;
+      padding: unset;
+    }
+
+    // .ant-btn {
+    //   background-color: $button;
+    // }
+  }
+
+  .header {
+    color: #333;
+    height: 78px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  .infoWrapper {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    padding: 0px 30px;
+  }
+
+  .createBtn {
+    display: flex;
+    justify-content: center;
+    padding-top: 30px;
+    margin-top: 18px;
+
+    .btn {
+      background-color: $button;
+      width: 220px;
+      height: 40px;
+    }
+  }
+
+  .title0 {
+    margin-bottom: 8px;
+  }
+}

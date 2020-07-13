@@ -1,0 +1,75 @@
+@import 'global.scss';
+
+.modalWrapper {
+  :global {
+    .ant-modal-content {
+      border-radius: 7px;
+    }
+
+    .ant-upload-list-item {
+      display: none;
+    }
+
+    .ant-modal-body {
+      height: 600px;
+      padding: unset;
+    }
+
+    // .ant-btn {
+    //   background-color: $button;
+    // }
+  }
+
+  .header {
+    color: #333;
+    height: 78px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  .infoWrapper {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    height: 500px;
+    padding: 10px 30px;
+  }
+
+  .uplo {
+    display: flex;
+  }
+
+  .pic {
+    // flex: 1;
+    margin-top: 8px;
+    margin-right: 10px;
+    border-radius: 50%;
+    width: 88px;
+    height: 88px !important;
+  }
+
+  .smallword {
+    margin-top: 10px;
+    width: 170px;
+  }
+
+  .createBtn {
+    display: flex;
+    justify-content: center;
+    padding-top: 30px;
+
+    .btn {
+      background-color: $button;
+      width: 220px;
+      height: 40px;
+    }
+  }
+
+  .rightdiv {
+    padding-top: 32px;
+    padding-left: 6px;
+  }
+}
