@@ -3,7 +3,7 @@ import { Table, Button, Space, Upload, message } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 
 import style from './index.scss'
-import MemberManger from './MemberManger'
+import MemberManger from './membermanger'
 import NewFils from './NewFils/index.jsx'
 
 import { libFileList } from '@/api/library'
