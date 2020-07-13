@@ -48,21 +48,17 @@ const ArticleEditor = ({ history, location }) => {
   }
 
   const fuwenbenOnChange = (v) => {
-    console.log(v.toRAW())
     setEditorState(v)
-    !id && saveStorage()
     console.log(v.toHTML())
+    !id && saveStorage()
   }
 
   const handleChange = (value) => {
-    console.log(value)
     setMdValue(value)
-    console.log(mdValue, 'change')
   }
 
   // 保存文章
   const saveArticle = async () => {
-    console.log(editorState.isEmpty())
     if (editorState.isEmpty()) {
       return message.error('请输入文章内容')
     }
@@ -70,10 +66,8 @@ const ArticleEditor = ({ history, location }) => {
   }
 
   const handleSave = (value) => {
-    console.log(this)
     console.log('保存====', value)
     setMdValue(value)
-    console.log(mdValue)
   }
 
   const mdEditorAddSaveBtn = () => {
@@ -106,7 +100,7 @@ const ArticleEditor = ({ history, location }) => {
     Uploader.upload({
       file: param.file,
       type: 1, // 1 图片 2 视频 3 其他
-      filename: `${randomNum()}.${fileSuffix}}`, // 文件名称需要自己生成，不能包含中文
+      filename: `${randomNum()}.${fileSuffix}`, // 文件名称需要自己生成，不能包含中文
     }).then(
       (url) => {
         console.log('上传后的地址', url)
