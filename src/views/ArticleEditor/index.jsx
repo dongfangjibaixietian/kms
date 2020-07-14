@@ -9,6 +9,7 @@ import { Uploader } from '@gworld/toolset'
 import { randomNum } from '@/utils/index'
 import { message } from 'antd'
 import { setItem, getItem } from '@/utils/storage'
+import { useRootStore } from '@/utils/customHooks'
 import style from './index.scss'
 
 const toolbar = {
@@ -35,6 +36,7 @@ const ArticleEditor = ({ history, location }) => {
   const [editorState, setEditorState] = useState(BraftEditor.createEditorState(null))
   // 获取文章类型 md: markdown use:富文本
   const [editorType, setEditorType] = useState('md')
+  const { setModelVisible, isLogin } = useRootStore().userStore
 
   // 储存文章
   const saveStorage = () => {
@@ -61,6 +63,12 @@ const ArticleEditor = ({ history, location }) => {
   const saveArticle = async () => {
     if (editorState.isEmpty()) {
       return message.error('请输入文章内容')
+    }
+    console.log(isLogin)
+    if (!getItem('token') || !isLogin) {
+      message.error('登录过期，请重新登录')
+      setModelVisible(true)
+      return
     }
     history.push('/publish')
   }

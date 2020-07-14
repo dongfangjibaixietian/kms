@@ -176,7 +176,9 @@ const useGetRoutes = () => {
     setEditorRoutes,
     setArticleRoutes,
     setOnlineharddetailsRoutes,
-    // setPublishArticle,
+    setPublishArticle,
+    setAgreementRoutes,
+    setPrivacyRoutes,
   }
 }
 

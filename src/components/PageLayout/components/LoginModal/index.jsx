@@ -5,22 +5,25 @@ import { login, register } from '@/api/user'
 import { setItem } from '@/utils/storage'
 import style from './index.scss'
 import md5 from 'js-md5'
-import { checkEmail } from '@gworld/toolset'
 
-const LoginModal = ({ visible, setIsShowModal, change, onCancel, type }) => {
+import { checkEmail } from '@gworld/toolset'
+import { useRootStore } from '@/utils/customHooks'
+import { observer } from 'mobx-react-lite'
+
+const LoginModal = () => {
+  const { modelVisible, setModelVisible, modelType, setLoginState } = useRootStore().userStore
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [email, setEmail] = useState('')
-  const [titleType, setType] = useState(type)
+  const [type, setType] = useState(modelType)
   const [checked, setChecked] = useState(true)
+  // 防止点击协议与政策勾选
   const [isAllowed, setAllowed] = useState(true)
   const [loginForm] = Form.useForm()
 
   const closeModal = () => {
-    setUsername('')
-    setPassword('')
-    setEmail('')
-    setIsShowModal(false)
+    loginForm.resetFields()
+    setModelVisible(false)
   }
 
   const loginUser = async () => {
@@ -30,7 +33,8 @@ const LoginModal = ({ visible, setIsShowModal, change, onCancel, type }) => {
         password: md5(password),
       })
       setItem('token', res.data.token)
-      change(res.data.token)
+      message.success('登录成功')
+      setLoginState(true)
       closeModal()
     } catch (error) {
       console.log(error)
@@ -46,22 +50,14 @@ const LoginModal = ({ visible, setIsShowModal, change, onCancel, type }) => {
     })
 
     if (res.code === 0) {
+      message.success('注册成功')
       loginUser()
     }
   }
 
-  useEffect(() => {
-    if (!visible) return
-    if (titleType === 1) {
-      loginForm.validateFields(['username', 'password'])
-    } else {
-      loginForm.validateFields(['username', 'password', 'email'])
-    }
-  }, [titleType, visible])
-
   const onFinish = async () => {
     if (!checked) return message.error('请勾选协议与声明')
-    switch (titleType) {
+    switch (type) {
       case 1:
         loginUser()
         break
@@ -77,13 +73,10 @@ const LoginModal = ({ visible, setIsShowModal, change, onCancel, type }) => {
   }
 
   const checkChange = (e) => {
-    console.log(e)
     if (!isAllowed) {
       setAllowed(true)
       return
     }
-    console.log('穿透')
-
     setChecked(e.target.checked)
   }
 
@@ -97,7 +90,7 @@ const LoginModal = ({ visible, setIsShowModal, change, onCancel, type }) => {
       ({ getFieldValue }) => ({
         validator(rule, value) {
           console.log(value)
-          if (value === '') {
+          if (value === '' || value === undefined || value === null) {
             return Promise.reject('请输入用户名')
           }
           if (getFieldValue('username') === value && value.length >= 4) {
@@ -113,7 +106,7 @@ const LoginModal = ({ visible, setIsShowModal, change, onCancel, type }) => {
     rules: [
       ({ getFieldValue }) => ({
         validator(rule, value) {
-          if (value === '') {
+          if (value === '' || value === undefined || value === null) {
             return Promise.reject('请输入密码')
           }
           if (getFieldValue('password') === value && value.length >= 6) {
@@ -129,10 +122,10 @@ const LoginModal = ({ visible, setIsShowModal, change, onCancel, type }) => {
     rules: [
       ({}) => ({
         validator(rule, value) {
-          if (titleType === 1) {
+          if (type === 1) {
             return Promise.resolve()
           }
-          if (value === '') {
+          if (value === '' || value === undefined || value === null) {
             return Promise.reject('请输入邮箱')
           }
           if (checkEmail(value)) {
@@ -145,7 +138,7 @@ const LoginModal = ({ visible, setIsShowModal, change, onCancel, type }) => {
   }
 
   let defaultView
-  if (titleType === 1) {
+  if (type === 1) {
     defaultView = (
       <div className={style.registerBtn} onClick={() => loginOrRegister(2)}>
         立即注册
@@ -160,18 +153,17 @@ const LoginModal = ({ visible, setIsShowModal, change, onCancel, type }) => {
   }
 
   useEffect(() => {
-    console.log(type)
-    setType(type)
-  }, [visible])
+    setType(modelType)
+  }, [modelVisible])
 
   return (
     <Modal
       getContainer={false}
       title=""
       okText="确认"
-      visible={visible}
+      visible={modelVisible}
       onOk={loginUser}
-      onCancel={onCancel}
+      onCancel={closeModal}
       width={420}
       centered={true}
       footer={false}
@@ -183,7 +175,7 @@ const LoginModal = ({ visible, setIsShowModal, change, onCancel, type }) => {
         <span className={style.loginTitle}>超G知识库</span>
       </div>
 
-      <Form name="normal_login" form={loginForm} className="login-form" onFinish={onFinish}>
+      <Form name="normal_login" form={loginForm} className="login-form" onFinish={onFinish} autoComplete="off">
         <Form.Item name="username" {...nameConfig}>
           <Input
             value={username}
@@ -203,7 +195,7 @@ const LoginModal = ({ visible, setIsShowModal, change, onCancel, type }) => {
             placeholder="请输入密码"
           />
         </Form.Item>
-        {titleType === 2 ? (
+        {type === 2 ? (
           <Form.Item name="email" {...emailConfig}>
             <Input
               value={email}
@@ -217,7 +209,7 @@ const LoginModal = ({ visible, setIsShowModal, change, onCancel, type }) => {
         ) : null}
 
         <Button type="primary" htmlType="submit" className={style.loginBtn}>
-          {titleType === 1 ? '登录' : '注册'}
+          {type === 1 ? '登录' : '注册'}
         </Button>
         <div className={style.otherBox}>
           {defaultView}
@@ -237,4 +229,4 @@ const LoginModal = ({ visible, setIsShowModal, change, onCancel, type }) => {
   )
 }
 
-export default LoginModal
+export default observer(LoginModal)

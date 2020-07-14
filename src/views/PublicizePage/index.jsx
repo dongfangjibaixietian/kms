@@ -17,6 +17,7 @@ const PublicizePage = ({ history }) => {
   const [articleId, setArticleId] = useState('')
   const [poster, setImageUrl] = useState('')
   const [loading, setLoading] = useState(false)
+  const [notRefresh, setNotRefresh] = useState(false)
   const [isPublish, setIsPublish] = useState(false)
   const [publishDate, setPublishDate] = useState(format(new Date(), 'YYYY-MM-DD'))
 
@@ -118,11 +119,17 @@ const PublicizePage = ({ history }) => {
     console.log(articleId)
     if (articleId) {
       sessionStorage.removeItem('id')
-      history.replace('/')
+      setNotRefresh(true)
     } else {
       getTagList()
     }
   }, [])
+
+  useEffect(() => {
+    if (notRefresh) {
+      history.replace('/')
+    }
+  }, [notRefresh])
 
   return (
     <div className={style.publishWrap}>
@@ -210,7 +217,7 @@ const PublicizePage = ({ history }) => {
 
         <div>
           <div style={{ padding: '20px', color: '#333', fontSize: '22px' }}>推荐阅读</div>
-          <ArticleList isEssence={false} isHot={false} />
+          <ArticleList isEssence={false} isHot={false} notRefresh={notRefresh} />
         </div>
       </div>
     </div>

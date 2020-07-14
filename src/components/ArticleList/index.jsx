@@ -22,7 +22,7 @@ const ArticleList = forwardRef((props, ref) => {
 
   // 是否还有更多数据
   const [hasMore, setHasMore] = useState(true)
-  const [isUnmounted, setIsUnmounted] = useState(false)
+  const [notRefresh] = useState(props.notRefresh)
   // 加载中
   const [isLoading, setLoading] = useState(false)
   const [dataList, setList] = useState([])
@@ -103,17 +103,12 @@ const ArticleList = forwardRef((props, ref) => {
   }, [_handleScroll])
 
   useEffect(() => {
-    console.log(isUnmounted, 'isUnmounted')
-    if (!isUnmounted) {
+    if (!notRefresh) {
       getList().then(() => {
         setLoading(false)
       })
     }
-    return () => {
-      setIsUnmounted(true)
-      // isUnmounted = true
-    }
-  }, [state.pageIndex, props.isEssence, props.isHot, hasMore, searchKey])
+  }, [state.pageIndex, props.isEssence, props.isHot, hasMore, searchKey, notRefresh])
 
   return (
     <div className={style.articleList} ref={childRef}>

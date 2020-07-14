@@ -7,7 +7,6 @@ const StickList = forwardRef((props, ref) => {
   const [stickList, setStickList] = useState([])
   const getArticleTop = async () => {
     const res = await articleTop({})
-    console.log(res)
     if (res.code === 0) {
       //设置获取的数据列表
       setStickList(res.data.list)

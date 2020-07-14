@@ -1,176 +1,50 @@
 import React, { useEffect, useState } from 'react'
 import { Comment, Avatar, List, Menu, Dropdown, message } from 'antd'
-import style from './index.scss'
 import { articleDetail, articleCollect } from '@/api/article'
-import { commentList } from '@/api/comment'
+import { userFollow } from '@/api/user'
+import { commentList as commentListApi, commentCreate } from '@/api/comment'
 import { getUrlSearch, formateTime } from '@/utils'
 import { setItem } from '@/utils/storage'
 import BraftEditor from 'braft-editor'
+import { format } from '@gworld/toolset'
+import { getItem } from '@/utils/storage'
+import { useRootStore } from '@/utils/customHooks'
+import { ContentUtils } from 'braft-utils'
+import style from './index.scss'
 import 'braft-editor/dist/output.css'
 import 'braft-editor/dist/index.css'
 
+let commentContent = ''
 const ArticleDetails = ({ history }) => {
-  const list = [
-    {
-      id: 1,
-      content: '这个文章真的好',
-      createTime: '2020-07-02T09:19:10.000Z',
-      user: {
-        id: 10,
-        username: 'taroxin',
-        nickname: 'taroxin',
-        email: '15029352778@163.com',
-        avatar: 'https://images.gmall88.com/bee9ec5c-97af-48ce-ac7d-5dec270ec500_120x120.png',
-      },
-      targetUser: {
-        id: 11,
-        username: 'taroxin',
-        nickname: 'taroxin',
-        email: '15029352778@163.com',
-        avatar: 'https://images.gmall88.com/bee9ec5c-97af-48ce-ac7d-5dec270ec500_120x120.png',
-      },
-      children: [
-        {
-          id: 2,
-          content: '这个文章真的好',
-          createTime: '2020-07-02T09:19:40.000Z',
-          user: {
-            id: 13,
-            username: 'taroxin',
-            nickname: 'taroxin',
-            email: '15029352778@163.com',
-            avatar: 'https://images.gmall88.com/bee9ec5c-97af-48ce-ac7d-5dec270ec500_120x120.png',
-          },
-          targetUser: {
-            id: 14,
-            username: 'taroxin',
-            nickname: 'taroxin',
-            email: '15029352778@163.com',
-            avatar: 'https://images.gmall88.com/bee9ec5c-97af-48ce-ac7d-5dec270ec500_120x120.png',
-          },
-        },
-        {
-          id: 3,
-          content: '这个文章真的好',
-          createTime: '2020-07-02T09:19:40.000Z',
-          user: {
-            id: 15,
-            username: 'taroxin',
-            nickname: 'taroxin',
-            email: '15029352778@163.com',
-            avatar: 'https://images.gmall88.com/bee9ec5c-97af-48ce-ac7d-5dec270ec500_120x120.png',
-          },
-          targetUser: {
-            id: 16,
-            username: 'taroxin',
-            nickname: 'taroxin',
-            email: '15029352778@163.com',
-            avatar: 'https://images.gmall88.com/bee9ec5c-97af-48ce-ac7d-5dec270ec500_120x120.png',
-          },
-        },
-      ],
-    },
-    {
-      id: 4,
-      content: '这个文章真的好',
-      createTime: '2020-07-02T09:19:10.000Z',
-      user: {
-        id: 22,
-        username: 'taroxin',
-        nickname: 'taroxin',
-        email: '15029352778@163.com',
-        avatar: 'https://images.gmall88.com/bee9ec5c-97af-48ce-ac7d-5dec270ec500_120x120.png',
-      },
-      targetUser: {
-        id: 23,
-        username: 'taroxin',
-        nickname: 'taroxin',
-        email: '15029352778@163.com',
-        avatar: 'https://images.gmall88.com/bee9ec5c-97af-48ce-ac7d-5dec270ec500_120x120.png',
-      },
-      children: [
-        {
-          id: 5,
-          content: '这个文章真的好',
-          createTime: '2020-07-02T09:19:40.000Z',
-          user: {
-            id: 24,
-            username: 'taroxin',
-            nickname: 'taroxin',
-            email: '15029352778@163.com',
-            avatar: 'https://images.gmall88.com/bee9ec5c-97af-48ce-ac7d-5dec270ec500_120x120.png',
-          },
-          targetUser: {
-            id: 25,
-            username: 'taroxin',
-            nickname: 'taroxin',
-            email: '15029352778@163.com',
-            avatar: 'https://images.gmall88.com/bee9ec5c-97af-48ce-ac7d-5dec270ec500_120x120.png',
-          },
-        },
-        {
-          id: 6,
-          content: '这个文章真的好',
-          createTime: '2020-07-02T09:19:40.000Z',
-          user: {
-            id: 26,
-            username: 'taroxin',
-            nickname: 'taroxin',
-            email: '15029352778@163.com',
-            avatar: 'https://images.gmall88.com/bee9ec5c-97af-48ce-ac7d-5dec270ec500_120x120.png',
-          },
-          targetUser: {
-            id: 27,
-            username: 'taroxin',
-            nickname: 'taroxin',
-            email: '15029352778@163.com',
-            avatar: 'https://images.gmall88.com/bee9ec5c-97af-48ce-ac7d-5dec270ec500_120x120.png',
-          },
-        },
-      ],
-    },
-  ]
-
-  const CommentTemplate = ({ item, children }) => {
-    console.log(item)
-    console.log(children)
-    return (
-      <Comment
-        actions={[
-          <div key="comment-list-reply-to-0" className={style.reply}>
-            <img width="16" src={require('@/assets/img/reply.png').default} alt="" /> 回复
-          </div>,
-        ]}
-        author={<a>{item.user.username}</a>}
-        avatar={<Avatar src={item.user.avatar} />}
-        content={<p>{item.content}</p>}
-        datetime={<span>{item.createTime}</span>}
-      >
-        {children}
-      </Comment>
-    )
-  }
-
+  const { setModelVisible, isLogin } = useRootStore().userStore
   const [id, setArtcileId] = useState('')
   const [isCancel, setCollectStatus] = useState(false)
-  const [commontList, setcommontList] = useState([])
+  const [commentList, setCommentList] = useState([])
   const [detail, setArtcileDetail] = useState({
     title: '',
     content: '',
     createUser: {},
     tags: [],
   })
+  // 回复其他用户
+  const [commnetEditorState, setEditorState] = useState(BraftEditor.createEditorState(null))
+  // 评论文章
+  const [topCommentState, setTopCommentState] = useState(BraftEditor.createEditorState(null))
+  // 区分评论文章还是回复他人
+  const [isTop, setIsTop] = useState(true)
+  const [parentId, setParentId] = useState('')
+  const [targetUserId, setTargetUserId] = useState('')
 
   const getCommentList = async () => {
     try {
       // 获取评论列表
-      const commentRes = await commentList({
+      const commentRes = await commentListApi({
         articleId: id,
         pageIndex: 1,
         pageSize: 20,
       })
-      console.log(commentRes)
-      setcommontList(list)
+      console.log(commentRes.data.list)
+      setCommentList(commentRes.data.list)
     } catch (error) {
       console.log(error)
     }
@@ -228,6 +102,141 @@ const ArticleDetails = ({ history }) => {
     },
   ]
 
+  const addComment = async () => {
+    try {
+      // 新增评论
+      console.log(topCommentState.toHTML())
+      if (topCommentState.isEmpty() && !commentContent) return
+      if (!getItem('token') || !isLogin) {
+        message.error('请先登录')
+        setModelVisible(true)
+        return
+      }
+      const postData = {
+        articleId: id,
+        content: isTop ? topCommentState.toHTML() : commentContent.toHTML(),
+        rawContent: isTop ? topCommentState.toRAW() : commentContent.toRAW(),
+      }
+      if (!isTop) {
+        postData['parentId'] = parentId
+        postData['targetUserId'] = targetUserId
+      }
+      console.log(postData)
+      const creatRes = await commentCreate(postData)
+      console.log(creatRes)
+      if (!isTop) {
+        setEditorState(ContentUtils.clear(commnetEditorState))
+      } else {
+        setTopCommentState(ContentUtils.clear(topCommentState))
+      }
+      getCommentList()
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const extendControls = [
+    {
+      key: 'custom-button',
+      type: 'button',
+      text: (
+        <div className="fuwenben-publish-btn" onClick={addComment}>
+          评论
+        </div>
+      ),
+    },
+  ]
+
+  // 需要展示的富文本按钮
+  const controls = ['emoji']
+
+  const replyComment = (currenItem, parentId) => {
+    setEditorState(BraftEditor.createEditorState(null))
+    console.log(currenItem)
+    const hasChildren = currenItem.children || ''
+    let copyList = []
+    if (hasChildren) {
+      copyList = commentList.map((temp) =>
+        temp.id === currenItem.id ? { ...temp, isComment: !temp.isComment } : { ...temp, isComment: false }
+      )
+    } else {
+      copyList = commentList.map((item) => {
+        if (item.id === parentId) {
+          item.children = item.children.map((temp) =>
+            temp.id === currenItem.id ? { ...temp, isComment: !temp.isComment } : { ...temp, isComment: false }
+          )
+        }
+        return item
+      })
+    }
+    console.log(copyList)
+    currenItem.user && setTargetUserId(currenItem.user.id)
+    setParentId(parentId)
+    setCommentList(copyList)
+  }
+
+  const changeComment = (val) => {
+    console.log(val)
+    console.log(val.toHTML())
+    setIsTop(false)
+    commentContent = val
+  }
+
+  const changeTopComment = (val) => {
+    console.log(val.toHTML())
+    console.log(isTop)
+    setIsTop(true)
+    setTopCommentState(val)
+  }
+
+  const CommentTemplate = ({ item, parentId, children }) => {
+    console.log(item.targetUser)
+    const contentHtml = item.targetUser
+      ? `回复 <span class=${style.targerName}>${item.targetUser.username}:</span>${item.content}`
+      : item.content
+
+    return (
+      <Comment
+        className={style.commentItem}
+        actions={[
+          <div
+            key="comment-list-reply-to-0"
+            className={style.reply}
+            onClick={() => {
+              replyComment(item, parentId)
+            }}
+          >
+            <img width="16" src={require('@/assets/img/reply.png').default} alt="" /> 回复
+          </div>,
+        ]}
+        author={<a>{item.user ? item.user.username : '昵称'}</a>}
+        avatar={<Avatar src={item.user ? item.user.avatar : ''} />}
+        content={
+          <div
+            className={`${item.targetUser ? style.hasTarget : null} braft-output-content`}
+            dangerouslySetInnerHTML={{
+              __html: contentHtml,
+            }}
+          ></div>
+        }
+        datetime={<span>{format(item.createTime, 'YYYY-MM-DD HH:mm:ss')}</span>}
+      >
+        {item.isComment ? (
+          <div className={style.editorWrapper}>
+            <BraftEditor
+              extendControls={extendControls}
+              controls={controls}
+              value={commnetEditorState}
+              onChange={changeComment}
+            />
+          </div>
+        ) : null}
+
+        {children}
+      </Comment>
+    )
+  }
+
   // 进入文章编辑页面
   const goToEditArticle = () => {
     setItem('type', detail.type)
@@ -265,16 +274,13 @@ const ArticleDetails = ({ history }) => {
     await articleCollect({ id: id, isCancel: isCancel })
   }
 
-  const extendControls = [
-    {
-      key: 'custom-button',
-      type: 'button',
-      text: <div className="fuwenben-publish-btn">评论</div>,
-    },
-  ]
-
-  // 需要展示的富文本按钮
-  const controls = ['emoji']
+  // 关注用户
+  const followUser = async () => {
+    const res = await userFollow({ id: detail.createUser.id })
+    if (res.code === 0) {
+      message.success('关注成功')
+    }
+  }
 
   useEffect(() => {
     const searchId = getUrlSearch(window.location.search)
@@ -338,20 +344,25 @@ const ArticleDetails = ({ history }) => {
             </div>
           </div>
           <div className={style.editorWrapper}>
-            <BraftEditor extendControls={extendControls} controls={controls} />
+            <BraftEditor
+              extendControls={extendControls}
+              controls={controls}
+              value={topCommentState}
+              onChange={changeTopComment}
+            />
           </div>
           <div className={style.commentArea}>
             <List
-              header={`${commontList.length} 个评论`}
+              header={`${commentList.length} 个评论`}
               className={style.commentList}
               itemLayout="horizontal"
-              dataSource={commontList}
+              dataSource={commentList}
               renderItem={(item) => (
                 <List.Item>
-                  <CommentTemplate item={item}>
+                  <CommentTemplate item={item} parentId={item.id}>
                     {item.children.length > 0
                       ? item.children.map((subItem) => (
-                          <CommentTemplate key={subItem.id} item={subItem}></CommentTemplate>
+                          <CommentTemplate key={subItem.id} item={subItem} parentId={item.id}></CommentTemplate>
                         ))
                       : null}
                   </CommentTemplate>
@@ -363,17 +374,22 @@ const ArticleDetails = ({ history }) => {
 
         <div className={style.articleRelated}>
           <div className={style.authorInfo}>
-            <Avatar size="small" className={style.avatarImg} src={detail.createUser.avatar} />
-            <div className={style.authorAbout}>
-              <div>{detail.createUser.username}</div>
-              <div className={style.buttonGroup}>
-                <span className={style.attention}>关注</span>
-                <span className={style.private}>私信</span>
+            <div className={style.authTitle}>作者信息</div>
+            <div className={style.authInfo}>
+              <Avatar size="small" className={style.avatarImg} src={detail.createUser.avatar} />
+              <div className={style.authorAbout}>
+                <div>{detail.createUser.username}</div>
+                <div className={style.buttonGroup}>
+                  <span className={style.attention} onClick={followUser}>
+                    关注
+                  </span>
+                  <span className={style.private}>私信</span>
+                </div>
               </div>
             </div>
           </div>
           <div className={style.item}>
-            <div>文档标签</div>
+            <div className={style.authTitle}>文档标签</div>
             <div className={style.categoryDetails}>
               {detail.tags.map((tag) => (
                 <div key={tag.id} className={style.tagItem}>
@@ -383,7 +399,7 @@ const ArticleDetails = ({ history }) => {
             </div>
           </div>
           <div className={style.item}>
-            <div>相关文档</div>
+            <div className={style.authTitle}>相关文档</div>
             <div className={style.docList}>
               <div>万字长文，详解企业的线上运营策略MVP设计</div>
               <div>万字长文，详解企业的线上运营策略MVP设计</div>

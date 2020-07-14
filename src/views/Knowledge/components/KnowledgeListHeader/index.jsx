@@ -3,12 +3,15 @@ import { Tabs, Button } from 'antd'
 
 import style from './index.scss'
 import PublishModal from './../PublishModal'
+import { useRootStore } from '@/utils/customHooks'
 
 const { TabPane } = Tabs
 
 const KnowledgeListHeader = ({ update }) => {
   const [publishModalVisible, setPublishModalVisible] = useState(false)
+  const { setModelVisible, isLogin } = useRootStore().userStore
   const triggerShowPublishModal = (isShow) => {
+    if (!isLogin) return setModelVisible(true)
     setPublishModalVisible(isShow)
   }
 

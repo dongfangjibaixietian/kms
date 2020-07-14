@@ -3,26 +3,20 @@ import { Input, Avatar, Dropdown, Menu, Modal, message } from 'antd'
 import { withRouter } from 'react-router-dom'
 import { SearchOutlined } from '@ant-design/icons'
 import { observer } from 'mobx-react-lite'
-import { setItem, getItem, removeItem } from '@/utils/storage'
+import { removeItem } from '@/utils/storage'
 import style from './index.scss'
-import LoginModal from './../LoginModal'
-import { userInfo } from '@/api/user'
-import jwtDecode from 'jwt-decode'
+import { useRootStore } from '@/utils/customHooks'
 
 const HeaderRight = () => {
-  const [isShowModal, setIsShowModal] = useState(false)
-
-  // 1: 登录 2: 注册
-  const [type, setType] = useState(1)
-  const [token, setToken] = useState(getItem('token'))
+  const { setModelVisible, setModelType, isLogin, setLoginState, userInfo } = useRootStore().userStore
   const [user, setUser] = useState({
     avatar: '',
   })
   const [searchVal, setSearchVal] = useState('')
 
   const triggerShowModal = (type) => {
-    setType(type)
-    setIsShowModal(true)
+    setModelType(type)
+    setModelVisible(true)
   }
 
   const { confirm } = Modal
@@ -37,7 +31,7 @@ const HeaderRight = () => {
         removeItem('token')
         removeItem('user')
         removeItem('article')
-        setToken('')
+        setLoginState(false)
       },
       onCancel() {
         console.log('Cancel')
@@ -58,10 +52,8 @@ const HeaderRight = () => {
   }
 
   const searchArticle = (e) => {
-    console.log(e.target.value)
     setSearchKey(e.target.value)
     setSearchVal(e.target.value)
-    console.log('按下回车')
   }
 
   const menu = (
@@ -82,7 +74,7 @@ const HeaderRight = () => {
   )
 
   let defaultView
-  if (token) {
+  if (isLogin) {
     defaultView = (
       <Dropdown overlay={menu} trigger={['click']}>
         <Avatar className={style.avatarImg} src={user.avatar} />
@@ -101,29 +93,10 @@ const HeaderRight = () => {
     )
   }
 
-  const getUserInfo = async () => {
-    try {
-      const user = jwtDecode(token)
-      console.log(user)
-      const info = await userInfo({
-        id: user.id,
-      })
-      console.log(info.data)
-      setItem('user', JSON.stringify(info.data))
-      setUser(info.data.user)
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
   useEffect(() => {
-    console.log(token, 'use')
-    if (!token) {
-      setToken('')
-      return
-    }
-    getUserInfo()
-  }, [token])
+    if (!isLogin && !userInfo) return
+    setUser(userInfo.user)
+  }, [userInfo])
 
   return (
     <div className={style.headerRight}>
@@ -135,13 +108,6 @@ const HeaderRight = () => {
         suffix={<SearchOutlined style={{ color: 'rgba(201, 201, 201)', fontSize: 20 }} />}
       />
       {defaultView}
-      <LoginModal
-        change={setToken}
-        type={type}
-        setIsShowModal={setIsShowModal}
-        visible={isShowModal}
-        onCancel={() => setIsShowModal(false)}
-      />
     </div>
   )
 }
