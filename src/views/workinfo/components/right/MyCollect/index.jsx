@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useCallback, useReducer } from 'react'
 import { List, Avatar, Spin } from 'antd'
 import style from './index.scss'
-import { scrollEvent, formateTime } from '@/utils/index'
-import { articleList } from '@/api/article'
-const Article = () => {
+import { scrollEvent, formateTime } from '@/utils'
+import { articleCollectList } from '@/api/article'
+const MyCollect = () => {
   const locale = {
     emptyText: '暂无数据',
   }
@@ -58,19 +58,13 @@ const Article = () => {
     if (isLoading || !hasMore) return
     setLoading(true)
 
-    const res = await articleList({
-      searchKey: '',
+    const res = await articleCollectList({
       ...state,
-      isEssence: false,
-      isHot: false,
     })
 
     if (!hasMore || res.data.list.length < 10) {
       setHasMore(false)
     }
-    res.data.list.forEach((item) => {
-      item.tags = item.tags || []
-    })
     setList(() => {
       return [...dataList, ...res.data.list]
     })
@@ -137,4 +131,4 @@ const Article = () => {
   )
 }
 
-export default Article
+export default MyCollect

@@ -1,13 +1,15 @@
 import React, { useState, useReducer, useEffect } from 'react'
-import { Table, Button, Space, Upload, message } from 'antd'
+import { Table, Button, Space, Upload, message, Modal } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 
 import style from './index.scss'
 import MemberManger from './MemberManger'
 import NewFils from './NewFils/index.jsx'
 
-import { libFileList } from '@/api/library'
+import { libFileList, upLoadLib } from '@/api/library'
 import { getUrlSearch, formateTime } from '@/utils'
+import { Uploader } from '@gworld/toolset'
+import { randomNum } from '@/utils/index'
 
 const OnlinehardDetails = () => {
   const [publishModalVisible, setPublishModalVisible] = useState(false)
@@ -34,32 +36,149 @@ const OnlinehardDetails = () => {
   const [dataList, setList] = useState([])
   const [lib, setLib] = useState([])
   const [id, setOnLineHardId] = useState('')
+  const [finame, setFiName] = useState('')
+  const [filesize, setFileSize] = useState('')
+  const [filetype, setFileType] = useState('')
+  const [url, setUrl] = useState('')
+  const [parentId, setParentId] = useState('0')
+
+  // function getFileType(fileName) {
+  //   // 根据后缀判断文件类型
+  //   let fileSuffix = ''
+  //   // 结果
+  //   let result = ''
+  //   try {
+  //     const flieArr = fileName.split('.')
+  //     fileSuffix = flieArr[flieArr.length - 1]
+  //   } catch (err) {
+  //     fileSuffix = ''
+  //   }
+  //   // fileName无后缀返回 false
+  //   // 图片格式
+  //   const imglist = ['png', 'jpg', 'jpeg', 'bmp', 'gif']
+  //   // 进行图片匹配
+  //   result = imglist.some(function (item) {
+  //     return item == fileSuffix
+  //   })
+  //   if (result) {
+  //     setResult('img')
+  //   }
+  //   // 匹配txt
+  //   const txtlist = ['txt']
+  //   result = txtlist.some(function (item) {
+  //     return item == fileSuffix
+  //   })
+  //   if (result) {
+  //     setResult(txt)
+  //   }
+  //   // 匹配 excel
+  //   const excelist = ['xls', 'xlsx']
+  //   result = excelist.some(function (item) {
+  //     return item == fileSuffix
+  //   })
+  //   if (result) {
+  //     setResult(excel)
+  //   }
+  //   // 匹配 word
+  //   const wordlist = ['doc', 'docx']
+  //   result = wordlist.some(function (item) {
+  //     return item == fileSuffix
+  //   })
+  //   if (result) {
+  //     result = 'word'
+  //     return result
+  //   }
+  //   // 匹配 pdf
+  //   const pdflist = ['pdf']
+  //   result = pdflist.some(function (item) {
+  //     return item == fileSuffix
+  //   })
+  //   if (result) {
+  //     result = 'pdf'
+  //     return result
+  //   }
+  //   // 匹配 ppt
+  //   const pptlist = ['ppt']
+  //   result = pptlist.some(function (item) {
+  //     return item == fileSuffix
+  //   })
+  //   if (result) {
+  //     result = 'ppt'
+  //     return result
+  //   }
+  //   // 匹配 视频
+  //   const videolist = ['mp4', 'm2v', 'mkv']
+  //   result = videolist.some(function (item) {
+  //     return item == fileSuffix
+  //   })
+  //   if (result) {
+  //     result = 'video'
+  //     return result
+  //   }
+  //   // 匹配 音频
+  //   const radiolist = ['mp3', 'wav', 'wmv']
+  //   result = radiolist.some(function (item) {
+  //     return item == fileSuffix
+  //   })
+  //   if (result) {
+  //     result = 'radio'
+  //     return result
+  //   }
+  //   // 其他 文件类型
+  //   result = 'other'
+  //   return result
+  // }
 
   const getFileList = async () => {
-    // if (isLoading || !hasMore) return
-    // setLoading(true)
-    console.log(1111111111)
-    console.log(id)
     const res = await libFileList({
+      //知识库id
       id: id,
     })
-
-    if (!hasMore || res.data.list.length < 10) {
-      setHasMore(false)
-    }
     console.log(res.data)
-    const result = Object.assign({}, detail, res.data)
-    setList(() => {
-      return [...dataList, ...res.data.list]
+    res.data.list.map((item, index) => {
+      item.key = index
     })
+
+    setList(res.data.list)
+
+    // setList(() => {
+    //   return [...dataList, ...res.data.list]
+    // })
   }
 
+  const _upLoadLib = async (file, url) => {
+    console.log(file)
+    let fileType = file.name.split('.')[1] || 'png'
+
+    if (fileType == 'png') {
+      fileType = 'img'
+    }
+    if (fileType == 'doc' || 'docx') {
+      fileType = 'word'
+    }
+    if (fileType == 'xls' || 'xlsx') {
+      fileType = 'excel'
+    }
+    // 图片格式
+
+    const res = await upLoadLib({
+      id: id,
+      fileName: file.name,
+      fileSize: file.size,
+      type: fileType,
+      fileUrl: url,
+      parentId: parentId,
+    })
+
+    // if (!hasMore || res.data.list.length < 10) {
+    //   setHasMore(false)
+    // }
+    window.location.reload()
+    setParentId(res.data)
+  }
   const props = {
     name: 'file',
     action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-    headers: {
-      authorization: 'authorization-text',
-    },
     onChange(info) {
       if (info.file.status !== 'uploading') {
         console.log(info.file, info.fileList)
@@ -70,7 +189,42 @@ const OnlinehardDetails = () => {
         message.error(`${info.file.name} file upload failed.`)
       }
     },
+
+    customRequest: (info) => {
+      console.log(randomNum())
+      console.log(info)
+      const fileSuffix = info.file.name.split('.')[1] || 'png'
+      console.log(fileSuffix)
+      Uploader.upload({
+        file: info.file,
+        type: 3, // 1 图片 2 视频 3 其他
+        filename: `${randomNum()}.${fileSuffix}}`, // 文件名称需要自己生成，不能包含中文
+      }).then((url) => {
+        console.log('上传后的地址', url)
+        setUrl(url)
+        // console.log(info.file.name)
+        // setFiName(info.file.name)
+        // console.log(info.file.size)
+        // setFileSize(info.file.size)
+        // console.log(info.file.type)
+        // setFileType(info.file.type)
+        // if (isLoading || !hasMore) return
+        // setLoading(true)
+        // console.log(1111111111)
+        // console.log(id)
+        const file = info.file
+        console.log(file)
+        _upLoadLib(file, url)
+        // change(url)
+      })
+    },
   }
+
+  const download = (row) => {
+    console.log(row)
+    window.open(row.fileUrl)
+  }
+
   // useEffect(() => {
   //   getFileList().then(() => {
   //     setLoading(false)
@@ -89,70 +243,96 @@ const OnlinehardDetails = () => {
   const columns = [
     {
       title: '文件名',
-      dataIndex: 'filename',
+      dataIndex: 'fileName',
       width: 500,
-      // render: () => {
-      //   return (
-      //     <div>
-      //       <img src="/src/assets/img/file.png" className={style.filepng} />
-      //       {'公司LOGO & ICON 合集'}
-      //     </div>
+      render: (text, item, record, index) => {
+        return (
+          <div
+            onClick={() => {
+              console.log(item)
+              const id = item.id
+            }}
+          >
+            {text}
+          </div>
+        )
+      },
+
       //   )
       // },
-      // specify the condition of filtering result
-      // here is that finding the name started with `value`
+      // render: (row) => {
+      //   row === 0 ? '-' : 'fileName'
+      //   // return (
+      //   //   <div>
+      //   //     <img src="/src/assets/img/file.png" className={style.filepng} />
+      //   //     {'公司LOGO & ICON 合集'}
+      //   //   </div>
+      //   // )
+      // },
     },
     {
       title: '大小',
-      dataIndex: 'size',
+      dataIndex: 'fileSize',
     },
     {
       title: '上传人',
-      dataIndex: 'role',
+      dataIndex: 'userId',
     },
     {
       title: '上传时间',
-      dataIndex: 'uptime',
+      dataIndex: 'createTime',
+      // render: (row) =>
+      render: (text, item, record, index) => {
+        return formateTime(text)
+
+        //text是时间，即是内容
+        console.log(text)
+        //record是行索引
+        console.log(record)
+        console.log(index)
+        //item是行的文件总信息
+        console.log(item)
+      },
     },
     {
       title: '管理',
       dataIndex: 'manage',
       key: 'action',
-      render: (text, record, row) =>
-        row === 0 ? (
-          '-'
-        ) : (
-          <Space size="middle">
-            <a
-              onClick={() => {
-                download(row)
-              }}
-            >
-              下载
-            </a>
-          </Space>
-        ),
-
-      // <Space size="middle">
-      //   <a
-      //     onClick={() => {
-      //       download(row)
-      //     }}
-      //   >
-      //     下载
-      //   </a>
-      // </Space>
+      render: (text, record, row) => (
+        // row === 0 ? (
+        //   '-'
+        // ) :
+        <Space size="middle">
+          <a
+            onClick={() => {
+              download(record, row)
+            }}
+          >
+            下载
+          </a>
+        </Space>
+      ),
     },
     {
       title: '',
       dataIndex: 'image',
-      render: () => {
+      render: (text, item, record, index) => {
         return (
           <div>
             <img
               src="/src/assets/img/moreactions.png"
               onClick={() => {
-                console.log(123)
+                console.log(item)
+                const id = item.id
+                Modal.confirm({
+                  title: '确认',
+                  content: `您确认要删除此条数据吗？${id}`,
+                  onOk: () => {
+                    message.success('删除成功')
+                    window.location.reload()
+                  },
+                })
+                // handleDelate(item)
               }}
             />
           </div>
@@ -325,10 +505,6 @@ const OnlinehardDetails = () => {
     console.log('params', pagination, filters, extra)
   }
 
-  const upfiles = () => {
-    console.log(123)
-  }
-
   function changeflag() {
     console.log(123)
     setFlag(!flag)
@@ -355,7 +531,7 @@ const OnlinehardDetails = () => {
             新建文件夹
           </Button>
           <Upload {...props}>
-            <Button type="primary" className={style.btn} onClick={upfiles}>
+            <Button type="primary" className={style.btn} onClick={_upLoadLib}>
               上传文件
             </Button>
           </Upload>
@@ -364,7 +540,7 @@ const OnlinehardDetails = () => {
 
       <div className={style.tablewarp}>
         {flag ? (
-          <Table className={style.table} columns={columns} dataSource={dataone} onChange={onChange} />
+          <Table className={style.table} columns={columns} dataSource={dataList} onChange={onChange} />
         ) : (
           <MemberManger />
         )}

@@ -9,6 +9,7 @@ export function libList(data) {
   })
 }
 
+//新建知识库
 export function libCreate(data) {
   return request({
     url: '/kms/api/lib/create',
@@ -23,5 +24,14 @@ export function libFileList(data) {
     url: '/kms/api/lib/fileList',
     method: 'GET',
     params: data,
+  })
+}
+
+//上传文件到知识库
+export function upLoadLib(data) {
+  return request({
+    url: '/kms/api/lib/upload',
+    method: 'POST',
+    data,
   })
 }

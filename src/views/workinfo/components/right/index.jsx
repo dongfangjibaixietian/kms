@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { Tabs, Button, Comment, Avatar } from 'antd'
 import { EyeOutlined, TagOutlined, MessageOutlined, UpOutlined, DownOutlined } from '@ant-design/icons'
-import Article from './Article/index'
+import MyArticle from './MyArticle/index'
+import MyCollect from './MyCollect/index'
 
 import style from './index.scss'
 
@@ -114,7 +115,8 @@ const Right = () => {
               )}
             </div>
           </div>
-          <Article className={style.articlelist} />
+          <MyArticle className={style.articlelist} />
+
           {/* <div className={style.alltag}>
                 <div className={style.firstrow}>
                   <Tag className={style.tag}>网页开发 {28}</Tag>
@@ -208,7 +210,7 @@ const Right = () => {
           ,
         </TabPane>
         <TabPane tab="我的收藏" key="4">
-          <Article className={style.articlelist} />
+          <MyCollect className={style.articlelist} />
         </TabPane>
       </Tabs>
     </div>

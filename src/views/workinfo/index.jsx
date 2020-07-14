@@ -5,6 +5,7 @@ import style from './index.scss'
 import Top from './components/top'
 import Left from './components/left'
 import Right from './components/right'
+
 // import { test } from '@/service/api'
 
 const Test = () => {

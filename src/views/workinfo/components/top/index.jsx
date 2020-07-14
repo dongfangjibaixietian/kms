@@ -3,7 +3,7 @@ import { Button } from 'antd'
 
 import style from './index.scss'
 import EditorialPerson from './../EditorialPerson'
-import { userOtherInfo } from '@/api/user'
+import { userInfo, userOtherInfo } from '@/api/user'
 
 const Top = () => {
   const [publishModalVisible, setPublishModalVisible] = useState(false)
@@ -17,7 +17,15 @@ const Top = () => {
   const [followCount, setFollowCount] = useState([])
   const [likeCount, setLikeCount] = useState([])
   const [readCount, setReadCount] = useState([])
-  const [url, setUrl] = useState([])
+  const [url, setUrl] = useState('')
+  const [username, setUserName] = useState([])
+
+  const getUserInfo = async () => {
+    const res = await userInfo()
+    const username = res.data.user.username
+    setUserName(username)
+    // window.location.reload()
+  }
 
   const getUserOtherInfo = async () => {
     const res = await userOtherInfo()
@@ -35,7 +43,11 @@ const Top = () => {
 
   useEffect(() => {
     getUserOtherInfo()
-  })
+  }, [])
+
+  useEffect(() => {
+    getUserInfo()
+  }, [])
 
   return (
     <div className={style.KnowledgeListHeader}>
@@ -45,7 +57,7 @@ const Top = () => {
           <div className={style.pers}>
             <img className={style.pic} src={url} alt="" />
             <div className={style.leftinfo}>
-              <div className={style.nm}>马可波罗</div>
+              <div className={style.nm}>{username}</div>
               <div className={style.intro}>暂无个人介绍</div>
               <Button onClick={() => triggerShowPublishModal(true)} className={style.publishBtn}>
                 编辑资料
@@ -67,11 +79,11 @@ const Top = () => {
               <div>点赞数</div>
             </div>
             <div className={style.four}>
-              <div className={style.datafour}>{articleCount}</div>
+              <div className={style.datafour}>{followCount}</div>
               <div>关注</div>
             </div>
             <div className={style.five}>
-              <div className={style.datafive}>{followCount}</div>
+              <div className={style.datafive}>{fansCount}</div>
               <div>粉丝</div>
             </div>
           </div>

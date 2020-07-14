@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom'
 
 import CloseIcon from '@/assets/svg/close.svg'
 import style from './index.scss'
+import { upLoadLib } from '@/api/library'
 // import { Uploader } from '@gworld/toolset'
 // import { creatUser as creatUserApi } from '@/service/api'
 
@@ -13,6 +14,7 @@ import style from './index.scss'
 const NewFils = ({
   visible,
   triggerShowPublishModal,
+  id,
   // history,
   // setIsShowModal
 }) => {
@@ -25,21 +27,20 @@ const NewFils = ({
 
   // const [introduction, setIntroduction] = useState('')
 
-  // const closeModal = () => {
-  //   setUsername('')
-  //   setIsShowModal(false)
-  // }
-
   const _createFile = async () => {
-    try {
-      const res = await creatUserApi({
-        name: username,
-      })
-      setUserInfo(res.data.name)
-    } catch (error) {
-      console.log(error)
-    }
-    closeModal()
+    console.log(1234564545)
+    const res = await upLoadLib({
+      id: id,
+      fileName: title,
+      type: 'folder',
+      parentId: 0,
+      fileSize: 0,
+    })
+    // setUserInfo(res.data.name)
+
+    triggerShowPublishModal(false)
+    console.log(res)
+    // window.location.reload()
   }
 
   return (

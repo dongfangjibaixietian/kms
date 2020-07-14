@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { withRouter } from 'react-router-dom'
 import { Modal, Input, Button, Form, Checkbox, message } from 'antd'
 import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons'
 import { login, register } from '@/api/user'
@@ -7,7 +8,7 @@ import style from './index.scss'
 import md5 from 'js-md5'
 import { checkEmail } from '@gworld/toolset'
 
-const LoginModal = ({ visible, setIsShowModal, change, onCancel, type }) => {
+const LoginModal = ({ visible, setIsShowModal, change, onCancel, type, history }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [email, setEmail] = useState('')
@@ -237,4 +238,4 @@ const LoginModal = ({ visible, setIsShowModal, change, onCancel, type }) => {
   )
 }
 
-export default LoginModal
+export default withRouter(LoginModal)

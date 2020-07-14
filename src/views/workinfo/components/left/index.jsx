@@ -24,7 +24,7 @@ const Left = () => {
   // }
 
   const toLineHardDetails = (item) => {
-    window.open(window.location.origin + `/online/hard?id=${item.id}`)
+    window.open(window.location.origin + `/online/hard?id=${item.id}?uid=0`)
   }
 
   const reducer = (state, action) => {
@@ -80,9 +80,6 @@ const Left = () => {
     if (!hasMore || res.data.list.length < 10) {
       setHasMore(false)
     }
-    res.data.list.forEach((item) => {
-      item.tags = item.tags || []
-    })
     setList(() => {
       return [...dataList, ...res.data.list]
     })
@@ -97,7 +94,7 @@ const Left = () => {
     getList().then(() => {
       setLoading(false)
     })
-  }, [state.pageIndex, hasMore])
+  }, [state.pageIndex])
 
   // useEffect(() => {
   //   getList().then(() => {
@@ -167,7 +164,7 @@ const Left = () => {
                       {item.name}
                     </a>
                   }
-                  description={item.createTime}
+                  description={formateTime(item.createTime)}
                 />
               </List.Item>
             )}
