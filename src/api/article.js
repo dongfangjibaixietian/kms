@@ -47,3 +47,11 @@ export function articleCollect(data) {
     data,
   })
 }
+
+export function articleCollectList(data) {
+  return request({
+    url: '/kms/api/article/collectList',
+    method: 'GET',
+    params: data,
+  })
+}

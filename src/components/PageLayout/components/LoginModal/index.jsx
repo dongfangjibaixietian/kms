@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { withRouter } from 'react-router-dom'
 import { Modal, Input, Button, Form, Checkbox, message } from 'antd'
 import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons'
 import { login, register } from '@/api/user'
