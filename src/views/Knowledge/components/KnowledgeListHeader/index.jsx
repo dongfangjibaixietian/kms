@@ -1,18 +1,18 @@
 import React, { useState } from 'react'
 import { Tabs, Button } from 'antd'
-
+import { setItem } from '@/utils/storage'
 import style from './index.scss'
-import PublishModal from './../PublishModal'
 import { useRootStore } from '@/utils/customHooks'
 
 const { TabPane } = Tabs
 
 const KnowledgeListHeader = ({ update }) => {
-  const [publishModalVisible, setPublishModalVisible] = useState(false)
   const { setModelVisible, isLogin } = useRootStore().userStore
-  const triggerShowPublishModal = (isShow) => {
+  const publishArticle = () => {
     if (!isLogin) return setModelVisible(true)
-    setPublishModalVisible(isShow)
+    setItem('type', 'usd')
+    window.location.href = window.location.origin + `/publish/editor`
+    // setPublishModalVisible(isShow)
   }
 
   const data = [
@@ -53,7 +53,7 @@ const KnowledgeListHeader = ({ update }) => {
             <TabPane tab="专题" key="3" />
           </Tabs>
         </div>
-        <Button onClick={() => triggerShowPublishModal(true)} type="primary" className={style.publishBtn}>
+        <Button onClick={() => publishArticle(true)} type="primary" className={style.publishBtn}>
           我要发表
         </Button>
       </div>
@@ -68,9 +68,6 @@ const KnowledgeListHeader = ({ update }) => {
           </div>
         ))}
       </div>
-      {publishModalVisible && (
-        <PublishModal triggerShowPublishModal={triggerShowPublishModal} visible={publishModalVisible} />
-      )}
     </div>
   )
 }

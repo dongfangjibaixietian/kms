@@ -32,7 +32,8 @@ const PublishModal = ({ visible, triggerShowPublishModal, history }) => {
   // 进入文章编辑页面
   const gotoEditArticle = () => {
     triggerShowPublishModal(false)
-    history.push('/editor')
+    window.open(window.location.origin + `/publish/editor`)
+    // history.push('/publish/editor')
   }
 
   useEffect(() => {

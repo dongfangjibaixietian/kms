@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { Comment, Avatar, List, Menu, Dropdown, message } from 'antd'
-import { articleDetail, articleCollect } from '@/api/article'
+import { Comment, Avatar, List, Menu, Dropdown, message, Modal } from 'antd'
+import { articleDetail, articleCollect, removeArticle } from '@/api/article'
 import { userFollow } from '@/api/user'
 import { commentList as commentListApi, commentCreate } from '@/api/comment'
-import { getUrlSearch, formateTime } from '@/utils'
+import { getUrlSearch } from '@/utils'
 import { setItem } from '@/utils/storage'
 import BraftEditor from 'braft-editor'
 import { format } from '@gworld/toolset'
@@ -16,9 +16,11 @@ import 'braft-editor/dist/index.css'
 
 let commentContent = ''
 const ArticleDetails = ({ history }) => {
-  const { setModelVisible, isLogin } = useRootStore().userStore
-  const [id, setArtcileId] = useState('')
+  const { setModelVisible, isLogin, userInfo } = useRootStore().userStore
+  const [id, setArticleId] = useState('')
   const [isCancel, setCollectStatus] = useState(false)
+  // 是否有文章操作权限
+  const [isAllowed, setIsAllowed] = useState(false)
   const [commentList, setCommentList] = useState([])
   const [detail, setArtcileDetail] = useState({
     title: '',
@@ -32,6 +34,8 @@ const ArticleDetails = ({ history }) => {
   const [topCommentState, setTopCommentState] = useState(BraftEditor.createEditorState(null))
   // 区分评论文章还是回复他人
   const [isTop, setIsTop] = useState(true)
+  // 文章是否已删除
+  const [isDel, setIsDel] = useState(false)
   const [parentId, setParentId] = useState('')
   const [targetUserId, setTargetUserId] = useState('')
 
@@ -152,7 +156,6 @@ const ArticleDetails = ({ history }) => {
 
   const replyComment = (currenItem, parentId) => {
     setEditorState(BraftEditor.createEditorState(null))
-    console.log(currenItem)
     const hasChildren = currenItem.children || ''
     let copyList = []
     if (hasChildren) {
@@ -169,22 +172,17 @@ const ArticleDetails = ({ history }) => {
         return item
       })
     }
-    console.log(copyList)
     currenItem.user && setTargetUserId(currenItem.user.id)
     setParentId(parentId)
     setCommentList(copyList)
   }
 
   const changeComment = (val) => {
-    console.log(val)
-    console.log(val.toHTML())
     setIsTop(false)
     commentContent = val
   }
 
   const changeTopComment = (val) => {
-    console.log(val.toHTML())
-    console.log(isTop)
     setIsTop(true)
     setTopCommentState(val)
   }
@@ -239,11 +237,38 @@ const ArticleDetails = ({ history }) => {
 
   // 进入文章编辑页面
   const goToEditArticle = () => {
+    console.log(history)
     setItem('type', detail.type)
     const data = {
       id: id,
     }
-    history.push({ pathname: '/editor', data })
+    history.push({ pathname: '/publish/editor', data })
+  }
+
+  const { confirm } = Modal
+  //删除文章
+
+  const remove = async () => {
+    const res = await removeArticle({ id: id })
+    if (res.code === 0) {
+      message.info('删除成功')
+      setIsDel(true)
+    }
+  }
+
+  const delArticle = () => {
+    confirm({
+      content: '是否删除该文章',
+      okText: '确认',
+      cancelText: '取消',
+      icon: '',
+      onOk() {
+        remove()
+      },
+      onCancel() {
+        console.log('Cancel')
+      },
+    })
   }
 
   const menuHandleClick = ({ key }) => {
@@ -251,6 +276,9 @@ const ArticleDetails = ({ history }) => {
     switch (key) {
       case 'edit':
         goToEditArticle()
+        break
+      case 'del':
+        delArticle()
         break
       default:
         message.info('敬请期待')
@@ -283,132 +311,154 @@ const ArticleDetails = ({ history }) => {
   }
 
   useEffect(() => {
-    const searchId = getUrlSearch(window.location.search)
-    setArtcileId(searchId.id)
+    if (window.location.search) {
+      const searchInfo = getUrlSearch(window.location.search)
+      sessionStorage.setItem('detailId', searchInfo.id)
+      setArticleId(searchInfo.id)
+    } else {
+      setArticleId(sessionStorage.getItem('detailId'))
+    }
   }, [])
 
   useEffect(() => {
-    id && getArticleDetail()
-  }, [id])
+    if (isLogin && id) getArticleDetail()
+  }, [id, isLogin])
+
+  useEffect(() => {
+    const hasAuth = detail.createUser.id === userInfo.user.id
+    setIsAllowed(hasAuth)
+  }, [userInfo, detail.createUser])
 
   return (
     <div>
-      <div className={style.articleDetails}>
-        <div className={style.articleArea}>
-          <div className={style.main}>
-            <div className={style.titleInfo}>
-              <div className={style.more}>
-                <Dropdown overlay={menu} trigger={['hover']} placement="bottomCenter">
-                  <img style={{ cursor: 'pointer' }} width={16} src={require('@/assets/img/more.png').default} alt="" />
-                </Dropdown>
-              </div>
-              <div className={style.title}>
-                {detail.title}
-                <img className={style.tag} width={16} src={require('@/assets/img/hot.png').default} alt="" />
-                <img className={style.tag} width={16} src={require('@/assets/img/essence.png').default} alt="" />
-                <img className={style.tag} width={16} src={require('@/assets/img/Stick.png').default} alt="" />
-              </div>
-              <div className={style.otherInfo}>
-                <div className={style.left}>
-                  <span className={style.author}>{detail.createUser.username}</span>
-                  <span className={style.number}>创建于</span>
-                  <span className={style.text}>{formateTime(detail.updateTime)}</span>
-                  <span className={style.number}>{detail.viewCount}</span>
-                  <span className={style.text}>浏览</span>
+      {isDel ? (
+        <div className={style.delContent}>该文章已被删除</div>
+      ) : (
+        <div className={style.articleDetails}>
+          <div className={style.articleArea}>
+            <div className={style.main}>
+              <div className={style.titleInfo}>
+                <div className={style.more}>
+                  {isAllowed && isLogin ? (
+                    <Dropdown overlay={menu} trigger={['hover']} placement="bottomCenter">
+                      <img
+                        style={{ cursor: 'pointer' }}
+                        width={16}
+                        src={require('@/assets/img/more.png').default}
+                        alt=""
+                      />
+                    </Dropdown>
+                  ) : null}
                 </div>
-                <div className={style.left}>
-                  <div onClick={collectArticle}>
-                    <img className={style.img} width={16} src={require('@/assets/img/collect.png').default} alt="" />
-                    <span>{isCancel ? '取消收藏' : '收藏'}</span>
+                <div className={style.title}>
+                  {detail.title}
+                  <img className={style.tag} width={16} src={require('@/assets/img/hot.png').default} alt="" />
+                  <img className={style.tag} width={16} src={require('@/assets/img/essence.png').default} alt="" />
+                  <img className={style.tag} width={16} src={require('@/assets/img/Stick.png').default} alt="" />
+                </div>
+                <div className={style.otherInfo}>
+                  <div className={style.left}>
+                    <span className={style.author}>{detail.createUser.username}</span>
+                    <span className={style.number}>创建于</span>
+                    <span className={style.text}>{format(detail.updateTime, 'YYYY-MM-DD HH:mm:ss')}</span>
+                    <span className={style.number}>{detail.viewCount}</span>
+                    <span className={style.text}>浏览</span>
                   </div>
-                  <div>
-                    <img className={style.img} width={16} src={require('@/assets/img/remark.png').default} alt="" />
-                    <span>举报</span>
+                  <div className={style.left}>
+                    <div onClick={collectArticle}>
+                      <img className={style.img} width={16} src={require('@/assets/img/collect.png').default} alt="" />
+                      <span>{isCancel ? '取消收藏' : '收藏'}</span>
+                    </div>
+                    <div>
+                      <img className={style.img} width={16} src={require('@/assets/img/remark.png').default} alt="" />
+                      <span>举报</span>
+                    </div>
                   </div>
+                </div>
+              </div>
+              <div
+                className={`braft-output-content ${style.content}`}
+                dangerouslySetInnerHTML={{ __html: detail.content }}
+              ></div>
+              <div className={style.likeShare}>
+                <div className={style.like}>
+                  <img className={style.tag} width={16} src={require('@/assets/img/like.png').default} alt="" />
+                  点赞
+                </div>
+                <div className={style.share}>
+                  <img className={style.tag} width={16} src={require('@/assets/img/share.png').default} alt="" />
+                  分享
                 </div>
               </div>
             </div>
-            <div
-              className={`braft-output-content ${style.content}`}
-              dangerouslySetInnerHTML={{ __html: detail.content }}
-            ></div>
-            <div className={style.likeShare}>
-              <div className={style.like}>
-                <img className={style.tag} width={16} src={require('@/assets/img/like.png').default} alt="" />
-                点赞
-              </div>
-              <div className={style.share}>
-                <img className={style.tag} width={16} src={require('@/assets/img/share.png').default} alt="" />
-                分享
-              </div>
+            <div className={style.editorWrapper}>
+              <BraftEditor
+                extendControls={extendControls}
+                controls={controls}
+                value={topCommentState}
+                onChange={changeTopComment}
+              />
+            </div>
+            <div className={style.commentArea}>
+              <List
+                header={`${commentList.length} 个评论`}
+                className={style.commentList}
+                itemLayout="horizontal"
+                dataSource={commentList}
+                renderItem={(item) => (
+                  <List.Item>
+                    <CommentTemplate item={item} parentId={item.id}>
+                      {item.children.length > 0
+                        ? item.children.map((subItem) => (
+                            <CommentTemplate key={subItem.id} item={subItem} parentId={item.id}></CommentTemplate>
+                          ))
+                        : null}
+                    </CommentTemplate>
+                  </List.Item>
+                )}
+              />
             </div>
           </div>
-          <div className={style.editorWrapper}>
-            <BraftEditor
-              extendControls={extendControls}
-              controls={controls}
-              value={topCommentState}
-              onChange={changeTopComment}
-            />
-          </div>
-          <div className={style.commentArea}>
-            <List
-              header={`${commentList.length} 个评论`}
-              className={style.commentList}
-              itemLayout="horizontal"
-              dataSource={commentList}
-              renderItem={(item) => (
-                <List.Item>
-                  <CommentTemplate item={item} parentId={item.id}>
-                    {item.children.length > 0
-                      ? item.children.map((subItem) => (
-                          <CommentTemplate key={subItem.id} item={subItem} parentId={item.id}></CommentTemplate>
-                        ))
-                      : null}
-                  </CommentTemplate>
-                </List.Item>
-              )}
-            />
-          </div>
-        </div>
 
-        <div className={style.articleRelated}>
-          <div className={style.authorInfo}>
-            <div className={style.authTitle}>作者信息</div>
-            <div className={style.authInfo}>
-              <Avatar size="small" className={style.avatarImg} src={detail.createUser.avatar} />
-              <div className={style.authorAbout}>
-                <div>{detail.createUser.username}</div>
-                <div className={style.buttonGroup}>
-                  <span className={style.attention} onClick={followUser}>
-                    关注
-                  </span>
-                  <span className={style.private}>私信</span>
+          <div className={style.articleRelated}>
+            <div className={style.authorInfo}>
+              <div className={style.authTitle}>作者信息</div>
+              <div className={style.authInfo}>
+                <Avatar size="small" className={style.avatarImg} src={detail.createUser.avatar} />
+                <div className={style.authorAbout}>
+                  <div>{detail.createUser.username}</div>
+                  <div className={style.buttonGroup}>
+                    <span className={style.attention} onClick={followUser}>
+                      关注
+                    </span>
+                    <span className={style.private}>私信</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div className={style.item}>
-            <div className={style.authTitle}>文档标签</div>
-            <div className={style.categoryDetails}>
-              {detail.tags.map((tag) => (
-                <div key={tag.id} className={style.tagItem}>
-                  {tag.content}
-                </div>
-              ))}
+            <div className={style.item}>
+              <div className={style.authTitle}>文档标签</div>
+              <div className={style.categoryDetails}>
+                {detail.tags.map((tag) => (
+                  <div key={tag.id} className={style.tagItem}>
+                    {tag.content}
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-          <div className={style.item}>
-            <div className={style.authTitle}>相关文档</div>
-            <div className={style.docList}>
-              <div>万字长文，详解企业的线上运营策略MVP设计</div>
-              <div>万字长文，详解企业的线上运营策略MVP设计</div>
-              <div>万字长文，详解企业的线上运营策略MVP设计</div>
-              <div>万字长文，详解企业的线上运营策略MVP设计</div>
+            <div className={style.item}>
+              <div className={style.authTitle}>相关文档</div>
+              <div className={style.docList}>
+                <div>万字长文，详解企业的线上运营策略MVP设计</div>
+                <div>万字长文，详解企业的线上运营策略MVP设计</div>
+                <div>万字长文，详解企业的线上运营策略MVP设计</div>
+                <div>万字长文，详解企业的线上运营策略MVP设计</div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
+
       <div className={style.copyright}>
         Gworld（平潭）互联网科技有限公司 Copyright © 2012-2020 Gworld All Rights Reserved
       </div>

@@ -2,7 +2,7 @@
  * @Author       : charm
  * @Date         : 2020-07-02 10:53:19
  * @LastEditors  : charm
- * @LastEditTime : 2020-07-08 14:37:23
+ * @LastEditTime : 2020-07-15 18:10:43
  * @FilePath     : \gworld-pc-share\src\api\article.js
  */
 
@@ -53,5 +53,13 @@ export function articleCollectList(data) {
     url: '/kms/api/article/collectList',
     method: 'GET',
     params: data,
+  })
+}
+
+export function removeArticle(data) {
+  return request({
+    url: '/kms/api/article/remove',
+    method: 'POST',
+    data,
   })
 }

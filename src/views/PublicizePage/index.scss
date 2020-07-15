@@ -105,15 +105,23 @@
   padding: 10px;
 }
 
+.tips {
+  font-size: 22px;
+  color: #313131;
+}
+
 .toArticle {
-  font-size: 14px;
+  font-size: 20px;
   color: #ff5c5c;
   cursor: pointer;
   padding-bottom: 3px;
   box-sizing: border-box;
-  border-bottom: 1px solid transparent;
+  text-align: center;
+  display: block;
+  text-decoration: underline;
 
   &:hover {
-    border-bottom-color: #ff5c5c;
+    color: #ff5c5c;
+    text-decoration: underline;
   }
 }

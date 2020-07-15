@@ -8,6 +8,7 @@
   display: flex;
   flex-direction: column;
   width: 820px;
+  margin-bottom: 40px;
 }
 
 .main {
@@ -262,7 +263,7 @@
   color: #7f7f7f;
   padding: 26px 0;
   text-align: center;
-  margin-top: 40px;
+  height: 74px;
 }
 
 .reply {
@@ -355,4 +356,11 @@
     color: #406599;
     margin: 0 10px 0 5px;
   }
+}
+
+.delContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(100% - 74px);
 }

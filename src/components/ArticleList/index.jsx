@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useCallback, useReducer, useRef, forwardRef, useImperativeHandle } from 'react'
 import { List, Avatar, Spin } from 'antd'
 import style from './index.scss'
-import { scrollEvent, formateTime } from '@/utils/index'
+import { format } from '@gworld/toolset'
+import { scrollEvent } from '@/utils/index'
 import { articleList } from '@/api/article'
 import { useRootStore } from '@/utils/customHooks'
 
@@ -130,7 +131,7 @@ const ArticleList = forwardRef((props, ref) => {
                 <div className={style.left}>
                   <Avatar size="small" className={style.avatarImg} src={item.createUser.avatar} />
                   <span className={style.author}>{item.createUser.username}</span>
-                  <span className={style.text}>{formateTime(item.updateTime)}</span>
+                  <span className={style.text}>{format(item.updateTime, 'YYYY-MM-DD HH:mm:ss')}</span>
                   <img className={style.text} width={16} src={require('@/assets/img/read.png').default} alt="" />
                   {item.tags.map((tag) => (
                     <span key={tag.id} className={style.text}>
