@@ -6,18 +6,37 @@ import { useRootStore } from '@/utils/customHooks'
 const TagList = () => {
   const { userInfo } = useRootStore().userStore
   const [tagList, setTagList] = useState([])
+
   const getTagList = async () => {
     const res = await tagTree({})
-    console.log(res)
     if (res.code === 0) {
       //设置获取的数据列表
       setTagList(res.data.list)
     }
   }
+
+  const handChange = (currenItem) => {
+    let copyList = []
+    copyList = tagList.map((item) => {
+      if (item.id === currenItem.parentId) {
+        item.children = item.children.map((temp) =>
+          temp.id === currenItem.id ? { ...temp, isActive: true } : { ...temp, isActive: false }
+        )
+      } else {
+        item.children = item.children.map((temp) => {
+          return { ...temp, isActive: false }
+        })
+      }
+      return item
+    })
+    setTagList(copyList)
+  }
+
   useEffect(() => {
     console.log(userInfo)
     getTagList()
   }, [userInfo])
+
   return (
     <div className={style.tagDetails}>
       <div className={style.tagTitle}>文档标签</div>
@@ -28,7 +47,11 @@ const TagList = () => {
                 <div className={style.title}>{item.content}</div>
                 <div className={style.categoryDetails}>
                   {item.children.map((tag) => (
-                    <div key={tag.id} className={style.item}>
+                    <div
+                      key={tag.id}
+                      className={`${style.item} ${tag.isActive ? style.active : null}`}
+                      onClick={() => handChange(tag)}
+                    >
                       {tag.content}
                     </div>
                   ))}

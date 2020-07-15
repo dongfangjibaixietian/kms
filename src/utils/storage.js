@@ -2,7 +2,7 @@
  * @Author       : charm
  * @Date         : 2020-07-02 10:53:19
  * @LastEditors  : charm
- * @LastEditTime : 2020-07-09 19:33:53
+ * @LastEditTime : 2020-07-14 15:31:35
  * @FilePath     : \gworld-pc-share\src\utils\storage.js
  */
 
@@ -23,43 +23,3 @@ export function getItem(type) {
 export function removeItem(type) {
   return window.localStorage.removeItem(STORAGEList[type])
 }
-//token相关
-// export function setToken(data) {
-//   window.localStorage.setItem(TOKEN_KEY, data)
-// }
-
-// export function getToken() {
-//   return window.localStorage.getItem(TOKEN_KEY)
-// }
-
-// export function removeToken() {
-//   return window.localStorage.removeItem(TOKEN_KEY)
-// }
-// // 用户信息
-// export function setUserInfo(data) {
-//   console.log(data)
-//   window.localStorage.setItem(USER_INFO, data)
-// }
-
-// export function getUserInfo() {
-//   console.log(window.localStorage.getItem(USER_INFO))
-//   return window.localStorage.getItem(USER_INFO)
-// }
-
-// export function removeUserInfo() {
-//   return window.localStorage.removeItem(USER_INFO)
-// }
-// // 文章相关
-// export function setArticle(data) {
-//   console.log(data)
-//   window.localStorage.setItem(ARTICLE_INFO, data)
-// }
-
-// export function getArticle() {
-//   console.log(window.localStorage.getItem(ARTICLE_INFO))
-//   return window.localStorage.getItem(ARTICLE_INFO)
-// }
-
-// export function removeArticle() {
-//   return window.localStorage.removeItem(ARTICLE_INFO)
-// }

@@ -1,8 +1,9 @@
 import React from 'react'
-import { Menu } from 'antd'
+import { Menu, message } from 'antd'
 import { withRouter } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
-
+import { useRootStore } from '@/utils/customHooks'
+import { getItem } from '@/utils/storage'
 import style from './index.scss'
 import useGetRoutes from '@/router'
 
@@ -10,11 +11,17 @@ const MenuItem = Menu.Item
 
 const Nav = ({ history, location }) => {
   const { homeRoutes } = useGetRoutes()
-
+  const { isLogin, setModelVisible } = useRootStore().userStore
   const goto = ({ key }) => {
     if (location.pathname === key) {
       return
     }
+    if (!getItem('token') || !isLogin) {
+      message.error('登录过期，请重新登录')
+      setModelVisible(true)
+      return
+    }
+
     history.push(key)
   }
 

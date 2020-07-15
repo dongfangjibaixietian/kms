@@ -9,6 +9,7 @@ import { Uploader } from '@gworld/toolset'
 import { randomNum } from '@/utils/index'
 import { message } from 'antd'
 import { setItem, getItem } from '@/utils/storage'
+import { useRootStore } from '@/utils/customHooks'
 import style from './index.scss'
 
 const toolbar = {
@@ -35,6 +36,7 @@ const ArticleEditor = ({ history, location }) => {
   const [editorState, setEditorState] = useState(BraftEditor.createEditorState(null))
   // 获取文章类型 md: markdown use:富文本
   const [editorType, setEditorType] = useState('md')
+  const { setModelVisible, isLogin } = useRootStore().userStore
 
   // 储存文章
   const saveStorage = () => {
@@ -48,32 +50,32 @@ const ArticleEditor = ({ history, location }) => {
   }
 
   const fuwenbenOnChange = (v) => {
-    console.log(v.toRAW())
     setEditorState(v)
-    !id && saveStorage()
     console.log(v.toHTML())
+    !id && saveStorage()
   }
 
   const handleChange = (value) => {
-    console.log(value)
     setMdValue(value)
-    console.log(mdValue, 'change')
   }
 
   // 保存文章
   const saveArticle = async () => {
-    console.log(editorState.isEmpty())
     if (editorState.isEmpty()) {
       return message.error('请输入文章内容')
+    }
+    console.log(isLogin)
+    if (!getItem('token') || !isLogin) {
+      message.error('登录过期，请重新登录')
+      setModelVisible(true)
+      return
     }
     history.push('/publish')
   }
 
   const handleSave = (value) => {
-    console.log(this)
     console.log('保存====', value)
     setMdValue(value)
-    console.log(mdValue)
   }
 
   const mdEditorAddSaveBtn = () => {
@@ -106,7 +108,7 @@ const ArticleEditor = ({ history, location }) => {
     Uploader.upload({
       file: param.file,
       type: 1, // 1 图片 2 视频 3 其他
-      filename: `${randomNum()}.${fileSuffix}}`, // 文件名称需要自己生成，不能包含中文
+      filename: `${randomNum()}.${fileSuffix}`, // 文件名称需要自己生成，不能包含中文
     }).then(
       (url) => {
         console.log('上传后的地址', url)

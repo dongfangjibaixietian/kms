@@ -17,6 +17,7 @@ const PublicizePage = ({ history }) => {
   const [articleId, setArticleId] = useState('')
   const [poster, setImageUrl] = useState('')
   const [loading, setLoading] = useState(false)
+  const [notRefresh, setNotRefresh] = useState(false)
   const [isPublish, setIsPublish] = useState(false)
   const [publishDate, setPublishDate] = useState(format(new Date(), 'YYYY-MM-DD'))
 
@@ -27,12 +28,6 @@ const PublicizePage = ({ history }) => {
     } catch (error) {
       console.log(error)
     }
-  }
-
-  const getBase64 = (img, callback) => {
-    const reader = new FileReader()
-    reader.addEventListener('load', () => callback(reader.result))
-    reader.readAsDataURL(img)
   }
 
   const beforeUpload = (file) => {
@@ -48,38 +43,34 @@ const PublicizePage = ({ history }) => {
     return isJpgOrPng && isLt2M
   }
 
-  // const customUpload = (param) => {
-  //   console.log(param.file, 'customUpload')
-  //   setLoading(true)
-  //   const fileSuffix = param.file.name.split('.')[1] || 'png'
-  //   Uploader.upload({
-  //     file: param.file,
-  //     type: 1, // 1 图片 2 视频 3 其他
-  //     filename: `${randomNum()}.${fileSuffix}}`, // 文件名称需要自己生成，不能包含中文
-  //   }).then(
-  //     (url) => {
-  //       console.log('上传后的地址', url)
-  //       setLoading(false)
-  //       setImageUrl(url)
-  //     },
-  //     () => {
-  //       message.error('上传失败，请再次上传')
-  //     }
-  //   )
-  // }
+  // 获取富文本内容中第一张图片
+  const getImgUrl = function (str) {
+    let data = ''
+    str.replace(/<img [^>]*src=['"]([^'"]+)[^>]*>/, (match, capture) => {
+      data = capture
+    })
+    return data
+  }
 
-  const handleChange = (info) => {
-    console.log(info, '上传改变')
-    if (info.file.status === 'uploading') {
-      setLoading(true)
-      return
-    }
-    if (info.file.status === 'done') {
-      getBase64(info.file.originFileObj, (poster) => {
+  const customUpload = (param) => {
+    console.log(param.file, 'customUpload')
+    return
+    setLoading(true)
+    const fileSuffix = param.file.name.split('.')[1] || 'png'
+    Uploader.upload({
+      file: param.file,
+      type: 1, // 1 图片 2 视频 3 其他
+      filename: `${randomNum()}.${fileSuffix}`, // 文件名称需要自己生成，不能包含中文
+    }).then(
+      (url) => {
+        console.log('上传后的地址', url)
         setLoading(false)
-        setImageUrl(poster)
-      })
-    }
+        setImageUrl(url)
+      },
+      () => {
+        message.error('上传失败，请再次上传')
+      }
+    )
   }
 
   // 选择的tagId
@@ -94,10 +85,11 @@ const PublicizePage = ({ history }) => {
     // 保存文章
     const articleContent = JSON.parse(getItem('article'))
     console.log(articleContent, 'articleContent')
+    const firstImg = getImgUrl(articleContent.content)
     const postData = {
       title: title,
       type: getItem('type') || 'usd',
-      poster: poster,
+      poster: firstImg,
       content: articleContent.content,
       rawContent: articleContent.rawContent,
       tagIds: selectTagIds,
@@ -127,11 +119,17 @@ const PublicizePage = ({ history }) => {
     console.log(articleId)
     if (articleId) {
       sessionStorage.removeItem('id')
-      history.replace('/')
+      setNotRefresh(true)
     } else {
       getTagList()
     }
   }, [])
+
+  useEffect(() => {
+    if (notRefresh) {
+      history.replace('/')
+    }
+  }, [notRefresh])
 
   return (
     <div className={style.publishWrap}>
@@ -186,28 +184,15 @@ const PublicizePage = ({ history }) => {
                 </Select>
               </Form.Item>
               <div className={style.uploadModule}>
-                {/* <Form.Item name="poster" label="封面">
-                  <Upload
-                    name="poster"
-                    listType="picture-card"
-                    className={style.uploadItem}
-                    showUploadList={false}
-                    action=""
-                    customRequest={customUpload}
-                    beforeUpload={beforeUpload}
-                  >
-                    {poster ? <img src={poster} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
-                  </Upload>
-                </Form.Item> */}
                 <Form.Item name="fj" label="附件">
                   <Upload
                     name="avatar"
                     listType="picture-card"
                     className={style.uploadItem}
                     showUploadList={false}
-                    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                    action=""
                     beforeUpload={beforeUpload}
-                    onChange={handleChange}
+                    customRequest={customUpload}
                   >
                     {poster ? <img src={poster} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
                   </Upload>
@@ -232,7 +217,7 @@ const PublicizePage = ({ history }) => {
 
         <div>
           <div style={{ padding: '20px', color: '#333', fontSize: '22px' }}>推荐阅读</div>
-          <ArticleList isEssence={false} isHot={false} />
+          <ArticleList isEssence={false} isHot={false} notRefresh={notRefresh} />
         </div>
       </div>
     </div>

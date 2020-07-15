@@ -2,12 +2,13 @@
  * @Author       : charm
  * @Date         : 2020-07-02 10:53:19
  * @LastEditors  : charm
- * @LastEditTime : 2020-07-09 17:40:00
+ * @LastEditTime : 2020-07-14 15:02:02
  * @FilePath     : \gworld-pc-share\src\api\index.js
  */
 
 import { Request } from '@gworld/toolset'
 import { getItem, removeItem } from '@/utils/storage'
+import { useRootStore } from '@/utils/customHooks'
 import { message } from 'antd'
 
 const service = new Request({
@@ -28,6 +29,7 @@ const service = new Request({
   handleAccessDenied: {
     statusCode: [401],
     handler(code) {
+      const { setLoginState } = useRootStore().userStore
       switch (code) {
         case 401:
           message.error('登录过期，请重新登录')
@@ -35,6 +37,7 @@ const service = new Request({
           removeItem('user')
           removeItem('article')
           removeItem('type')
+          setLoginState(false)
           break
         case 422:
           message.error('接口参数错误')
