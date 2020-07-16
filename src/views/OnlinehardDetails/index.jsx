@@ -1,6 +1,6 @@
-import React, { useState, useReducer, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Table, Button, Space, Upload, message, Modal } from 'antd'
-import { UploadOutlined } from '@ant-design/icons'
+// import { UploadOutlined } from '@ant-design/icons'
 
 import style from './index.scss'
 import MemberManger from './membermanger'
@@ -32,13 +32,13 @@ const OnlinehardDetails = () => {
     }
   }
 
-  const [state, dispatch] = useReducer(reducer, initialState)
+  // const [state, dispatch] = useReducer(reducer, initialState)
   const [dataList, setList] = useState([])
-  const [lib, setLib] = useState([])
+  // const [lib, setLib] = useState([])
   const [id, setOnLineHardId] = useState('')
-  const [finame, setFiName] = useState('')
-  const [filesize, setFileSize] = useState('')
-  const [filetype, setFileType] = useState('')
+  // const [finame, setFiName] = useState('')
+  // const [filesize, setFileSize] = useState('')
+  // const [filetype, setFileType] = useState('')
   const [url, setUrl] = useState('')
   const [parentId, setParentId] = useState('0')
 
@@ -174,7 +174,7 @@ const OnlinehardDetails = () => {
     //   setHasMore(false)
     // }
     window.location.reload()
-    setParentId(res.data)
+    setParentId(res.data.id)
   }
   const props = {
     name: 'file',
@@ -198,7 +198,7 @@ const OnlinehardDetails = () => {
       Uploader.upload({
         file: info.file,
         type: 3, // 1 图片 2 视频 3 其他
-        filename: `${randomNum()}.${fileSuffix}}`, // 文件名称需要自己生成，不能包含中文
+        filename: `${randomNum()}.${fileSuffix}`, // 文件名称需要自己生成，不能包含中文
       }).then((url) => {
         console.log('上传后的地址', url)
         setUrl(url)
@@ -253,6 +253,11 @@ const OnlinehardDetails = () => {
               const id = item.id
             }}
           >
+            {item.type === 'folder' ? (
+              <img src="/src/assets/img/file.png" className={style.filepng} />
+            ) : (
+              <img src="/src/assets/img/document.png" className={style.filepng} />
+            )}
             {text}
           </div>
         )
@@ -321,15 +326,27 @@ const OnlinehardDetails = () => {
           <div>
             <img
               src="/src/assets/img/moreactions.png"
-              onClick={() => {
+              onClick={({}) => {
                 console.log(item)
+                console.log(record)
                 const id = item.id
                 Modal.confirm({
                   title: '确认',
-                  content: `您确认要删除此条数据吗？${id}`,
+                  content: `您确认要删除此条数据吗`,
                   onOk: () => {
                     message.success('删除成功')
-                    window.location.reload()
+                    console.log(dataList)
+                    //问题：key值是不变的，删除后
+                    dataList.map((item, index) => {
+                      item.key = index
+                    })
+                    const delIndex = dataList.findIndex((item) => record === item.key)
+                    const copyList = [...dataList]
+                    copyList.splice(delIndex, 1)
+                    setList(copyList)
+                    //下面是用过滤器删除文章
+                    // const copyList = [...dataList]
+                    // setList(copyList.filter(item => item.key !== record))
                   },
                 })
                 // handleDelate(item)
@@ -555,7 +572,12 @@ const OnlinehardDetails = () => {
         </p>
       </div>
       {publishModalVisible && (
-        <NewFils triggerShowPublishModal={triggerShowPublishModal} visible={publishModalVisible} />
+        <NewFils
+          id={id}
+          parentId={parentId}
+          triggerShowPublishModal={triggerShowPublishModal}
+          visible={publishModalVisible}
+        />
       )}
     </div>
   )

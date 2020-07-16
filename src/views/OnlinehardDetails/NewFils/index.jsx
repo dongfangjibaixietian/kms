@@ -15,6 +15,7 @@ const NewFils = ({
   visible,
   triggerShowPublishModal,
   id,
+  parentId,
   // history,
   // setIsShowModal
 }) => {
@@ -29,18 +30,19 @@ const NewFils = ({
 
   const _createFile = async () => {
     console.log(1234564545)
+    console.log(id)
+    console.log(parentId)
     const res = await upLoadLib({
       id: id,
       fileName: title,
       type: 'folder',
-      parentId: 0,
-      fileSize: 0,
+      parentId: parentId + '',
+      fileSize: '1',
     })
     // setUserInfo(res.data.name)
-
     triggerShowPublishModal(false)
     console.log(res)
-    // window.location.reload()
+    window.location.reload()
   }
 
   return (

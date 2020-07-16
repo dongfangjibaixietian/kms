@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useReducer, forwardRef } from 'react'
+import React, { useEffect, useState, useCallback, useReducer } from 'react'
 import { Button, List, Avatar, Spin } from 'antd'
 
 import style from './index.scss'
@@ -6,7 +6,7 @@ import NewSource from './../Newsource'
 
 import { scrollEvent, formateTime } from '@/utils/index'
 import { libList } from '@/api/library'
-import { useRootStore } from '@/utils/customHooks'
+// import { useRootStore } from '@/utils/customHooks'
 // import { hasPrefixSuffix } from 'antd/lib/input/ClearableLabeledInput'
 
 const Left = () => {
@@ -24,7 +24,7 @@ const Left = () => {
   // }
 
   const toLineHardDetails = (item) => {
-    window.open(window.location.origin + `/online/hard?id=${item.id}?uid=0`)
+    window.open(window.location.origin + `/online/hard?id=${item.id}?parentId=0`)
   }
 
   const reducer = (state, action) => {
@@ -48,6 +48,11 @@ const Left = () => {
   const [state, dispatch] = useReducer(reducer, initialState)
   const [dataList, setList] = useState([])
   const [lib, setLib] = useState([])
+
+  // const scroll = () => {
+  //   const listHeight = document.getElementsByClassName('list')[0].offsetHeight
+  //   console.log(listHeight)
+  // }
 
   const _handleScroll = useCallback(
     (event) => {
@@ -102,38 +107,38 @@ const Left = () => {
   //   })
   // }, [lib])
   //列表数据
-  const dataone = [
-    {
-      title: '公司美术常用设计规范',
-    },
-    {
-      title: '直播“赞助礼物”资源库',
-    },
-    {
-      title: '超G名片APP特点',
-    },
-    {
-      title: '直播“赞助礼物”资源库',
-    },
-    {
-      title: '公司美术常用设计规范',
-    },
-    {
-      title: '直播“赞助礼物”资源库',
-    },
-    {
-      title: '公司美术常用设计规范',
-    },
-    {
-      title: '超G名片APP特点',
-    },
-    {
-      title: '公司美术常用设计规范',
-    },
-    {
-      title: '直播“赞助礼物”资源库',
-    },
-  ]
+  // const dataone = [
+  //   {
+  //     title: '公司美术常用设计规范',
+  //   },
+  //   {
+  //     title: '直播“赞助礼物”资源库',
+  //   },
+  //   {
+  //     title: '超G名片APP特点',
+  //   },
+  //   {
+  //     title: '直播“赞助礼物”资源库',
+  //   },
+  //   {
+  //     title: '公司美术常用设计规范',
+  //   },
+  //   {
+  //     title: '直播“赞助礼物”资源库',
+  //   },
+  //   {
+  //     title: '公司美术常用设计规范',
+  //   },
+  //   {
+  //     title: '超G名片APP特点',
+  //   },
+  //   {
+  //     title: '公司美术常用设计规范',
+  //   },
+  //   {
+  //     title: '直播“赞助礼物”资源库',
+  //   },
+  // ]
 
   return (
     <div className={style.left}>

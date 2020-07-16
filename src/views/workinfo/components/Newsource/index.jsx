@@ -14,7 +14,7 @@ const { Option } = Select
 const NewSource = ({ visible, triggerShowPublishModal, change }) => {
   const { setArticleBaseInfo } = useRootStore().articleStore
 
-  const [textType] = useState(1)
+  // const [textType] = useState(1)
 
   const { TextArea } = Input
 
