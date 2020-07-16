@@ -37,6 +37,16 @@
       }
     }
   }
+
+  .moreComment {
+    text-align: center;
+    cursor: pointer;
+    color: #406599;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
 }
 
 .likeShare {
@@ -111,6 +121,10 @@
       display: flex;
     }
 
+    .personal {
+      align-items: center;
+    }
+
     .avatarImg {
       width: 68px;
       height: 68px;
@@ -128,7 +142,8 @@
     }
 
     .attention {
-      width: 72px;
+      min-width: 70px;
+      padding: 0 15px;
       height: 30px;
       display: flex;
       justify-content: center;

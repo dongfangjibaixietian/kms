@@ -1,5 +1,5 @@
 import React from 'react'
-import { Menu, message } from 'antd'
+import { Menu } from 'antd'
 import { withRouter } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
 import { useRootStore } from '@/utils/customHooks'
@@ -16,9 +16,7 @@ const Nav = ({ history, location }) => {
     if (location.pathname === key) {
       return
     }
-    console.log(key)
     if ((!getItem('token') || !isLogin) && key == '/workData') {
-      message.error('登录过期，请重新登录')
       setModelVisible(true)
       return
     }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useReducer, useCallback } from 'react'
 import { Comment, Avatar, List, Menu, Dropdown, message, Modal } from 'antd'
 import { articleDetail, articleCollect, removeArticle } from '@/api/article'
 import { userFollow } from '@/api/user'
@@ -16,11 +16,23 @@ import 'braft-editor/dist/index.css'
 
 let commentContent = ''
 const ArticleDetails = ({ history }) => {
+  const locale = {
+    emptyText: '暂无评论',
+  }
   const { setModelVisible, isLogin, userInfo } = useRootStore().userStore
   const [id, setArticleId] = useState('')
-  const [isCancel, setCollectStatus] = useState(false)
+  // 是否已收藏
+  const [isCollect, setCollectStatus] = useState(false)
+  // 是否已点赞
+  const [isLike, setLikeStatus] = useState(false)
   // 是否有文章操作权限
   const [isAllowed, setIsAllowed] = useState(false)
+  // 是否已关注该用户
+  const [isFollow, setFollow] = useState(false)
+  // 是否还有更多评论
+  const [hasMore, setHasMore] = useState(true)
+  // 加载中
+  const [isLoading, setLoading] = useState(false)
   const [commentList, setCommentList] = useState([])
   const [detail, setArtcileDetail] = useState({
     title: '',
@@ -38,33 +50,77 @@ const ArticleDetails = ({ history }) => {
   const [isDel, setIsDel] = useState(false)
   const [parentId, setParentId] = useState('')
   const [targetUserId, setTargetUserId] = useState('')
+  const initialState = {
+    pageIndex: 1,
+    pageSize: 10,
+  }
+
+  const reducer = (state, action) => {
+    switch (action.type) {
+      case 'update':
+        return { ...state, ...action.payload }
+      default:
+        throw new Error()
+    }
+  }
+
+  const [state, dispatch] = useReducer(reducer, initialState)
 
   const getCommentList = async () => {
+    if (isLoading || !hasMore) return
+    setLoading(true)
     try {
       // 获取评论列表
       const commentRes = await commentListApi({
         articleId: id,
-        pageIndex: 1,
-        pageSize: 20,
+        ...state,
       })
-      console.log(commentRes.data.list)
-      setCommentList(commentRes.data.list)
+      if (!hasMore || commentRes.data.list.length < 10) {
+        setHasMore(false)
+      }
+      setCommentList(() => {
+        return [...commentList, ...commentRes.data.list]
+      })
     } catch (error) {
       console.log(error)
     }
   }
 
+  const refresh = () => {
+    //需要处理的数据
+    setHasMore(true)
+    setLoading(false)
+    setCommentList([])
+    dispatch({
+      type: 'update',
+      payload: {
+        pageIndex: 1,
+      },
+    })
+  }
+
+  const loadMore = useCallback(() => {
+    if (!isLoading && hasMore) {
+      const pageIndex = state.pageIndex + 1
+      dispatch({
+        type: 'update',
+        payload: {
+          pageIndex,
+        },
+      })
+    }
+  }, [hasMore, state.pageIndex])
+
   const getArticleDetail = async () => {
-    console.log(id)
     const res = await articleDetail({ id: id })
     const editorState = BraftEditor.createEditorState(res.data.rawContent)
     res.data.content = editorState.toHTML()
-    console.log(res.data)
-
     const result = Object.assign({}, detail, res.data)
     setArtcileDetail(result)
-
-    if (res.code === 0) getCommentList()
+    setCollectStatus(result.isCollect)
+    setLikeStatus(result.isLike)
+    setFollow(result.isFollow)
+    // if (res.code === 0) getCommentList()
   }
 
   const menuList = [
@@ -109,7 +165,6 @@ const ArticleDetails = ({ history }) => {
   const addComment = async () => {
     try {
       // 新增评论
-      console.log(topCommentState.toHTML())
       if (topCommentState.isEmpty() && !commentContent) return
       if (!getItem('token') || !isLogin) {
         message.error('请先登录')
@@ -125,15 +180,15 @@ const ArticleDetails = ({ history }) => {
         postData['parentId'] = parentId
         postData['targetUserId'] = targetUserId
       }
-      console.log(postData)
       const creatRes = await commentCreate(postData)
-      console.log(creatRes)
-      if (!isTop) {
-        setEditorState(ContentUtils.clear(commnetEditorState))
-      } else {
-        setTopCommentState(ContentUtils.clear(topCommentState))
+      if (creatRes.code === 0) {
+        if (!isTop) {
+          setEditorState(ContentUtils.clear(commnetEditorState))
+        } else {
+          setTopCommentState(ContentUtils.clear(topCommentState))
+        }
       }
-      getCommentList()
+      refresh()
     } catch (error) {
       console.log(error)
     }
@@ -188,7 +243,6 @@ const ArticleDetails = ({ history }) => {
   }
 
   const CommentTemplate = ({ item, parentId, children }) => {
-    console.log(item.targetUser)
     const contentHtml = item.targetUser
       ? `回复 <span class=${style.targerName}>${item.targetUser.username}:</span>${item.content}`
       : item.content
@@ -237,7 +291,6 @@ const ArticleDetails = ({ history }) => {
 
   // 进入文章编辑页面
   const goToEditArticle = () => {
-    console.log(history)
     setItem('type', detail.type)
     const data = {
       id: id,
@@ -272,7 +325,6 @@ const ArticleDetails = ({ history }) => {
   }
 
   const menuHandleClick = ({ key }) => {
-    console.log(key)
     switch (key) {
       case 'edit':
         goToEditArticle()
@@ -296,17 +348,33 @@ const ArticleDetails = ({ history }) => {
     </Menu>
   )
 
-  // 收藏文章
-  const collectArticle = async () => {
-    setCollectStatus(!isCancel)
-    await articleCollect({ id: id, isCancel: isCancel })
+  // 收藏或点赞文章
+  const collectArticle = async (type) => {
+    if (!getItem('token') || !isLogin) {
+      message.error('请先登录')
+      setModelVisible(true)
+      return
+    }
+    const isCancel = type === 'collect' ? isCollect : isLike
+    const res = await articleCollect({ id: id, isCancel: isCancel, type: type })
+    if (res.code !== 0) return
+    if (type === 'collect') {
+      setCollectStatus(!isCollect)
+    } else {
+      setLikeStatus(!isLike)
+    }
   }
 
   // 关注用户
   const followUser = async () => {
-    const res = await userFollow({ id: detail.createUser.id })
+    if (!getItem('token') || !isLogin) {
+      message.error('请先登录')
+      setModelVisible(true)
+      return
+    }
+    const res = await userFollow({ id: detail.createUser.id, isCancel: isFollow })
     if (res.code === 0) {
-      message.success('关注成功')
+      setFollow(!isFollow)
     }
   }
 
@@ -321,15 +389,26 @@ const ArticleDetails = ({ history }) => {
   }, [])
 
   useEffect(() => {
-    if (id) getArticleDetail()
+    if (!isLogin) setIsAllowed(false)
+    if (id) {
+      getArticleDetail()
+      getCommentList().then(() => {
+        setLoading(false)
+      })
+    }
   }, [id, isLogin])
 
-  // useEffect(() => {
-  //   if () getArticleDetail()
-  // }, [])
+  useEffect(() => {
+    if (id) {
+      getCommentList().then(() => {
+        setLoading(false)
+      })
+    }
+  }, [state.pageIndex, hasMore])
 
   useEffect(() => {
-    if (!isLogin) return
+    if (!isLogin || !userInfo) return
+    console.log(userInfo)
     const hasAuth = detail.createUser.id === userInfo.user.id
     setIsAllowed(hasAuth)
   }, [userInfo, detail.createUser])
@@ -369,32 +448,41 @@ const ArticleDetails = ({ history }) => {
                     <span className={style.number}>{detail.viewCount}</span>
                     <span className={style.text}>浏览</span>
                   </div>
-                  <div className={style.left}>
-                    <div onClick={collectArticle}>
-                      <img className={style.img} width={16} src={require('@/assets/img/collect.png').default} alt="" />
-                      <span>{isCancel ? '取消收藏' : '收藏'}</span>
+                  {!isAllowed ? (
+                    <div className={style.left}>
+                      <div onClick={() => collectArticle('collect')}>
+                        <img
+                          className={style.img}
+                          width={16}
+                          src={require('@/assets/img/collect.png').default}
+                          alt=""
+                        />
+                        <span>{isCollect ? '取消收藏' : '收藏'}</span>
+                      </div>
+                      <div>
+                        <img className={style.img} width={16} src={require('@/assets/img/remark.png').default} alt="" />
+                        <span>举报</span>
+                      </div>
                     </div>
-                    <div>
-                      <img className={style.img} width={16} src={require('@/assets/img/remark.png').default} alt="" />
-                      <span>举报</span>
-                    </div>
-                  </div>
+                  ) : null}
                 </div>
               </div>
               <div
                 className={`braft-output-content ${style.content}`}
                 dangerouslySetInnerHTML={{ __html: detail.content }}
               ></div>
-              <div className={style.likeShare}>
-                <div className={style.like}>
-                  <img className={style.tag} width={16} src={require('@/assets/img/like.png').default} alt="" />
-                  点赞
-                </div>
-                <div className={style.share}>
+              {!isAllowed ? (
+                <div className={style.likeShare}>
+                  <div className={style.like} onClick={() => collectArticle('like')}>
+                    <img className={style.tag} width={16} src={require('@/assets/img/like.png').default} alt="" />
+                    {isLike ? '已点赞' : '点赞'}
+                  </div>
+                  {/* <div className={style.share}>
                   <img className={style.tag} width={16} src={require('@/assets/img/share.png').default} alt="" />
                   分享
+                </div> */}
                 </div>
-              </div>
+              ) : null}
             </div>
             <div className={style.editorWrapper}>
               <BraftEditor
@@ -406,6 +494,7 @@ const ArticleDetails = ({ history }) => {
             </div>
             <div className={style.commentArea}>
               <List
+                locale={locale}
                 header={`${commentList.length} 个评论`}
                 className={style.commentList}
                 itemLayout="horizontal"
@@ -422,22 +511,29 @@ const ArticleDetails = ({ history }) => {
                   </List.Item>
                 )}
               />
+              {hasMore ? (
+                <div className={style.moreComment} onClick={loadMore}>
+                  {isLoading ? '加载中...' : '查看更多 >'}
+                </div>
+              ) : null}
             </div>
           </div>
 
           <div className={style.articleRelated}>
             <div className={style.authorInfo}>
               <div className={style.authTitle}>作者信息</div>
-              <div className={style.authInfo}>
+              <div className={`${style.authInfo} ${!isAllowed ? null : style.personal}`}>
                 <Avatar size="small" className={style.avatarImg} src={detail.createUser.avatar} />
                 <div className={style.authorAbout}>
                   <div>{detail.createUser.username}</div>
-                  <div className={style.buttonGroup}>
-                    <span className={style.attention} onClick={followUser}>
-                      关注
-                    </span>
-                    <span className={style.private}>私信</span>
-                  </div>
+                  {!isAllowed ? (
+                    <div className={style.buttonGroup}>
+                      <span className={`${style.attention} ${isFollow ? style.followed : null}`} onClick={followUser}>
+                        {isFollow ? '取消关注' : '关注'}
+                      </span>
+                      <span className={style.private}>私信</span>
+                    </div>
+                  ) : null}
                 </div>
               </div>
             </div>

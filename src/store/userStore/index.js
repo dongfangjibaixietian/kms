@@ -2,7 +2,7 @@
  * @Author       : charm
  * @Date         : 2020-06-28 16:15:01
  * @LastEditors  : charm
- * @LastEditTime : 2020-07-14 15:31:44
+ * @LastEditTime : 2020-07-16 13:36:14
  * @FilePath     : \gworld-pc-share\src\store\userStore\index.js
  */
 
@@ -24,33 +24,26 @@ export class UserStore {
 
   @action.bound
   setUserInfo(data) {
-    console.log(data)
     this.userInfo = data
-    console.log(this.userInfo)
   }
 
   @action.bound
   setSearchKey(data) {
-    console.log(data)
     this.searchKey = data
-    console.log(this.searchKey)
   }
 
   @action.bound
   setModelVisible(data) {
-    console.log(data)
     this.modelVisible = data
   }
 
   @action.bound
   setModelType(data) {
-    console.log(data)
     this.modelType = data
   }
 
   @action.bound
   setLoginState(data) {
-    console.log(data)
     this.isLogin = data
   }
 }

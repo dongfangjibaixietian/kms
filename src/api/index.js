@@ -2,7 +2,7 @@
  * @Author       : charm
  * @Date         : 2020-07-02 10:53:19
  * @LastEditors  : charm
- * @LastEditTime : 2020-07-14 15:02:02
+ * @LastEditTime : 2020-07-16 18:38:10
  * @FilePath     : \gworld-pc-share\src\api\index.js
  */
 
@@ -23,7 +23,7 @@ const service = new Request({
     console.log('接口路径partHeaders', uri)
 
     return {
-      Authorization: `Bearer ${getItem('token')}`,
+      Authorization: getItem('token') ? `Bearer ${getItem('token')}` : '',
     }
   },
   handleAccessDenied: {

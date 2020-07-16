@@ -4,7 +4,7 @@ import ArticleList from '@/components/ArticleList'
 import { format } from '@gworld/toolset'
 import { articleDetail } from '@/api/article'
 
-const PublicizePage = ({ location }) => {
+const PublicizePage = ({ history, location }) => {
   const [publishDate] = useState(format(new Date(), 'YYYY-MM-DD'))
   // 文章ID
   const [id, setArticleId] = useState('')
@@ -40,14 +40,19 @@ const PublicizePage = ({ location }) => {
           <div>
             <div className={style.tips}>发表成功！有了你的分享，超G知识库会变得更好！</div>
             <div className={style.publishDate}>{publishDate}</div>
-            <a
-              className={style.toArticle}
-              onClick={() => {
-                window.open(window.location.origin + `/article/detail?id=${id}`)
-              }}
-            >
-              1111
-            </a>
+            <div className={style.toDeatil}>
+              <a
+                className={style.toArticle}
+                onClick={() => {
+                  window.open(window.location.origin + `/article/detail?id=${id}`)
+                }}
+              >
+                {title}
+              </a>
+              <div className={style.goHome} onClick={() => history.replace('/')}>
+                回到首页
+              </div>
+            </div>
           </div>
         </div>
         <div>

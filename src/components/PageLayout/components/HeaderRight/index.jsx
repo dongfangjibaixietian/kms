@@ -40,7 +40,6 @@ const HeaderRight = () => {
   }
 
   const menuHandleClick = ({ key }) => {
-    console.log(key)
     switch (key) {
       case 'out':
         logOUt()

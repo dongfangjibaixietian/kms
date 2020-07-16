@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import MdEditor from 'for-editor'
 import { Upload, Select, Input, Button, Form, message } from 'antd'
-import { LoadingOutlined, PlusOutlined, DownOutlined, FileTextOutlined } from '@ant-design/icons'
+import { DownOutlined, FileTextOutlined } from '@ant-design/icons'
 import { withRouter } from 'react-router-dom'
 import BraftEditor from 'braft-editor'
 import { ContentUtils } from 'braft-utils'
@@ -91,7 +91,6 @@ const ArticleEditor = ({ history, location }) => {
 
   const fuwenbenOnChange = (v) => {
     setEditorState(v)
-    console.log(v.toHTML())
     if (id) return
     // 储存文章
     setItem(
@@ -108,13 +107,11 @@ const ArticleEditor = ({ history, location }) => {
   }
 
   const handleSave = (value) => {
-    console.log('保存====', value)
     setMdValue(value)
   }
 
   const getArticleDetail = async () => {
     const res = await articleDetail({ id: id })
-    console.log(res)
     const tagIds = []
     res.data.tags.forEach((item) => {
       tagIds.push(item.id)
@@ -158,9 +155,7 @@ const ArticleEditor = ({ history, location }) => {
     if (id) {
       postData['id'] = Number(id)
     }
-    console.log(postData)
     const res = await createArticle(postData)
-    console.log(res)
     if (res.code === 0) {
       setEditorState(ContentUtils.clear(editorState))
       articleForm.resetFields()
@@ -170,18 +165,14 @@ const ArticleEditor = ({ history, location }) => {
   }
   const selectTag = (values) => {
     setSelectedTag(values)
-    console.log(selectTagIds)
   }
 
   const $vm = React.createRef()
   const addImg = ($file) => {
     $vm.current.$img2Url($file.name, 'file_url')
-    console.log($file)
   }
 
   const uploadFn = (param) => {
-    console.log(randomNum())
-    console.log(param)
     const fileSuffix = param.file.name.split('.')[1] || 'png'
     Uploader.upload({
       file: param.file,
@@ -232,9 +223,9 @@ const ArticleEditor = ({ history, location }) => {
     console.log('braftEditorChange', param)
   }
 
-  const changeEditorType = () => {
-    console.log('ts')
-  }
+  // const changeEditorType = () => {
+  //   console.log('ts')
+  // }
 
   const mdEditorAddSaveBtn = () => {
     const mdToolTarget = document.querySelector('.for-toolbar').lastChild
@@ -305,13 +296,7 @@ const ArticleEditor = ({ history, location }) => {
       >
         <div className={style.formItem}>
           <Form.Item name="title" label="文章标题" rules={[{ required: true, message: '请填写文章标题!' }]}>
-            <Input
-              allowClear
-              defaultValue={title}
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="请输入标题"
-            />
+            <Input allowClear value={title} onChange={(e) => setTitle(e.target.value)} placeholder="请输入标题" />
           </Form.Item>
         </div>
         {editorType === 'md' ? (
