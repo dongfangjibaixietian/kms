@@ -40,6 +40,8 @@ const App = () => {
   }, [])
 
   const renderRoutes = (routeMenu, path) => {
+    console.log(routeMenu)
+    console.log(path)
     const children = []
     const renderRoute = (item, routePath) => {
       const newPath = (item.path ? `${routePath}/${item.path}` : routePath).replace(/\/+/g, '/')

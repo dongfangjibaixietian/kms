@@ -5,7 +5,7 @@ import Loadable from 'react-loadable'
 import PageLayout from '@/components/PageLayout'
 import workinfo from '../views/workinfo'
 
-const Loading = () => <div>loading</div>
+const Loading = () => <div>正在加载中</div>
 
 // 首页
 const Knowledge = Loadable({
@@ -99,15 +99,27 @@ const useGetRoutes = () => {
     ],
   })
 
-  // 编辑
+  // 编写文章
+  // const [editorRoutes, setEditorRoutes] = useState({
+  //   path: 'editor',
+  //   component: ArticleEditor,
+  // })
+
   const [editorRoutes, setEditorRoutes] = useState({
-    path: 'editor',
-    component: ArticleEditor,
+    path: '/publish',
+    component: PageLayout,
+    children: [
+      {
+        path: '/editor',
+        title: '编辑文章',
+        component: ArticleEditor,
+      },
+    ],
   })
 
   // 发表文章
   const [publishRoute, setPublishArticle] = useState({
-    path: 'publish',
+    path: 'publicize',
     component: publishArticle,
   })
 
@@ -151,10 +163,9 @@ const useGetRoutes = () => {
   const currentRoutes = useMemo(() => {
     return [
       onlineharddetailsRoutes,
-
       articleRoutes,
-      adminRoutes,
       editorRoutes,
+      adminRoutes,
       agreementRoutes,
       userPrivacyRoutes,
       publishRoute,

@@ -1,7 +1,31 @@
 @import 'global.scss';
 
+.publishTop {
+  padding: 30px 0;
+  display: flex;
+  align-items: center;
+
+  .publishIcon {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    background-color: #07c160;
+    border-radius: 50%;
+  }
+
+  .publishTitle {
+    font-size: 22px;
+    margin-left: 15px;
+    color: #121212;
+  }
+}
+
 .editorWrapper {
-  height: 100vh;
+  width: 1140px;
+  padding-bottom: 50px;
 
   :global {
     .for-preview {
@@ -25,14 +49,14 @@
     .bf-container {
       display: flex;
       flex-direction: column;
-    }
-
-    .bf-content {
-      flex: 1;
+      background-color: #fff;
+      padding: 0 20px;
+      margin-bottom: 20px;
     }
 
     .bf-controlbar {
       position: relative;
+      box-shadow: inset 0 -1px 0 0 rgba(0, 0, 0, 0.1);
 
       .control-item {
         &:last-child {
@@ -56,5 +80,47 @@
       right: 7px;
       top: 10px;
     }
+  }
+}
+
+.articleForm {
+  .formItem {
+    background-color: #fff;
+    margin-bottom: 20px;
+    padding: 30px 30px 6px;
+  }
+
+  .otherItem {
+    margin-bottom: 0;
+
+    :global {
+      .ant-form-item-control {
+        padding-bottom: 20px;
+        box-shadow: inset 0 -1px 0 0 rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+
+  :global {
+    .ant-form-item-label {
+      font-weight: 600;
+      min-width: 90px;
+      text-align: left;
+
+      > label::after {
+        content: '';
+      }
+    }
+  }
+}
+
+.btnGroup {
+  display: flex;
+  justify-content: flex-end;
+
+  .btn {
+    width: 105px;
+    height: 32px;
+    margin-left: 20px;
   }
 }

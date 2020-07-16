@@ -16,7 +16,8 @@ const Nav = ({ history, location }) => {
     if (location.pathname === key) {
       return
     }
-    if (!getItem('token') || !isLogin) {
+    console.log(key)
+    if ((!getItem('token') || !isLogin) && key == '/workData') {
       message.error('登录过期，请重新登录')
       setModelVisible(true)
       return
