@@ -49,3 +49,12 @@ export function userFollow(data) {
     data,
   })
 }
+
+//编辑用户资料信息
+export function editUserInfo(data) {
+  return request({
+    url: '/kms/api/user/edit',
+    method: 'POST',
+    data,
+  })
+}

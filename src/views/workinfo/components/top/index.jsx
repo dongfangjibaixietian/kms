@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { Button } from 'antd'
-
+import { setItem } from '@/utils/storage'
 import style from './index.scss'
 import EditorialPerson from './../EditorialPerson'
 import { userInfo, userOtherInfo } from '@/api/user'
+import { useRootStore } from '@/utils/customHooks'
 
 const Top = () => {
   const [publishModalVisible, setPublishModalVisible] = useState(false)
-
+  const { setUserInfo } = useRootStore().userStore
   const triggerShowPublishModal = (isShow) => {
     setPublishModalVisible(isShow)
   }
@@ -19,11 +20,17 @@ const Top = () => {
   const [readCount, setReadCount] = useState([])
   const [url, setUrl] = useState('')
   const [username, setUserName] = useState([])
+  const [nickname, setNickName] = useState([])
 
   const getUserInfo = async () => {
     const res = await userInfo()
     const username = res.data.user.username
+    const nickname = res.data.user.nickname
     setUserName(username)
+    setNickName(nickname)
+    setUrl(res.data.user.avatar)
+    setItem('user', JSON.stringify(res.data))
+    setUserInfo(res.data)
     // window.location.reload()
   }
 
@@ -57,7 +64,7 @@ const Top = () => {
           <div className={style.pers}>
             <img className={style.pic} src={url} alt="" />
             <div className={style.leftinfo}>
-              <div className={style.nm}>{username}</div>
+              <div className={style.nm}>{nickname}</div>
               <div className={style.intro}>暂无个人介绍</div>
               <Button onClick={() => triggerShowPublishModal(true)} className={style.publishBtn}>
                 编辑资料
@@ -91,7 +98,7 @@ const Top = () => {
       </div>
       {publishModalVisible && (
         <EditorialPerson
-          change={setUrl}
+          change={getUserInfo}
           triggerShowPublishModal={triggerShowPublishModal}
           visible={publishModalVisible}
         />

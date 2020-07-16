@@ -18,11 +18,6 @@ const Left = () => {
     pageSize: 10,
   }
 
-  //点击网盘跳转详情
-  // const tohref = (item) => {
-  //   window.open(window.location + `article/detail?id=${item.id}`)
-  // }
-
   const toLineHardDetails = (item) => {
     window.open(window.location.origin + `/online/hard?id=${item.id}`)
   }
@@ -50,8 +45,14 @@ const Left = () => {
   const [lib, setLib] = useState([])
 
   // const scroll = () => {
-  //   const listHeight = document.getElementsByClassName('list')[0].offsetHeight
-  //   console.log(listHeight)
+  //   const listScroll = useRef(list)
+  //   console.log(listScroll)
+  //   const scrollTop = listScroll.scrollTop //页面上卷的高度
+  //   const wholeHeight = listScroll.scrollHeight //页面底部到顶部的距离
+  //   const divHeight = listScroll.clientHeight //页面可视区域的高度
+  //   const height = wholeHeight - scrollTop - divHeight
+  //   console.log(height, ' 距离页面底部的高度')
+  //   return height
   // }
 
   const _handleScroll = useCallback(
@@ -139,7 +140,6 @@ const Left = () => {
   //     title: '直播“赞助礼物”资源库',
   //   },
   // ]
-
   return (
     <div className={style.left}>
       <div className={style.butt}>

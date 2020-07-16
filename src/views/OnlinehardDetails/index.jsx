@@ -430,7 +430,13 @@ const OnlinehardDetails = () => {
 
       <div className={style.tablewarp}>
         {flag ? (
-          <Table className={style.table} columns={columns} dataSource={dataList} onChange={onChange} />
+          <Table
+            className={style.table}
+            columns={columns}
+            dataSource={dataList}
+            onChange={onChange}
+            // onHeaderRow={onHeaderRow}
+          />
         ) : (
           <MemberManger />
         )}
