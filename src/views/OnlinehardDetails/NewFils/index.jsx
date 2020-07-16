@@ -6,27 +6,9 @@ import { withRouter } from 'react-router-dom'
 import CloseIcon from '@/assets/svg/close.svg'
 import style from './index.scss'
 import { upLoadLib } from '@/api/library'
-// import { Uploader } from '@gworld/toolset'
-// import { creatUser as creatUserApi } from '@/service/api'
 
-// import { useRootStore } from '@/utils/customHooks'
-
-const NewFils = ({
-  visible,
-  triggerShowPublishModal,
-  id,
-  parentId,
-  // history,
-  // setIsShowModal
-}) => {
-  // const { setUserInfo } = useRootStore().userStore
-  // const { setArticleBaseInfo } = useRootStore().articleStore
-
-  // const [username, setUsername] = useState('')
-
+const NewFils = ({ visible, triggerShowPublishModal, id, parentId, getFileList }) => {
   const [title, setTitle] = useState('')
-
-  // const [introduction, setIntroduction] = useState('')
 
   const _createFile = async () => {
     console.log(1234564545)
@@ -39,10 +21,9 @@ const NewFils = ({
       parentId: parentId + '',
       fileSize: '1',
     })
-    // setUserInfo(res.data.name)
     triggerShowPublishModal(false)
     console.log(res)
-    window.location.reload()
+    if (res.code === 0) getFileList()
   }
 
   return (

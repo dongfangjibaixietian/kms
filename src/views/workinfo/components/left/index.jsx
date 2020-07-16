@@ -24,7 +24,7 @@ const Left = () => {
   // }
 
   const toLineHardDetails = (item) => {
-    window.open(window.location.origin + `/online/hard?id=${item.id}?parentId=0`)
+    window.open(window.location.origin + `/online/hard?id=${item.id}`)
   }
 
   const reducer = (state, action) => {
