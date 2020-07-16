@@ -76,34 +76,34 @@ const ArticleDetails = ({ history }) => {
       name: '删除文章',
       type: 'del',
     },
-    {
-      name: '置顶文章',
-      type: 'stick',
-    },
-    {
-      name: '取消置顶',
-      type: 'cancelStick',
-    },
-    {
-      name: '设置为精华文章',
-      type: 'essence',
-    },
-    {
-      name: '取消精华',
-      type: 'cancelEssence',
-    },
-    {
-      name: '设为热门',
-      type: 'toHot',
-    },
-    {
-      name: '取消热门',
-      type: 'cancelHot',
-    },
-    {
-      name: '屏蔽作者',
-      type: 'mask',
-    },
+    // {
+    //   name: '置顶文章',
+    //   type: 'stick',
+    // },
+    // {
+    //   name: '取消置顶',
+    //   type: 'cancelStick',
+    // },
+    // {
+    //   name: '设置为精华文章',
+    //   type: 'essence',
+    // },
+    // {
+    //   name: '取消精华',
+    //   type: 'cancelEssence',
+    // },
+    // {
+    //   name: '设为热门',
+    //   type: 'toHot',
+    // },
+    // {
+    //   name: '取消热门',
+    //   type: 'cancelHot',
+    // },
+    // {
+    //   name: '屏蔽作者',
+    //   type: 'mask',
+    // },
   ]
 
   const addComment = async () => {
@@ -454,10 +454,10 @@ const ArticleDetails = ({ history }) => {
             <div className={style.item}>
               <div className={style.authTitle}>相关文档</div>
               <div className={style.docList}>
+                {/* <div>万字长文，详解企业的线上运营策略MVP设计</div>
                 <div>万字长文，详解企业的线上运营策略MVP设计</div>
                 <div>万字长文，详解企业的线上运营策略MVP设计</div>
-                <div>万字长文，详解企业的线上运营策略MVP设计</div>
-                <div>万字长文，详解企业的线上运营策略MVP设计</div>
+                <div>万字长文，详解企业的线上运营策略MVP设计</div> */}
               </div>
             </div>
           </div>

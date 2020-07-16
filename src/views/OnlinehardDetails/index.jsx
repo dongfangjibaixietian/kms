@@ -563,14 +563,14 @@ const OnlinehardDetails = () => {
         )}
       </div>
 
-      <div className={style.introduction}>简介</div>
+      {/* <div className={style.introduction}>简介</div>
       <div className={style.introductionContent}>
         <p>库实际上是一种代码共享的方式，主要用于代码重用和源码隐藏，通常分为动态库和静态库。</p>
         <p>静态库：链接时完整的拷贝至可执行文件中，被多次使用就有多份冗余拷贝。</p>
         <p>
           动态库：链接时不复制，程序运行时由系统动态加载到内存，供程序调用，系统只加载一次，多个程序共用，节省内存空间。
         </p>
-      </div>
+      </div> */}
       {publishModalVisible && (
         <NewFils
           id={id}
