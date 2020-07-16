@@ -321,10 +321,15 @@ const ArticleDetails = ({ history }) => {
   }, [])
 
   useEffect(() => {
-    if (isLogin && id) getArticleDetail()
+    if (id) getArticleDetail()
   }, [id, isLogin])
 
+  // useEffect(() => {
+  //   if () getArticleDetail()
+  // }, [])
+
   useEffect(() => {
+    if (!isLogin) return
     const hasAuth = detail.createUser.id === userInfo.user.id
     setIsAllowed(hasAuth)
   }, [userInfo, detail.createUser])
