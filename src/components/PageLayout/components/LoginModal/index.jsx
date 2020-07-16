@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { withRouter } from 'react-router-dom'
 import { Modal, Input, Button, Form, Checkbox, message } from 'antd'
 import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons'
 import { login, register } from '@/api/user'
@@ -69,7 +68,6 @@ const LoginModal = () => {
   }
 
   const loginOrRegister = async (val) => {
-    console.log(val)
     setType(val)
   }
 
@@ -90,7 +88,6 @@ const LoginModal = () => {
     rules: [
       ({ getFieldValue }) => ({
         validator(rule, value) {
-          console.log(value)
           if (value === '' || value === undefined || value === null) {
             return Promise.reject('请输入用户名')
           }

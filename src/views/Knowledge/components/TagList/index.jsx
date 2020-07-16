@@ -33,7 +33,6 @@ const TagList = () => {
   }
 
   useEffect(() => {
-    console.log(userInfo)
     getTagList()
   }, [userInfo])
 

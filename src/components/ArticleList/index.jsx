@@ -32,7 +32,6 @@ const ArticleList = forwardRef((props, ref) => {
   const reducer = (state, action) => {
     switch (action.type) {
       case 'update':
-        console.log({ ...state, ...action.payload }, 'update_state')
         return { ...state, ...action.payload }
       default:
         throw new Error()
@@ -43,7 +42,6 @@ const ArticleList = forwardRef((props, ref) => {
   useImperativeHandle(ref, () => ({
     refresh: () => {
       //需要处理的数据
-      console.log('refresh')
       setHasMore(true)
       setLoading(false)
       setList([])
@@ -59,8 +57,6 @@ const ArticleList = forwardRef((props, ref) => {
   const _handleScroll = useCallback(
     (event) => {
       const height = scrollEvent(event)
-      console.log('hasMore', hasMore)
-      console.log('isloading_hasMore', isLoading)
       if (!isLoading && height <= 20 && hasMore) {
         const pageIndex = state.pageIndex + 1
         dispatch({
@@ -75,8 +71,6 @@ const ArticleList = forwardRef((props, ref) => {
   )
 
   const getList = async () => {
-    console.log(isLoading, 'isloading')
-    console.log(hasMore, 'hasMore_isloading')
     if (isLoading || !hasMore) return
     setLoading(true)
 
@@ -143,7 +137,7 @@ const ArticleList = forwardRef((props, ref) => {
                   <img className={style.img} width={16} src={require('@/assets/img/read.png').default} alt="" />
                   <span>{item.viewCount}</span>
                   <img className={style.img} width={16} src={require('@/assets/img/remark.png').default} alt="" />
-                  <span>6666</span>
+                  <span>0</span>
                 </div>
               </div>
             </div>

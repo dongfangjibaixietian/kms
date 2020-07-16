@@ -2,7 +2,7 @@
  * @Author       : charm
  * @Date         : 2020-06-28 16:15:01
  * @LastEditors  : charm
- * @LastEditTime : 2020-07-07 18:24:36
+ * @LastEditTime : 2020-07-16 17:25:08
  * @FilePath     : \gworld-pc-share\src\utils\index.js
  */
 import { getTimestamp } from '@gworld/toolset'
@@ -75,32 +75,5 @@ export const scrollEvent = (event) => {
   const scrollHeight = (event.srcElement && event.srcElement.documentElement.scrollHeight) || document.body.scrollHeight
   // 距离页面底部的高度
   const height = scrollHeight - scrollTop - clientHeight
-  console.log(height, ' 距离页面底部的高度')
   return height
 }
-// 判断滚动方向
-// export const scrollDirection = (event) => {
-//   console.log(event)
-//   const beforeScrollTop =
-//     (event.srcElement ? event.srcElement.documentElement.scrollTop : false) ||
-//     window.pageYOffset ||
-//     (event.srcElement ? event.srcElement.body.scrollTop : 0)
-//   console.log(beforeScrollTop, 'beforeScrollTop')
-//   let delta
-//   window.addEventListener(
-//     'scroll',
-//     () => {
-//       const afterScrollTop =
-//         (event.srcElement ? event.srcElement.documentElement.scrollTop : false) ||
-//         window.pageYOffset ||
-//         (event.srcElement ? event.srcElement.body.scrollTop : 0)
-//       console.log(afterScrollTop, 'afterScrollTop')
-//       delta = afterScrollTop - beforeScrollTop
-//       if (delta === 0) return false
-//       // callback(delta > 0 ? 'down' : 'up')
-//       beforeScrollTop = afterScrollTop
-//     },
-//     false
-//   )
-//   return delta > 0 ? 'down' : 'up'
-// }

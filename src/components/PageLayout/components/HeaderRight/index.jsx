@@ -40,7 +40,6 @@ const HeaderRight = () => {
   }
 
   const menuHandleClick = ({ key }) => {
-    console.log(key)
     switch (key) {
       case 'out':
         logOUt()
@@ -58,7 +57,7 @@ const HeaderRight = () => {
 
   const menu = (
     <Menu className={style.menu} onClick={menuHandleClick}>
-      <Menu.Item className={style.item} key="user">
+      {/* <Menu.Item className={style.item} key="user">
         个人中心
       </Menu.Item>
       <Menu.Item className={style.item} key="set">
@@ -66,7 +65,7 @@ const HeaderRight = () => {
       </Menu.Item>
       <Menu.Item className={style.item} key="top">
         置顶文章
-      </Menu.Item>
+      </Menu.Item> */}
       <Menu.Item className={style.item} key="out">
         退出登录
       </Menu.Item>

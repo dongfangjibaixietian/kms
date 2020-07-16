@@ -106,7 +106,7 @@
 }
 
 .tips {
-  font-size: 22px;
+  font-size: 16px;
   color: #313131;
 }
 
@@ -124,4 +124,16 @@
     color: #ff5c5c;
     text-decoration: underline;
   }
+}
+
+.toDeatil {
+  padding: 25px 0;
+  text-align: center;
+}
+
+.goHome {
+  color: #007fff;
+  margin-top: 15px;
+  cursor: pointer;
+  font-size: 20px;
 }

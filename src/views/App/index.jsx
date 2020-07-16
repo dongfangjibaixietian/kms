@@ -29,19 +29,15 @@ const App = () => {
 
   useEffect(() => {
     if (!isLogin) return
-    console.log(isLogin, 'isLogin_app')
     getUserInfo()
   }, [isLogin])
 
   useEffect(() => {
     const token = getItem('token')
-    console.log(token, 'token_app')
     setLoginState(!!token)
   }, [])
 
   const renderRoutes = (routeMenu, path) => {
-    console.log(routeMenu)
-    console.log(path)
     const children = []
     const renderRoute = (item, routePath) => {
       const newPath = (item.path ? `${routePath}/${item.path}` : routePath).replace(/\/+/g, '/')

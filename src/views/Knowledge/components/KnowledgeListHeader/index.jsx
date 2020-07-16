@@ -36,8 +36,7 @@ const KnowledgeListHeader = ({ update }) => {
   const [sign, changeCategory] = useState('new')
   const change = (e) => {
     e.persist()
-    console.log(e)
-    console.log(e.target.dataset.sign)
+    if (!e.target.dataset.sign) return
     changeCategory(e.target.dataset.sign)
     // 更新数据
     update(e.target.dataset.sign)
@@ -49,8 +48,8 @@ const KnowledgeListHeader = ({ update }) => {
         <div className={style.tabsWrapper}>
           <Tabs className={style.tabs} animated={false}>
             <TabPane tab="全部" key="1" />
-            <TabPane tab="文章" key="2" />
-            <TabPane tab="专题" key="3" />
+            {/* <TabPane tab="文章" key="2" />
+            <TabPane tab="专题" key="3" /> */}
           </Tabs>
         </div>
         <Button onClick={() => publishArticle(true)} type="primary" className={style.publishBtn}>

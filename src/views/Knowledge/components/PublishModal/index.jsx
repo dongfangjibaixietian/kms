@@ -10,7 +10,7 @@ import style from './index.scss'
 import { tagTree as getTagListApi } from '@/api/tag'
 import { setItem } from '@/utils/storage'
 
-const PublishModal = ({ visible, triggerShowPublishModal, history }) => {
+const PublishModal = ({ visible, triggerShowPublishModal }) => {
   // usd: 富文本  md:MarkDown
   const [type, setType] = useState('usd')
 
