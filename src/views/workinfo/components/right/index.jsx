@@ -87,7 +87,7 @@ const Right = () => {
 
   return (
     <div className={style.KnowledgeListHeader}>
-      <Tabs className={style.tabs} defaultActiveKey="1" onChange={callback}>
+      <Tabs className={style.tabs} defaultActiveKey="1" onChange={callback} animated={false}>
         <TabPane tab="我的文章" key="1" className={style.mypaper}>
           <div className={style.filtcategory}>
             <div className={style.KnowledgeCategory} onClick={change}>
