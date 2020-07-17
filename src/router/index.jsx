@@ -29,7 +29,7 @@ const Admin = Loadable({
 // })
 
 const ArticleEditor = Loadable({
-  loader: () => import(/* webpackChunkName: "test" */ '@/views/ArticleEditor'),
+  loader: () => import(/* webpackChunkName: "article-editor" */ '@/views/ArticleEditor'),
   loading: Loading,
 })
 
@@ -72,7 +72,7 @@ const useGetRoutes = () => {
     children: [
       {
         path: '/',
-        title: '发现知识',
+        title: '',
         component: Knowledge,
       },
       // {

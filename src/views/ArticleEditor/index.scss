@@ -28,10 +28,6 @@
   padding-bottom: 50px;
 
   :global {
-    .for-preview {
-      background-color: rgb(252, 250, 242) !important;
-    }
-
     .md-publish-btn {
       background-color: #3370ff;
       color: white;
@@ -88,7 +84,7 @@
     .md-btn {
       position: absolute;
       top: 0;
-      right: 50px;
+      right: 30px;
       height: 44px;
       line-height: 44px;
       cursor: pointer;

@@ -50,8 +50,8 @@ const HeaderRight = () => {
         setPwd(true)
         break
       case 'user':
-        window.open(window.location.origin + `/user/center`)
-        // window.location.href = window.location.origin + `/user/center`
+        // window.open(window.location.origin + `/user/center`)
+        window.location.href = window.location.origin + `/user/center`
         break
 
       default:

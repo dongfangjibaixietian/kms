@@ -7,7 +7,7 @@ const UserAgreement = () => {
   return (
     <div className={style.pageContent}>
       <div className={style.logo}>
-        <img width={66} height={66} src="img/logo.png" alt="" />
+        <img width={66} height={66} src={require('@/assets/img/logo.png').default} alt="" />
       </div>
       <div className={style.title}>
         <div>超G知识库用户服务协议</div>

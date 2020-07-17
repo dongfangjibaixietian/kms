@@ -93,7 +93,6 @@ const ArticleDetails = ({ history }) => {
     //需要处理的数据
     setHasMore(true)
     setLoading(false)
-    setCommentList([])
     dispatch({
       type: 'update',
       payload: {
@@ -194,6 +193,7 @@ const ArticleDetails = ({ history }) => {
           setTopCommentState(ContentUtils.clear(topCommentState))
         }
       }
+      setCommentList([])
       refresh()
     } catch (error) {
       console.log(error)
