@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Button } from 'antd'
-import { setItem } from '@/utils/storage'
+import { setItem, getItem } from '@/utils/storage'
 import style from './index.scss'
 import EditorialPerson from './../EditorialPerson'
 import { userInfo as userInfoApi, userOtherInfo } from '@/api/user'
@@ -8,7 +8,7 @@ import { useRootStore } from '@/utils/customHooks'
 
 const Top = () => {
   const [publishModalVisible, setPublishModalVisible] = useState(false)
-  const { setUserInfo, isLogin } = useRootStore().userStore
+  const { setUserInfo, setModelVisible, isLogin, userInfo } = useRootStore().userStore
   const triggerShowPublishModal = (isShow) => {
     setPublishModalVisible(isShow)
   }
@@ -19,7 +19,7 @@ const Top = () => {
   const [likeCount, setLikeCount] = useState([])
   const [readCount, setReadCount] = useState([])
   const [url, setUrl] = useState('')
-  const [setUserName] = useState([])
+  const [username, setUserName] = useState([])
   const [nickname, setNickName] = useState([])
   const [description, setDescription] = useState([])
 
