@@ -23,7 +23,7 @@ module.exports = {
     path: resolve('dist'),
     filename: NODE_ENV === 'development' ? 'js/[name].js' : `js/[name].[chunkhash].js`,
     chunkFilename: NODE_ENV === 'development' ? 'js/[name].js' : `js/[name].[id].[chunkhash].js`,
-    publicPath: NODE_ENV === 'development' ? '/' : '/',
+    publicPath: NODE_ENV === 'development' ? '/' : './',
   },
   devServer: {
     historyApiFallback: true,
