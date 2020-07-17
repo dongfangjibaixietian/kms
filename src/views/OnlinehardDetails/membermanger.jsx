@@ -38,8 +38,6 @@ const MemberManger = () => {
     const delIndex = list.findIndex((item) => row.key === item.key)
     const copyList = [...list]
     copyList.splice(delIndex, 1)
-    console.log(copyList)
-    console.log(list)
     setList(copyList)
   }
 

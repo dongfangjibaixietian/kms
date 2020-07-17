@@ -26,9 +26,9 @@ const EditorialPerson = ({ visible, triggerShowPublishModal, change }) => {
     const res = await editUserInfo({
       nickname: title,
       avatar: url,
+      description: introduction,
     })
     triggerShowPublishModal(false)
-    console.log(res)
     if (res.code === 0) change()
   }
 
@@ -38,16 +38,12 @@ const EditorialPerson = ({ visible, triggerShowPublishModal, change }) => {
     name: 'file',
     action: '',
     customRequest: (param) => {
-      console.log(randomNum())
-      console.log(param)
       const fileSuffix = param.file.name.split('.')[1] || 'png'
-      console.log(fileSuffix)
       Uploader.upload({
         file: param.file,
         type: 1, // 1 图片 2 视频 3 其他
         filename: `${randomNum()}.${fileSuffix}`, // 文件名称需要自己生成，不能包含中文
       }).then((url) => {
-        console.log('上传后的地址', url)
         setUrl(url)
       })
     },
@@ -65,10 +61,10 @@ const EditorialPerson = ({ visible, triggerShowPublishModal, change }) => {
   //   closeModal()
   // }
   useEffect(() => {
-    console.log('gengxin')
     if (userInfo) {
       setTitle(userInfo.user.nickname)
       setUrl(userInfo.user.avatar)
+      setIntroduction(userInfo.user.description)
     }
   }, [])
 
@@ -85,7 +81,7 @@ const EditorialPerson = ({ visible, triggerShowPublishModal, change }) => {
       <div className={style.header}>编辑资料</div>
       <div className={style.infoWrapper}>
         <div style={{ marginTop: 18 }} className={style.otherInfo}>
-          <div className={style.title0}>名称</div>
+          <div className={style.title0}>昵称</div>
           <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="" />
         </div>
         <div className={style.introduction}>

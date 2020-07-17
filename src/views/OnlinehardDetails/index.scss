@@ -44,7 +44,7 @@
   .operate {
     display: flex;
     justify-content: space-between;
-    width: 380px;
+    width: 260px;
     margin-top: 10px;
     margin-bottom: 10px;
   }
@@ -138,5 +138,11 @@
     margin-right: 15px;
     padding-bottom: 3px;
     border-radius: 50%;
+  }
+
+  .backBtn {
+    position: relative;
+    left: 30px;
+    bottom: 75px;
   }
 }
