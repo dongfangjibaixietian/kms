@@ -75,11 +75,11 @@ const useGetRoutes = () => {
         title: '发现知识',
         component: Knowledge,
       },
-      {
-        path: '/workData',
-        title: '工作资料',
-        component: workinfo,
-      },
+      // {
+      //   path: '/workData',
+      //   title: '工作资料',
+      //   component: workinfo,
+      // },
       // {
       //   path:''
       // },
@@ -104,6 +104,18 @@ const useGetRoutes = () => {
   //   path: 'editor',
   //   component: ArticleEditor,
   // })
+
+  const [userRoutes, setUserRoutes] = useState({
+    path: '/user',
+    component: PageLayout,
+    children: [
+      {
+        path: '/center',
+        title: '用户中心',
+        component: workinfo,
+      },
+    ],
+  })
 
   const [editorRoutes, setEditorRoutes] = useState({
     path: '/publish',
@@ -166,6 +178,7 @@ const useGetRoutes = () => {
       articleRoutes,
       editorRoutes,
       adminRoutes,
+      userRoutes,
       agreementRoutes,
       userPrivacyRoutes,
       publishRoute,
@@ -190,6 +203,7 @@ const useGetRoutes = () => {
     setPublishArticle,
     setAgreementRoutes,
     setPrivacyRoutes,
+    setUserRoutes,
   }
 }
 

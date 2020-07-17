@@ -49,6 +49,11 @@ const HeaderRight = () => {
       case 'pwd':
         setPwd(true)
         break
+      case 'user':
+        window.open(window.location.origin + `/user/center`)
+        // window.location.href = window.location.origin + `/user/center`
+        break
+
       default:
         message.info('敬请期待')
         break
@@ -71,6 +76,9 @@ const HeaderRight = () => {
       <Menu.Item className={style.item} key="top">
         置顶文章
       </Menu.Item> */}
+      <Menu.Item className={style.item} key="user">
+        个人中心
+      </Menu.Item>
       <Menu.Item className={style.item} key="pwd">
         修改密码
       </Menu.Item>
