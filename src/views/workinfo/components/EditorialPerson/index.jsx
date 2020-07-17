@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Modal, Input, Button, Upload } from 'antd'
+import { Modal, Input, Button, Upload, message } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 import { withRouter } from 'react-router-dom'
 
@@ -23,6 +23,14 @@ const EditorialPerson = ({ visible, triggerShowPublishModal, change }) => {
   const [introduction, setIntroduction] = useState('')
 
   const saveUser = async () => {
+    if (title.length < 2) {
+      message.error('名字长度不能小于两位')
+      return
+    }
+    if (introduction.length == 0) {
+      message.error('简介不能为空')
+      return
+    }
     const res = await editUserInfo({
       nickname: title,
       avatar: url,

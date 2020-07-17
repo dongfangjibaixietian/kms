@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Modal, Input, Button, Select } from 'antd'
+import { Modal, Input, Button, Select, message } from 'antd'
 import { withRouter } from 'react-router-dom'
 
 import CloseIcon from '@/assets/svg/close.svg'
@@ -36,6 +36,10 @@ const NewSource = ({ visible, triggerShowPublishModal, change }) => {
 
   // 新建知识库接口
   const _libCreate = async () => {
+    if (title.length < 4) {
+      message.error('名称长度不能小于四位')
+      return
+    }
     const data = {
       // viewType,
       title,
