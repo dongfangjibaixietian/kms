@@ -137,7 +137,7 @@ const ArticleList = forwardRef((props, ref) => {
                   <img className={style.img} width={16} src={require('@/assets/img/read.png').default} alt="" />
                   <span>{item.viewCount}</span>
                   <img className={style.img} width={16} src={require('@/assets/img/remark.png').default} alt="" />
-                  <span>0</span>
+                  <span>{item.commentCount}</span>
                 </div>
               </div>
             </div>

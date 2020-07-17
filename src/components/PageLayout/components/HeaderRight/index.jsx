@@ -6,6 +6,7 @@ import { observer } from 'mobx-react-lite'
 import { removeItem } from '@/utils/storage'
 import style from './index.scss'
 import { useRootStore } from '@/utils/customHooks'
+import ResetPassword from '../ResetPassword'
 
 const HeaderRight = () => {
   const { setModelVisible, setModelType, isLogin, setLoginState, userInfo } = useRootStore().userStore
@@ -13,6 +14,7 @@ const HeaderRight = () => {
     avatar: '',
   })
   const [searchVal, setSearchVal] = useState('')
+  const [changePwd, setPwd] = useState(false)
 
   const triggerShowModal = (type) => {
     setModelType(type)
@@ -44,6 +46,9 @@ const HeaderRight = () => {
       case 'out':
         logOUt()
         break
+      case 'pwd':
+        setPwd(true)
+        break
       default:
         message.info('敬请期待')
         break
@@ -66,6 +71,9 @@ const HeaderRight = () => {
       <Menu.Item className={style.item} key="top">
         置顶文章
       </Menu.Item> */}
+      <Menu.Item className={style.item} key="pwd">
+        修改密码
+      </Menu.Item>
       <Menu.Item className={style.item} key="out">
         退出登录
       </Menu.Item>
@@ -107,6 +115,8 @@ const HeaderRight = () => {
         suffix={<SearchOutlined style={{ color: 'rgba(201, 201, 201)', fontSize: 20 }} />}
       />
       {defaultView}
+
+      <ResetPassword visible={changePwd} change={setPwd} />
     </div>
   )
 }
