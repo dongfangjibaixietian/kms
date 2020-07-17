@@ -169,7 +169,7 @@ const LoginModal = () => {
       className={style.loginDialog}
     >
       <div className={style.loginLogo}>
-        <img width={82} height={82} src="img/logo.png" alt="" />
+        <img width={82} height={82} src={require('@/assets/img/logo.png').default} alt="" />
         <span className={style.loginTitle}>超G知识库</span>
       </div>
 

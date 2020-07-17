@@ -13,7 +13,12 @@ module.exports = [
         loader: 'url-loader',
         options: {
           limit: 10000,
-          name: resolve('dist/img/[name].[ext]'),
+          fallback: {
+            loader: 'file-loader',
+            options: {
+              name: 'img/[name].[hash:8].[ext]'
+            }
+          }
         },
       },
     ],
