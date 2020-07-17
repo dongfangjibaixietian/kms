@@ -1,10 +1,13 @@
 import React, { useEffect, useState, useCallback, useReducer } from 'react'
 import { Button, List, Avatar, Spin } from 'antd'
 
+//结合这个插件实现滚动加载功能
+// import InfiniteScroll from 'react-infinite-scroller'
+
 import style from './index.scss'
 import NewSource from './../Newsource'
 
-import { scrollEvent, formateTime } from '@/utils/index'
+import { formateTime } from '@/utils/index'
 import { libList } from '@/api/library'
 // import { useRootStore } from '@/utils/customHooks'
 // import { hasPrefixSuffix } from 'antd/lib/input/ClearableLabeledInput'
@@ -42,40 +45,36 @@ const Left = () => {
   const [isLoading, setLoading] = useState(false)
   const [state, dispatch] = useReducer(reducer, initialState)
   const [dataList, setList] = useState([])
-  const [lib, setLib] = useState([])
+  const [setLib] = useState([])
 
-  // const scroll = () => {
-  //   const listScroll = useRef(list)
+  // const _listScroll = () => {
+  //   const listScroll = document.getElementsByClassName(style.list)[0]
   //   console.log(listScroll)
+  //   console.log(1213213)
   //   const scrollTop = listScroll.scrollTop //页面上卷的高度
+  //   console.log(scrollTop, '页面上卷的高度')
   //   const wholeHeight = listScroll.scrollHeight //页面底部到顶部的距离
+  //   console.log(wholeHeight, '页面底部到顶部的距离')
   //   const divHeight = listScroll.clientHeight //页面可视区域的高度
+  //   console.log(divHeight, '页面可视区域的高度')
   //   const height = wholeHeight - scrollTop - divHeight
   //   console.log(height, ' 距离页面底部的高度')
-  //   return height
+  //   setHeight(height)
   // }
 
-  const _handleScroll = useCallback(
-    (event) => {
-      const height = scrollEvent(event)
-      console.log('hasMore', hasMore)
-      console.log('isloading_hasMore', isLoading)
-      if (!isLoading && height <= 20 && hasMore) {
-        const pageIndex = state.pageIndex + 1
-        dispatch({
-          type: 'update',
-          payload: {
-            pageIndex,
-          },
-        })
-      }
-    },
-    [hasMore, state.pageIndex]
-  )
+  const _handleScroll = useCallback(() => {
+    if (!isLoading && height <= 20 && hasMore) {
+      const pageIndex = state.pageIndex + 1
+      dispatch({
+        type: 'update',
+        payload: {
+          pageIndex,
+        },
+      })
+    }
+  }, [hasMore, state.pageIndex])
 
   const getList = async () => {
-    console.log(isLoading, 'isloading')
-    console.log(hasMore, 'hasMore_isloading')
     if (isLoading || !hasMore) return
     setLoading(true)
 
@@ -91,6 +90,35 @@ const Left = () => {
     })
   }
 
+  // handleInfiniteOnLoad = () => {
+  //   setLoading(true)
+  //   if (data.length > 14) {
+  //     message.warning('Infinite List loaded all')
+  //     setLoading(false)
+  //     setHasMore(false)
+
+  //     // this.setState({
+  //     //   hasMore: false,
+  //     //   loading: false,
+  //     // });
+  //     return
+  //   }
+
+  //   getList()
+
+  //   // this.fetchData(res => {
+  //   //   data = data.concat(res.results);
+  //   //   this.setState({
+  //   //     data,
+  //   //     loading: false,
+  //   //   });
+  //   // });
+  // }
+
+  // useEffect(() => {
+  //   _handleScroll()
+  // }, [_listScroll()])
+
   useEffect(() => {
     window.addEventListener('scroll', _handleScroll)
     return () => window.removeEventListener('scroll', _handleScroll)
@@ -103,10 +131,9 @@ const Left = () => {
   }, [state.pageIndex])
 
   // useEffect(() => {
-  //   getList().then(() => {
-  //     setLoading(false)
-  //   })
-  // }, [lib])
+  //   _listScroll()
+  // }, [])
+
   //列表数据
   // const dataone = [
   //   {
@@ -150,7 +177,15 @@ const Left = () => {
       </div>
       <div className={style.box}>
         <div className={style.list}>
+          {/* <InfiniteScroll
+            initialLoad={false}
+            pageStart={0}
+            loadMore={this.handleInfiniteOnLoad}
+            hasMore={!isLoading && hasMore}
+            useWindow={false}
+          > */}
           <List
+            className={style.scrollList}
             itemLayout="horizontal"
             locale={locale}
             dataSource={dataList}
@@ -159,28 +194,20 @@ const Left = () => {
                 <List.Item.Meta
                   avatar={<Avatar src="/src/assets/img/file.png" className={style.fl} />}
                   //后端传过来的是name，其实title更好
-                  title={
-                    <a
-                      onClick={
-                        () => toLineHardDetails(item)
-                        // window.open(window.location.origin + `/online/hard`)
-                      }
-                    >
-                      {item.name}
-                    </a>
-                  }
+                  title={<a onClick={() => toLineHardDetails(item)}>{item.name}</a>}
                   description={formateTime(item.createTime)}
                 />
               </List.Item>
             )}
           />
-          <div className={style.spinBox}>
-            {hasMore ? (
-              <Spin tip="正在加载" className={style.spin} spinning={hasMore} />
-            ) : dataList.length > 0 ? (
-              <div>没有更多了</div>
-            ) : null}
-          </div>
+        </div>
+
+        <div className={style.spinBox}>
+          {hasMore ? (
+            <Spin tip="正在加载" className={style.spin} spinning={hasMore} />
+          ) : dataList.length > 0 ? (
+            <div>没有更多了</div>
+          ) : null}
         </div>
       </div>
       {publishModalVisible && (

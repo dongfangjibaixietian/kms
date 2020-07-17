@@ -11,9 +11,6 @@ const NewFils = ({ visible, triggerShowPublishModal, id, parentId, getFileList }
   const [title, setTitle] = useState('')
 
   const _createFile = async () => {
-    console.log(1234564545)
-    console.log(id)
-    console.log(parentId)
     const res = await upLoadLib({
       id: id,
       fileName: title,
@@ -22,7 +19,6 @@ const NewFils = ({ visible, triggerShowPublishModal, id, parentId, getFileList }
       fileSize: '1',
     })
     triggerShowPublishModal(false)
-    console.log(res)
     if (res.code === 0) getFileList()
   }
 

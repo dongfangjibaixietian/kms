@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { Button } from 'antd'
-import { setItem } from '@/utils/storage'
+import { setItem, getItem } from '@/utils/storage'
 import style from './index.scss'
 import EditorialPerson from './../EditorialPerson'
-import { userInfo, userOtherInfo } from '@/api/user'
+import { userInfo as userInfoApi, userOtherInfo } from '@/api/user'
 import { useRootStore } from '@/utils/customHooks'
 
 const Top = () => {
   const [publishModalVisible, setPublishModalVisible] = useState(false)
-  const { setUserInfo } = useRootStore().userStore
+  const { setUserInfo, setModelVisible, isLogin, userInfo } = useRootStore().userStore
   const triggerShowPublishModal = (isShow) => {
     setPublishModalVisible(isShow)
   }
@@ -21,13 +21,19 @@ const Top = () => {
   const [url, setUrl] = useState('')
   const [username, setUserName] = useState([])
   const [nickname, setNickName] = useState([])
+  const [description, setDescription] = useState([])
 
   const getUserInfo = async () => {
-    const res = await userInfo()
+    // if (!isLogin) {
+    //   setModelVisible(true)
+    // }
+    const res = await userInfoApi()
     const username = res.data.user.username
     const nickname = res.data.user.nickname
+    const description = res.data.user.description
     setUserName(username)
     setNickName(nickname)
+    setDescription(description)
     setUrl(res.data.user.avatar)
     setItem('user', JSON.stringify(res.data))
     setUserInfo(res.data)
@@ -50,11 +56,11 @@ const Top = () => {
 
   useEffect(() => {
     getUserOtherInfo()
-  }, [])
+  }, [isLogin])
 
   useEffect(() => {
     getUserInfo()
-  }, [])
+  }, [isLogin])
 
   return (
     <div className={style.KnowledgeListHeader}>
@@ -65,7 +71,7 @@ const Top = () => {
             <img className={style.pic} src={url} alt="" />
             <div className={style.leftinfo}>
               <div className={style.nm}>{nickname}</div>
-              <div className={style.intro}>暂无个人介绍</div>
+              <div className={style.intro}>{description}</div>
               <Button onClick={() => triggerShowPublishModal(true)} className={style.publishBtn}>
                 编辑资料
               </Button>

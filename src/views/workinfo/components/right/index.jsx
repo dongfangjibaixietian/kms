@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { Tabs, Button, Comment, Avatar } from 'antd'
-import { EyeOutlined, TagOutlined, MessageOutlined, UpOutlined, DownOutlined } from '@ant-design/icons'
+import { Tabs } from 'antd'
+import { UpOutlined, DownOutlined } from '@ant-design/icons'
 import MyArticle from './MyArticle/index'
 import MyCollect from './MyCollect/index'
 
@@ -60,21 +60,19 @@ const Right = () => {
   const [sign, changeCategory] = useState('new')
   const change = (e) => {
     e.persist()
-    console.log(e)
-    console.log(e.target.dataset.sign)
     changeCategory(e.target.dataset.sign)
   }
 
-  const ExampleComment = ({ children }) => (
-    <Comment
-      actions={[<span key="comment-nested-reply-to">回复</span>]}
-      author={<a>马可波罗</a>}
-      avatar={<Avatar className={style.sculpture} src="http://www.9ht.com/xue/54507.html" alt="马可波罗" />}
-      content={<p>牛牛牛！！！功能强大，超乎想象！</p>}
-    >
-      {children}
-    </Comment>
-  )
+  // const ExampleComment = ({ children }) => (
+  //   <Comment
+  //     actions={[<span key="comment-nested-reply-to">回复</span>]}
+  //     author={<a>马可波罗</a>}
+  //     avatar={<Avatar className={style.sculpture} src="http://www.9ht.com/xue/54507.html" alt="马可波罗" />}
+  //     content={<p>牛牛牛！！！功能强大，超乎想象！</p>}
+  //   >
+  //     {children}
+  //   </Comment>
+  // )
 
   function changetodown() {
     setShow(false)
@@ -134,7 +132,7 @@ const Right = () => {
               </div> */}
         </TabPane>
 
-        <TabPane tab="我的专栏" key="2">
+        {/* <TabPane tab="我的专栏" key="2">
           <div className={style.mycolumn}>
             <div className={style.columntit}>
               <div className={style.columnnum}>共{4}个专题</div>
@@ -143,8 +141,8 @@ const Right = () => {
               </Button>
             </div>
           </div>
-        </TabPane>
-        <TabPane tab="我的问答" key="3">
+        </TabPane> */}
+        {/* <TabPane tab="我的问答" key="3">
           <div className={style.myquest}>
             <div className={style.titquestion}>html5直播?</div>
             <div className={style.textcon}>
@@ -208,7 +206,7 @@ const Right = () => {
             </div>
           </div>
           ,
-        </TabPane>
+        </TabPane> */}
         <TabPane tab="我的收藏" key="4">
           <MyCollect className={style.articlelist} />
         </TabPane>
