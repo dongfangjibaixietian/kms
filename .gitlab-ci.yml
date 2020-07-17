@@ -22,6 +22,7 @@ build:
   tags:
     - shell-fe
   script:
+    - sudo npm rebuild node-sass
     - npm run build:prod
   artifacts:
     paths:
