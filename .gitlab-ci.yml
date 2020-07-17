@@ -22,6 +22,7 @@ build:
   tags:
     - shell-fe
   script:
+    - sudo npm rebuild node-sass
     - npm run build:prod
   artifacts:
     paths:
@@ -43,21 +44,17 @@ deploy_test:
   script:
     - rsync -ravtz --delete --password-file=/data/Auth/rsync/rsync.pwd dist/* gworld@172.16.1.244::gworld_pc_share/
 
-# deploy_prod:
-#   stage: deploy
-#   tags:
-#     - shell-fe
-#   only:
-#     - master
-#   environment:
-#     name: Production
-#     url: https://www.gworld.net/
-#   script:
-#     - rsync -ravtz --delete --password-file=/data/Auth/rsync/rsync.pwd dist/* gworld@172.31.0.183::gworld_net_office/
-#   after_script:
-#     - echo 'Deploy production env done !'
-#   when:
-#     on_success
+deploy_prod:
+  stage: deploy
+  tags:
+    - shell-fe
+  only:
+    - master
+  environment:
+    name: Production
+    url: https://kms.gworld.net/
+  script:
+    - rsync -ravtz --delete --password-file=/data/Auth/rsync/rsync.pwd dist/* gworld@172.31.0.183::kms.gworld.net/
 
 
 

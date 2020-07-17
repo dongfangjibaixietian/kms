@@ -2,7 +2,7 @@
  * @Author       : charm
  * @Date         : 2020-07-14 16:40:05
  * @LastEditors  : charm
- * @LastEditTime : 2020-07-14 18:44:52
+ * @LastEditTime : 2020-07-17 17:02:31
  * @FilePath     : \gworld-pc-share\src\api\user.js
  */
 
@@ -54,6 +54,15 @@ export function userFollow(data) {
 export function editUserInfo(data) {
   return request({
     url: '/kms/api/user/edit',
+    method: 'POST',
+    data,
+  })
+}
+
+//编辑用户资料信息
+export function resetPassword(data) {
+  return request({
+    url: '/kms/api/user/resetPassword',
     method: 'POST',
     data,
   })

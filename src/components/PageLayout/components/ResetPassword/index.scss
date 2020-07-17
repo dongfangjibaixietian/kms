@@ -1,0 +1,71 @@
+.loginDialog {
+  :global {
+    .ant-input {
+      height: 30px;
+    }
+
+    // 处理输入框自动填充色
+    input:-webkit-autofill,
+    select:-webkit-autofill {
+      box-shadow: 0 0 0 1000px white inset;
+    }
+
+    .ant-form-item-has-error .ant-input-affix-wrapper input:focus {
+      box-shadow: 0 0 0 1000px white inset !important;
+    }
+
+    .ant-modal-content {
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 7px;
+    }
+
+    .ant-modal-title {
+      font-weight: bold;
+    }
+
+    .ant-modal-close-x {
+      display: flex;
+      height: 50px;
+      width: 42px;
+      font-size: 18px;
+      color: #000;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+.loginLogo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 13px;
+
+  .loginTitle {
+    padding: 16px 0;
+    font-size: 21px;
+    color: #000;
+  }
+}
+
+.btnGroup {
+  display: flex;
+}
+
+.loginBtn {
+  width: 240px;
+  height: 46px;
+  border-radius: 23px;
+  background-color: #c4c4c4;
+  border: none;
+  display: block;
+  margin: 15px auto;
+
+  &:hover {
+    background: linear-gradient(to right, #505562, #000) !important;
+  }
+
+  &:focus {
+    background: linear-gradient(to right, #505562, #000) !important;
+  }
+}

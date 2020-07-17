@@ -13,6 +13,7 @@ import { ContentUtils } from 'braft-utils'
 import style from './index.scss'
 import 'braft-editor/dist/output.css'
 import 'braft-editor/dist/index.css'
+import 'github-markdown-css'
 
 let commentContent = ''
 const ArticleDetails = ({ history }) => {
@@ -27,6 +28,8 @@ const ArticleDetails = ({ history }) => {
   const [isLike, setLikeStatus] = useState(false)
   // 是否有文章操作权限
   const [isAllowed, setIsAllowed] = useState(false)
+  // 文章点赞数
+  const [likeCount, setLikeCount] = useState(0)
   // 是否已关注该用户
   const [isFollow, setFollow] = useState(false)
   // 是否还有更多评论
@@ -113,12 +116,15 @@ const ArticleDetails = ({ history }) => {
 
   const getArticleDetail = async () => {
     const res = await articleDetail({ id: id })
-    const editorState = BraftEditor.createEditorState(res.data.rawContent)
-    res.data.content = editorState.toHTML()
+    if (res.data.type === 'usd') {
+      const editorState = BraftEditor.createEditorState(res.data.rawContent)
+      res.data.content = editorState.toHTML()
+    }
     const result = Object.assign({}, detail, res.data)
     setArtcileDetail(result)
     setCollectStatus(result.isCollect)
     setLikeStatus(result.isLike)
+    setLikeCount(result.likeCount)
     setFollow(result.isFollow)
     // if (res.code === 0) getCommentList()
   }
@@ -361,6 +367,13 @@ const ArticleDetails = ({ history }) => {
     if (type === 'collect') {
       setCollectStatus(!isCollect)
     } else {
+      let currentLikeCount = 0
+      if (isLike) {
+        currentLikeCount = likeCount - 1
+      } else {
+        currentLikeCount = likeCount + 1
+      }
+      setLikeCount(currentLikeCount)
       setLikeStatus(!isLike)
     }
   }
@@ -408,7 +421,6 @@ const ArticleDetails = ({ history }) => {
 
   useEffect(() => {
     if (!isLogin || !userInfo) return
-    console.log(userInfo)
     const hasAuth = detail.createUser.id === userInfo.user.id
     setIsAllowed(hasAuth)
   }, [userInfo, detail.createUser])
@@ -467,22 +479,29 @@ const ArticleDetails = ({ history }) => {
                   ) : null}
                 </div>
               </div>
-              <div
-                className={`braft-output-content ${style.content}`}
-                dangerouslySetInnerHTML={{ __html: detail.content }}
-              ></div>
-              {!isAllowed ? (
-                <div className={style.likeShare}>
-                  <div className={style.like} onClick={() => collectArticle('like')}>
-                    <img className={style.tag} width={16} src={require('@/assets/img/like.png').default} alt="" />
-                    {isLike ? '已点赞' : '点赞'}
-                  </div>
-                  {/* <div className={style.share}>
+              {detail.type === 'usd' ? (
+                <div
+                  className={`braft-output-content ${style.content}`}
+                  dangerouslySetInnerHTML={{ __html: detail.content }}
+                ></div>
+              ) : (
+                <div
+                  dangerouslySetInnerHTML={{ __html: detail.content }}
+                  className={`markdown-body ${style.content}`}
+                />
+              )}
+
+              <div className={style.likeShare}>
+                <div className={style.like} onClick={() => collectArticle('like')}>
+                  <img className={style.tag} width={16} src={require('@/assets/img/like.png').default} alt="" />
+                  {isLike ? '已点赞' : '点赞'}
+                  {likeCount ? `(${likeCount})` : ''}
+                </div>
+                {/* <div className={style.share}>
                   <img className={style.tag} width={16} src={require('@/assets/img/share.png').default} alt="" />
                   分享
                 </div> */}
-                </div>
-              ) : null}
+              </div>
             </div>
             <div className={style.editorWrapper}>
               <BraftEditor
@@ -531,7 +550,7 @@ const ArticleDetails = ({ history }) => {
                       <span className={`${style.attention} ${isFollow ? style.followed : null}`} onClick={followUser}>
                         {isFollow ? '取消关注' : '关注'}
                       </span>
-                      <span className={style.private}>私信</span>
+                      {/* <span className={style.private}>私信</span> */}
                     </div>
                   ) : null}
                 </div>

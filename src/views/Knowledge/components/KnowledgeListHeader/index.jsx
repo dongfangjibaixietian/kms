@@ -10,7 +10,7 @@ const KnowledgeListHeader = ({ update }) => {
   const { setModelVisible, isLogin } = useRootStore().userStore
   const publishArticle = () => {
     if (!isLogin) return setModelVisible(true)
-    setItem('type', 'usd')
+    setItem('type', 'md')
     window.location.href = window.location.origin + `/publish/editor`
     // setPublishModalVisible(isShow)
   }

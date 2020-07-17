@@ -51,7 +51,6 @@
       flex-direction: column;
       background-color: #fff;
       padding: 0 20px;
-      margin-bottom: 20px;
     }
 
     .bf-controlbar {
@@ -67,18 +66,57 @@
       }
     }
 
-    .fuwenben-publish-btn {
-      width: 90px;
-      height: 27px;
-      border-radius: 2px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: #3370ff;
-      color: white;
+    .change-button {
       position: absolute;
-      right: 7px;
-      top: 10px;
+      bottom: 0;
+      right: 50px;
+      cursor: pointer;
+
+      &:hover {
+        color: #3370ff;
+      }
+
+      .anticon {
+        margin-right: 10px;
+      }
+    }
+
+    .for-toolbar {
+      padding-right: 200px;
+    }
+
+    .md-btn {
+      position: absolute;
+      top: 0;
+      right: 50px;
+      height: 44px;
+      line-height: 44px;
+      cursor: pointer;
+
+      &:hover {
+        color: #3370ff;
+      }
+
+      .anticon {
+        margin-right: 10px;
+      }
+    }
+
+    .for-fullscreen + .md-btn {
+      position: fixed;
+      z-index: 999999;
+    }
+  }
+}
+
+.toEditor {
+  :global {
+    .for-toolbar {
+      padding-right: 6px;
+    }
+
+    .for-container .for-editor-edit .for-editor-content {
+      height: auto !important;
     }
   }
 }
@@ -117,10 +155,40 @@
 .btnGroup {
   display: flex;
   justify-content: flex-end;
+  padding: 20px 0;
 
   .btn {
     width: 105px;
     height: 32px;
     margin-left: 20px;
   }
+}
+
+.editorPop {
+  width: 250px;
+  z-index: 99999;
+
+  :global {
+    .ant-popover-message-title {
+      padding-left: 0;
+    }
+
+    .ant-popover-buttons {
+      display: flex;
+      justify-content: space-evenly;
+    }
+
+    .ant-btn {
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      padding: 5px 15px;
+      height: 30px;
+    }
+  }
+}
+
+.editorContent {
+  position: relative;
+  margin-bottom: 20px;
 }

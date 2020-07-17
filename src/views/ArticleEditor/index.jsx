@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import MdEditor from 'for-editor'
-import { Upload, Select, Input, Button, Form, message } from 'antd'
-import { DownOutlined, FileTextOutlined } from '@ant-design/icons'
+import { Upload, Select, Input, Button, Form, message, Popconfirm } from 'antd'
+import { DownOutlined, FileTextOutlined, SwapOutlined } from '@ant-design/icons'
 import { withRouter } from 'react-router-dom'
 import BraftEditor from 'braft-editor'
 import { ContentUtils } from 'braft-utils'
 import 'braft-editor/dist/index.css'
-// import marked from 'marked'
+import marked from 'marked'
 import { articleDetail, createArticle } from '@/api/article'
 import { tagTree as getTagListApi } from '@/api/tag'
 import { Uploader } from '@gworld/toolset'
@@ -46,7 +46,6 @@ const ArticleEditor = ({ history, location }) => {
   // const [poster, setImageUrl] = useState('')
   // 可见范围
   const [viewType, setViewType] = useState(1)
-  // const [loading, setLoading] = useState(false)
   const [editorState, setEditorState] = useState(BraftEditor.createEditorState(null))
   // 获取文章类型 md: markdown use:富文本
   const [editorType, setEditorType] = useState('md')
@@ -63,7 +62,6 @@ const ArticleEditor = ({ history, location }) => {
   }
 
   const beforeUpload = (file) => {
-    console.log('上传之前')
     const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
     if (!isJpgOrPng) {
       message.error('只能上传JPG/PNG文件!')
@@ -89,6 +87,7 @@ const ArticleEditor = ({ history, location }) => {
     message.info('功能正在完善，敬请期待')
   }
 
+  // 富文本编辑保存
   const fuwenbenOnChange = (v) => {
     setEditorState(v)
     if (id) return
@@ -96,20 +95,28 @@ const ArticleEditor = ({ history, location }) => {
     setItem(
       'article',
       JSON.stringify({
-        content: editorType === 'usd' ? v.toHTML() : mdValue,
-        rawContent: editorType === 'usd' ? v.toRAW() : html,
+        type: editorType,
+        content: v.toHTML(),
+        rawContent: v.toRAW(),
       })
     )
   }
 
+  // MD编辑保存
   const handleChange = (value) => {
     setMdValue(value)
+    // 储存文章
+    setItem(
+      'article',
+      JSON.stringify({
+        type: editorType,
+        content: marked(value),
+        rawContent: value,
+      })
+    )
   }
 
-  const handleSave = (value) => {
-    setMdValue(value)
-  }
-
+  //获取文章详情
   const getArticleDetail = async () => {
     const res = await articleDetail({ id: id })
     const tagIds = []
@@ -118,10 +125,14 @@ const ArticleEditor = ({ history, location }) => {
     })
     setSelectedTag(tagIds)
     setTitle(res.data.title)
-
+    // 重置表单
     articleForm.setFieldsValue({ title: res.data.title })
     articleForm.setFieldsValue({ 'select-multiple': tagIds })
-    setEditorState(BraftEditor.createEditorState(res.data.rawContent))
+    if (res.data.type === 'usd') {
+      setEditorState(BraftEditor.createEditorState(res.data.rawContent))
+    } else {
+      setMdValue(res.data.rawContent)
+    }
   }
 
   // 进入文章发布成功页面
@@ -134,21 +145,23 @@ const ArticleEditor = ({ history, location }) => {
 
   // 保存文章
   const publishArticle = async () => {
-    if (editorState.isEmpty()) {
-      return message.error('请输入文章内容')
-    }
     if (!getItem('token') || !isLogin) {
       message.error('登录过期，请重新登录')
       setModelVisible(true)
       return
     }
-    const firstImg = getImgUrl(editorState.toHTML())
+    const isUsd = editorType === 'usd'
+    if ((isUsd && editorState.isEmpty()) || (!isUsd && mdValue === '')) {
+      return message.error('请输入文章内容')
+    }
+
+    const firstImg = getImgUrl(isUsd ? editorState.toHTML() : marked(mdValue))
     const postData = {
       title: title,
       type: editorType,
       poster: firstImg,
-      content: editorType === 'usd' ? editorState.toHTML() : mdValue,
-      rawContent: editorType === 'usd' ? editorState.toRAW() : html,
+      content: isUsd ? editorState.toHTML() : marked(mdValue),
+      rawContent: isUsd ? editorState.toRAW() : mdValue,
       tagIds: selectTagIds,
       fileIds: [],
     }
@@ -157,19 +170,38 @@ const ArticleEditor = ({ history, location }) => {
     }
     const res = await createArticle(postData)
     if (res.code === 0) {
-      setEditorState(ContentUtils.clear(editorState))
+      if (isUsd) {
+        setEditorState(ContentUtils.clear(editorState))
+      } else {
+        setMdValue('')
+      }
+
       articleForm.resetFields()
       goToPublicizePage(res.data.id)
       removeItem('article')
     }
   }
+
   const selectTag = (values) => {
     setSelectedTag(values)
   }
 
   const $vm = React.createRef()
   const addImg = ($file) => {
-    $vm.current.$img2Url($file.name, 'file_url')
+    if (!beforeUpload($file)) return
+    const fileSuffix = $file.name.split('.')[1] || 'png'
+    Uploader.upload({
+      file: $file,
+      type: 1, // 1 图片 2 视频 3 其他
+      filename: `${randomNum()}.${fileSuffix}`, // 文件名称需要自己生成，不能包含中文
+    }).then(
+      (url) => {
+        $vm.current.$img2Url($file.name, url)
+      },
+      () => {
+        message.error('上传失败，请再次上传')
+      }
+    )
   }
 
   const uploadFn = (param) => {
@@ -180,7 +212,6 @@ const ArticleEditor = ({ history, location }) => {
       filename: `${randomNum()}.${fileSuffix}`, // 文件名称需要自己生成，不能包含中文
     }).then(
       (url) => {
-        console.log('上传后的地址', url)
         param.success({
           url: url,
           meta: {
@@ -203,52 +234,43 @@ const ArticleEditor = ({ history, location }) => {
   //   </div>
   // )
 
-  const validateFn = (file) => {
-    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
-    if (!isJpgOrPng) {
-      message.error('只能上传jpg/png文件')
-    }
-    const isLt2M = file.size / 1024 / 1024 < 2
-    if (!isLt2M) {
-      message.error('图片大小不能超过不超过2M')
-    }
-    return isJpgOrPng && isLt2M
+  // 确认切换编辑器类型
+  const confirm = () => {
+    const type = editorType === 'usd' ? 'md' : 'usd'
+    setEditorType(type)
+    setItem('type', type)
+    setEditorState(ContentUtils.clear(editorState))
+    setSelectedTag([])
+    setTitle([])
+    removeItem('article')
   }
 
-  const onInsert = (param) => {
-    console.log('onInsert', param)
-  }
+  const templateHtml = (
+    <Popconfirm
+      title="切换编辑器后，当前已编辑内容会丢失，请确认是否需要切换？"
+      onConfirm={confirm}
+      overlayClassName={style.editorPop}
+      icon=""
+      okText="确认"
+      cancelText="取消"
+    >
+      <div className="fuwenben-publish-btn">
+        <SwapOutlined />
+        {editorType === 'usd' ? '切换MarkDown编辑器' : '切换富文本编辑器'}
+      </div>
+    </Popconfirm>
+  )
 
-  const braftEditorChange = (param) => {
-    console.log('braftEditorChange', param)
-  }
-
-  // const changeEditorType = () => {
-  //   console.log('ts')
-  // }
-
-  const mdEditorAddSaveBtn = () => {
-    const mdToolTarget = document.querySelector('.for-toolbar').lastChild
-    const btnChild = document.createElement('div')
-    btnChild.textContent = '发表'
-    btnChild.className = 'md-publish-btn'
-    btnChild.addEventListener('click', () => {
-      saveArticle()
-    })
-    mdToolTarget.appendChild(btnChild)
-  }
-
-  // const extendControls = [
-  //   {
-  //     key: 'custom-button',
-  //     type: 'button',
-  //     text: (
-  //       <div onClick={changeEditorType} className="fuwenben-publish-btn">
-  //         {editorType === 'usd' ? '切换MarkDown编辑器' : '切换富文本编辑器'}
-  //       </div>
-  //     ),
-  //   },
-  // ]
+  const extendControls = [
+    'separator',
+    {
+      key: 'editor-type',
+      type: 'button',
+      className: 'change-button',
+      html: ``,
+      text: !id ? templateHtml : null,
+    },
+  ]
 
   useEffect(() => {
     getTagList()
@@ -261,21 +283,25 @@ const ArticleEditor = ({ history, location }) => {
     } else {
       setArticleId(sessionStorage.getItem('articleId'))
     }
-    type === 'md' && mdEditorAddSaveBtn()
   }, [])
 
   useEffect(() => {
     const articleContent = JSON.parse(getItem('article'))
-    const rawContent = articleContent
-      ? BraftEditor.createEditorState(articleContent.rawContent)
-      : BraftEditor.createEditorState(null)
-    setEditorState(rawContent)
-    console.log(articleContent, 'articleContent')
+    if (editorType === 'usd') {
+      const rawContent = articleContent
+        ? BraftEditor.createEditorState(articleContent.rawContent)
+        : BraftEditor.createEditorState(null)
+      setEditorState(rawContent)
+    } else {
+      const mdRawContent = articleContent ? articleContent.rawContent : ''
+      setMdValue(mdRawContent)
+    }
+
     id && getArticleDetail()
   }, [id])
 
   return (
-    <div className={style.editorWrapper}>
+    <div className={`${style.editorWrapper} ${id ? style.toEditor : null}`}>
       <div className={style.publishTop}>
         <div className={style.publishIcon}>
           <FileTextOutlined className="site-form-item-icon" style={{ fontSize: '20px' }} twoToneColor="#eb2f96" />
@@ -299,39 +325,57 @@ const ArticleEditor = ({ history, location }) => {
             <Input allowClear value={title} onChange={(e) => setTitle(e.target.value)} placeholder="请输入标题" />
           </Form.Item>
         </div>
-        {editorType === 'md' ? (
-          <MdEditor
-            ref={$vm}
-            toolbar={toolbar}
-            expand
-            subfield
-            preview
-            value={mdValue}
-            onChange={handleChange}
-            addImg={($file) => addImg($file)}
-            onSave={(value) => handleSave(value)}
-          />
-        ) : (
-          <BraftEditor
-            // extendControls={extendControls}
-            placeholder="请输入内容"
-            media={{
-              uploadFn: uploadFn,
-              validateFn: validateFn,
-              accepts: {
-                audio: false,
-                video: false,
-              },
-              externals: {
-                image: true,
-              },
-              onInsert: onInsert,
-              onChange: braftEditorChange,
-            }}
-            value={editorState}
-            onChange={fuwenbenOnChange}
-          />
-        )}
+        <div className={style.editorContent}>
+          {editorType === 'md' ? (
+            <div>
+              <MdEditor
+                ref={$vm}
+                toolbar={toolbar}
+                subfield
+                preview
+                value={mdValue}
+                onChange={handleChange}
+                addImg={($file) => addImg($file)}
+                onSave={(value) => handleChange(value)}
+                className={style.mdEditor}
+              />
+              {!id ? (
+                <Popconfirm
+                  title="切换编辑器后，当前已编辑内容会丢失，请确认是否需要切换？"
+                  onConfirm={confirm}
+                  overlayClassName={style.editorPop}
+                  icon=""
+                  okText="确认"
+                  cancelText="取消"
+                >
+                  <div className="md-btn">
+                    <SwapOutlined />
+                    {editorType === 'usd' ? '切换MarkDown编辑器' : '切换富文本编辑器'}
+                  </div>
+                </Popconfirm>
+              ) : null}
+            </div>
+          ) : (
+            <BraftEditor
+              extendControls={extendControls}
+              placeholder="请输入内容"
+              media={{
+                uploadFn: uploadFn,
+                validateFn: beforeUpload,
+                accepts: {
+                  audio: false,
+                  video: false,
+                },
+                externals: {
+                  image: true,
+                },
+              }}
+              value={editorState}
+              onChange={fuwenbenOnChange}
+            />
+          )}
+        </div>
+
         <div className={`${style.formItem} ${style.otherItem}`}>
           <Form.Item
             name="select-multiple"
@@ -374,7 +418,7 @@ const ArticleEditor = ({ history, location }) => {
           </Form.Item>
         </div>
 
-        <div className={style.formItem}>
+        <div className={style.formItem} style={{ display: 'none' }}>
           <Form.Item name="fj" label="附件">
             <Upload
               listType="picture-card"
@@ -389,14 +433,14 @@ const ArticleEditor = ({ history, location }) => {
           </Form.Item>
         </div>
         <div className={style.btnGroup}>
-          <Button
+          {/* <Button
             className={style.btn}
             onClick={() => {
               message.info('敬请期待')
             }}
           >
             保存草稿
-          </Button>
+          </Button> */}
           <Button type="primary" htmlType="submit" className={style.btn}>
             发表
           </Button>

@@ -14,8 +14,11 @@ import { message } from 'antd'
 const service = new Request({
   namespace: 'gworld-kms',
   partBase(pageURL, uri) {
-    console.log('页面路由', pageURL)
     console.log('接口路径partBase', uri)
+
+    if (pageURL.includes('gworld.net')) {
+      return 'https://apis.gworld.net'
+    }
 
     return 'http://kms.api.gworld-inc.com'
   },
