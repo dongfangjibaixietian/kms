@@ -18,7 +18,7 @@ const Left = () => {
   }
   const initialState = {
     pageIndex: 1,
-    pageSize: 10,
+    pageSize: 20,
   }
 
   const toLineHardDetails = (item) => {
@@ -45,7 +45,7 @@ const Left = () => {
   const [isLoading, setLoading] = useState(false)
   const [state, dispatch] = useReducer(reducer, initialState)
   const [dataList, setList] = useState([])
-  const [setLib] = useState([])
+  const [lib, setLib] = useState([])
 
   // const _listScroll = () => {
   //   const listScroll = document.getElementsByClassName(style.list)[0]

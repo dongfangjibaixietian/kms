@@ -118,8 +118,8 @@ const MyArticle = () => {
                 <div>
                   {/* <img className={style.img} width={16} src={require('@/assets/img/write.png').default} alt="" /> */}
                   {/* <span>编辑</span> */}
-                  <img className={style.img} width={16} src={require('@/assets/img/delete.png').default} alt="" />
-                  <span>删除</span>
+                  {/* <img className={style.img} width={16} src={require('@/assets/img/delete.png').default} alt="" />
+                  <span>删除</span> */}
                 </div>
               </div>
             </div>

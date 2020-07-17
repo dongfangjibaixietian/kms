@@ -56,11 +56,11 @@ const Top = () => {
 
   useEffect(() => {
     getUserOtherInfo()
-  }, [isLogin])
+  }, [])
 
   useEffect(() => {
     getUserInfo()
-  }, [isLogin])
+  }, [])
 
   return (
     <div className={style.KnowledgeListHeader}>
