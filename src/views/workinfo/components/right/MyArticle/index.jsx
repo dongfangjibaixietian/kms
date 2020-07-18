@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useCallback, useReducer } from 'react'
 import { List, Avatar, Spin } from 'antd'
 import style from './index.scss'
-import { scrollEvent, formateTime } from '@/utils'
+import { format } from '@gworld/toolset'
+import { scrollEvent } from '@/utils'
 import { articleList } from '@/api/article'
 const MyArticle = () => {
   const locale = {
@@ -37,9 +38,8 @@ const MyArticle = () => {
   const _handleScroll = useCallback(
     (event) => {
       const height = scrollEvent(event)
-      console.log('hasMore', hasMore)
-      console.log('isloading_hasMore', isLoading)
       if (!isLoading && height <= 20 && hasMore) {
+        setLoading(true)
         const pageIndex = state.pageIndex + 1
         dispatch({
           type: 'update',
@@ -49,15 +49,11 @@ const MyArticle = () => {
         })
       }
     },
-    [hasMore, state.pageIndex]
+    [hasMore, state.pageIndex, isLoading]
   )
 
   const getList = async () => {
-    console.log(isLoading, 'isloading')
-    console.log(hasMore, 'hasMore_isloading')
-    if (isLoading || !hasMore) return
-    setLoading(true)
-
+    if (!hasMore) return
     const res = await articleList({
       searchKey: '',
       ...state,
@@ -85,7 +81,7 @@ const MyArticle = () => {
     getList().then(() => {
       setLoading(false)
     })
-  }, [state.pageIndex])
+  }, [state.pageIndex, hasMore])
 
   return (
     <div className={style.ArticleList}>
@@ -107,7 +103,7 @@ const MyArticle = () => {
                 <div className={style.left}>
                   <Avatar size="small" className={style.avatarImg} src={item.createUser.avatar} />
                   <span className={style.author}>{item.createUser.username}</span>
-                  <span className={style.text}>{formateTime(item.updateTime)}</span>
+                  <span className={style.text}>{format(item.updateTime, 'YYYY-MM-DD HH:mm:ss')}</span>
                   <img className={style.text} width={16} src={require('@/assets/img/read.png').default} alt="" />
                   {item.tags.map((tag) => (
                     <span key={tag.id} className={style.text}>

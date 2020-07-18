@@ -12,7 +12,6 @@ const KnowledgeListHeader = ({ update }) => {
     if (!isLogin) return setModelVisible(true)
     setItem('type', 'md')
     window.location.href = window.location.origin + `/publish/editor`
-    // setPublishModalVisible(isShow)
   }
 
   const data = [

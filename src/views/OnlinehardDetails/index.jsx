@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import { Table, Button, Space, Upload, message } from 'antd'
-
+import { FileImageOutlined } from '@ant-design/icons'
 import style from './index.scss'
 import MemberManger from './membermanger'
 import NewFils from './NewFils/index.jsx'
 
 import { libFileList, upLoadLib } from '@/api/library'
-import { getUrlSearch, formateTime } from '@/utils'
-import { Uploader } from '@gworld/toolset'
+import { getUrlSearch, sizeTostr } from '@/utils'
+import { Uploader, format } from '@gworld/toolset'
 import { randomNum } from '@/utils/index'
 
-const OnlinehardDetails = () => {
+const OnlinehardDetails = ({ location }) => {
   const [publishModalVisible, setPublishModalVisible] = useState(false)
 
   const triggerShowPublishModal = (isShow) => {
@@ -81,7 +81,7 @@ const OnlinehardDetails = () => {
         type: 3, // 1 图片 2 视频 3 其他
         filename: `${randomNum()}.${fileSuffix}`, // 文件名称需要自己生成，不能包含中文
       }).then((url) => {
-        setUrl(url)
+        // setUrl(url)
         // console.log(info.file.name)
         // setFiName(info.file.name)
         // console.log(info.file.size)
@@ -116,12 +116,23 @@ const OnlinehardDetails = () => {
 
   useEffect(() => {
     id && getFileList()
-  }, [id])
+  }, [id, parentId])
 
   useEffect(() => {
     const searchId = getUrlSearch(window.location.search)
     setOnLineHardId(searchId.id)
   }, [])
+
+  // useEffect(() => {
+  //   console.log(location)
+  //   if (location.data && location.data.id) {
+  //     const searchId = location.data.id
+  //     sessionStorage.setItem('hardId', searchId)
+  //     setOnLineHardId(searchId)
+  //   } else {
+  //     setOnLineHardId(sessionStorage.getItem('hardId'))
+  //   }
+  // }, [])
 
   const columns = [
     {
@@ -139,9 +150,14 @@ const OnlinehardDetails = () => {
             }}
           >
             {item.type === 'folder' ? (
-              <img src="/src/assets/img/file.png" className={style.filepng} />
+              <img src={require('@/assets/img/file.png').default} className={style.filepng} />
             ) : (
-              <img src="/src/assets/img/document.png" className={style.filepng} />
+              <FileImageOutlined
+                className="site-form-item-icon"
+                style={{ fontSize: '20px', marginRight: '10px' }}
+                twoToneColor="#eb2f96"
+              />
+              // <img src={require('@/assets/img/document.png').default} className={style.filepng} />
             )}
             {text}
           </div>
@@ -151,6 +167,13 @@ const OnlinehardDetails = () => {
     {
       title: '大小',
       dataIndex: 'fileSize',
+      render: (text, item) => {
+        console.log(item)
+        if (item.type === 'folder') {
+          return ''
+        }
+        return sizeTostr(text)
+      },
     },
     {
       title: '上传人',
@@ -160,7 +183,7 @@ const OnlinehardDetails = () => {
       title: '上传时间',
       dataIndex: 'createTime',
       render: (text) => {
-        return formateTime(text)
+        return format(text, 'YYYY-MM-DD HH:mm:ss')
       },
     },
     {
@@ -168,24 +191,18 @@ const OnlinehardDetails = () => {
       dataIndex: 'manage',
       key: 'action',
       render: (text, record, row) => {
-        if (record.type !== 'folder')
-          return (
-            <Space size="middle">
-              <a
-                onClick={() => {
-                  download(record, row)
-                }}
-              >
-                下载
-              </a>
-            </Space>
-          )
-        if (record.type == 'folder')
-          return (
-            <Space size="middle">
-              <a>下载</a>
-            </Space>
-          )
+        if (record.type == 'folder') return ''
+        return (
+          <Space size="middle">
+            <a
+              onClick={() => {
+                download(record, row)
+              }}
+            >
+              下载
+            </a>
+          </Space>
+        )
       },
     },
     //删除页面，没有接口，暂时取消功能
@@ -269,15 +286,6 @@ const OnlinehardDetails = () => {
       {/* <Button className={style.backBtn} onClick={backBtn}>
         返回第一层
       </Button> */}
-
-      <div className={style.introduction}>简介</div>
-      <div className={style.introductionContent}>
-        <p>库实际上是一种代码共享的方式，主要用于代码重用和源码隐藏，通常分为动态库和静态库。</p>
-        <p>静态库：链接时完整的拷贝至可执行文件中，被多次使用就有多份冗余拷贝。</p>
-        <p>
-          动态库：链接时不复制，程序运行时由系统动态加载到内存，供程序调用，系统只加载一次，多个程序共用，节省内存空间。
-        </p>
-      </div>
       {publishModalVisible && (
         <NewFils
           id={id}

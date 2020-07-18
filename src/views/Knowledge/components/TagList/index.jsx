@@ -34,7 +34,7 @@ const TagList = () => {
 
   useEffect(() => {
     getTagList()
-  }, [userInfo])
+  }, [])
 
   return (
     <div className={style.tagDetails}>

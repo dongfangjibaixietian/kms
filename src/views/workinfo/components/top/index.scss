@@ -1,8 +1,6 @@
-@import 'global.scss';
-
 .KnowledgeListHeader {
-  width: 1230px;
-  height: 156px;
+  width: 1140px;
+  padding: 30px;
   background-color: white;
 
   .header {
@@ -13,34 +11,33 @@
   }
 
   .tabsWrapper {
-    width: 1230px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    height: 116px;
   }
 
   .nm {
-    height: 20px;
-    font-size: 20px;
-    font-family: PingFang-SC-Regular, PingFang-SC;
-    font-weight: 400;
+    font-size: 22px;
+    font-weight: 500;
+    width: 360px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     color: rgba(51, 51, 51, 1);
-    line-height: 20px;
-    margin-bottom: 8px;
   }
 
   .intro {
     font-size: 12px;
-    font-family: PingFang-SC-Regular, PingFang-SC;
-    font-weight: 400;
+    width: 360px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     color: rgba(163, 163, 163, 1);
-    line-height: 20px;
   }
 
   .pic {
-    margin-top: 30px;
     margin-right: 20px;
-    margin-bottom: 20px;
     width: 96px;
     height: 96px;
     border-radius: 50%;
@@ -48,90 +45,65 @@
   }
 
   .pers {
-    margin-bottom: 20px;
     display: flex;
+    align-items: center;
     justify-content: space-between;
+    height: 100%;
   }
 
   .leftinfo {
-    flex: 1;
-    margin-top: 35px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    height: 96px;
   }
 
   .publishBtn {
-    margin-top: 10px;
-    background: rgba(245, 245, 245, 1);
+    cursor: pointer;
+    background: #f5f5f5;
+    border: none;
+    padding: 0;
+    font-size: 12px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #303030;
+    width: 90px;
+
+    &:hover {
+      background-color: #eaf0ff;
+      color: #2d77ee;
+    }
   }
 
   .rigtinfo {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 571px;
   }
 
-  .one {
-    flex: 1;
+  .item {
+    width: 122px;
     display: flex;
     flex-flow: column;
     align-items: center;
     height: 50px;
-    border-right: 1px solid #ddd;
-  }
+    border-right: 1px solid #f2f2f2;
 
-  .dataone {
-    flex: 1;
-  }
+    &:last-child {
+      border-right: 0;
+    }
 
-  .two {
-    flex: 1;
-    display: flex;
-    flex-flow: column;
-    align-items: center;
-    height: 50px;
-    border-right: 1px solid #ddd;
-  }
+    .itemValue {
+      color: #333;
+      font-size: 20px;
+    }
 
-  .datatwo {
-    flex: 1;
-  }
-
-  .three {
-    flex: 1;
-    display: flex;
-    flex-flow: column;
-    align-items: center;
-    height: 50px;
-    border-right: 1px solid #ddd;
-  }
-
-  .datathree {
-    flex: 1;
-  }
-
-  .four {
-    flex: 1;
-    display: flex;
-    flex-flow: column;
-    align-items: center;
-    height: 50px;
-    border-right: 1px solid #ddd;
-  }
-
-  .datafour {
-    flex: 1;
-  }
-
-  .five {
-    flex: 1;
-    display: flex;
-    flex-flow: column;
-    align-items: center;
-    height: 50px;
-  }
-
-  .datafive {
-    flex: 1;
+    .itemName {
+      color: #999;
+      font-size: 14px;
+    }
   }
 
   .tabs {

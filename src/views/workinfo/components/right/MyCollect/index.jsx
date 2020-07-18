@@ -3,7 +3,7 @@ import { List, Avatar, Spin } from 'antd'
 import style from './index.scss'
 import { scrollEvent, formateTime } from '@/utils'
 import { articleCollectList } from '@/api/article'
-const MyCollect = () => {
+const MyCollect = ({ userId, isSelf }) => {
   const locale = {
     emptyText: '暂无数据',
   }
@@ -60,6 +60,7 @@ const MyCollect = () => {
 
     const res = await articleCollectList({
       ...state,
+      userId: userId,
     })
 
     if (!hasMore || res.data.list.length < 10) {
@@ -76,6 +77,7 @@ const MyCollect = () => {
   }, [_handleScroll])
 
   useEffect(() => {
+    if (!userId) return
     getList().then(() => {
       setLoading(false)
     })
@@ -109,12 +111,14 @@ const MyCollect = () => {
                     </span>
                   ))}
                 </div>
-                <div>
-                  {/* <img className={style.img} width={16} src={require('@/assets/img/write.png').default} alt="" />
+                {isSelf ? (
+                  <div>
+                    {/* <img className={style.img} width={16} src={require('@/assets/img/write.png').default} alt="" />
                   <span>编辑</span> */}
-                  <img className={style.img} width={16} src={require('@/assets/img/delete.png').default} alt="" />
-                  <span>删除</span>
-                </div>
+                    <img className={style.img} width={16} src={require('@/assets/img/delete.png').default} alt="" />
+                    {/* <span>删除</span> */}
+                  </div>
+                ) : null}
               </div>
             </div>
           </List.Item>

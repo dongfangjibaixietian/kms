@@ -3,7 +3,7 @@ import { useState, useMemo } from 'react'
 import Loadable from 'react-loadable'
 
 import PageLayout from '@/components/PageLayout'
-import workinfo from '../views/workinfo'
+// import workinfo from '../views/workinfo'
 
 const Loading = () => <div>正在加载中</div>
 
@@ -23,10 +23,10 @@ const Admin = Loadable({
   loading: Loading,
 })
 
-// const Test = Loadable({
-//   loader: () => import(/* webpackChunkName: "test" */ '@/views/workinfo'),
-//   loading: Loading,
-// })
+const WorkInfo = Loadable({
+  loader: () => import(/* webpackChunkName: "work-info" */ '@/views/workinfo'),
+  loading: Loading,
+})
 
 const ArticleEditor = Loadable({
   loader: () => import(/* webpackChunkName: "article-editor" */ '@/views/ArticleEditor'),
@@ -112,7 +112,7 @@ const useGetRoutes = () => {
       {
         path: '/center',
         title: '用户中心',
-        component: workinfo,
+        component: WorkInfo,
       },
     ],
   })

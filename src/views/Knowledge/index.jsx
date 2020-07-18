@@ -1,5 +1,4 @@
 import React, { useState, useRef } from 'react'
-
 import style from './index.scss'
 import KnowledgeListHeader from './components/KnowledgeListHeader'
 import ArticleList from '@/components/ArticleList'

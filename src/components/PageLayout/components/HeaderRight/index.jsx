@@ -8,7 +8,7 @@ import style from './index.scss'
 import { useRootStore } from '@/utils/customHooks'
 import ResetPassword from '../ResetPassword'
 
-const HeaderRight = () => {
+const HeaderRight = ({ history }) => {
   const { setModelVisible, setModelType, isLogin, setLoginState, userInfo } = useRootStore().userStore
   const [user, setUser] = useState({
     avatar: '',
@@ -50,8 +50,13 @@ const HeaderRight = () => {
         setPwd(true)
         break
       case 'user':
+        console.log(history)
+        const data = {
+          userId: userInfo.user.id,
+        }
+        history.push(`/user/center?userId=${userInfo.user.id}`)
         // window.open(window.location.origin + `/user/center`)
-        window.location.href = window.location.origin + `/user/center`
+        // window.location.href = window.location.origin + `/user/center?userId=${userInfo.user.id}`
         break
 
       default:

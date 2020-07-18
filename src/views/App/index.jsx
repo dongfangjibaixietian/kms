@@ -15,6 +15,7 @@ const App = () => {
   Uploader.init()
 
   const getUserInfo = async () => {
+    console.log('获取信息')
     try {
       const user = jwtDecode(getItem('token'))
       const info = await userInfo({

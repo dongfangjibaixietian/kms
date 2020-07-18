@@ -10,7 +10,7 @@ const { TabPane } = Tabs
 
 //以下都是成员管理功能模块
 
-const Right = () => {
+const Right = ({ userId, isSelf }) => {
   const [show, setShow] = useState(true)
 
   function callback(key) {
@@ -86,8 +86,8 @@ const Right = () => {
   return (
     <div className={style.KnowledgeListHeader}>
       <Tabs className={style.tabs} defaultActiveKey="1" onChange={callback} animated={false}>
-        <TabPane tab="我的文章" key="1" className={style.mypaper}>
-          <div className={style.filtcategory}>
+        <TabPane tab="文章" key="1" className={style.mypaper}>
+          {/* <div className={style.filtcategory}>
             <div className={style.KnowledgeCategory} onClick={change}>
               {copydata.map((item) => (
                 <div
@@ -99,11 +99,6 @@ const Right = () => {
                   {item.name}
                 </div>
               ))}
-              {/* {show ? (
-              <UpOutlined onClick={changetodown} className={style.showicon} />
-            ) : (
-              <DownOutlined onClick={changetoup} className={style.showicon} />
-            )} */}
             </div>
             <div className={style.totalshowicon}>
               {show ? (
@@ -112,7 +107,7 @@ const Right = () => {
                 <DownOutlined onClick={changetoup} className={style.showicon} />
               )}
             </div>
-          </div>
+          </div> */}
           <MyArticle className={style.articlelist} />
 
           {/* <div className={style.alltag}>
@@ -207,8 +202,8 @@ const Right = () => {
           </div>
           ,
         </TabPane> */}
-        <TabPane tab="我的收藏" key="4">
-          <MyCollect className={style.articlelist} />
+        <TabPane tab="收藏" key="4">
+          <MyCollect className={style.articlelist} userId={userId} isSelf={isSelf} />
         </TabPane>
       </Tabs>
     </div>

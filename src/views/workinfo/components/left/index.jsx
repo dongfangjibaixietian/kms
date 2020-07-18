@@ -1,18 +1,17 @@
 import React, { useEffect, useState, useCallback, useReducer } from 'react'
-import { Button, List, Avatar, Spin } from 'antd'
+import { Button, List, Avatar, Spin, message } from 'antd'
 
 //结合这个插件实现滚动加载功能
 // import InfiniteScroll from 'react-infinite-scroller'
-
 import style from './index.scss'
 import NewSource from './../Newsource'
 
-import { formateTime } from '@/utils/index'
+import { format } from '@gworld/toolset'
 import { libList } from '@/api/library'
-// import { useRootStore } from '@/utils/customHooks'
+import { useRootStore } from '@/utils/customHooks'
 // import { hasPrefixSuffix } from 'antd/lib/input/ClearableLabeledInput'
 
-const Left = () => {
+const Left = ({ userId, isSelf }) => {
   const locale = {
     emptyText: '暂无数据',
   }
@@ -20,9 +19,18 @@ const Left = () => {
     pageIndex: 1,
     pageSize: 20,
   }
-
   const toLineHardDetails = (item) => {
-    window.open(window.location.origin + `/online/hard?id=${item.id}`)
+    // const data = {
+    //   id: item.id,
+    // }
+    // history.push({ pathname: '/online/hard', data })
+    if (!isSelf) {
+      message.info('请先申请权限！')
+      return
+    }
+    window.location.href = window.location.origin + `/online/hard?id=${item.id}`
+
+    // window.open(window.location.origin + `/online/hard?id=${item.id}`)
   }
 
   const reducer = (state, action) => {
@@ -35,6 +43,7 @@ const Left = () => {
     }
   }
 
+  const { isLogin, userInfo } = useRootStore().userStore
   const [publishModalVisible, setPublishModalVisible] = useState(false)
   const triggerShowPublishModal = (isShow) => {
     setPublishModalVisible(isShow)
@@ -45,25 +54,12 @@ const Left = () => {
   const [isLoading, setLoading] = useState(false)
   const [state, dispatch] = useReducer(reducer, initialState)
   const [dataList, setList] = useState([])
-  const [lib, setLib] = useState([])
 
-  // const _listScroll = () => {
-  //   const listScroll = document.getElementsByClassName(style.list)[0]
-  //   console.log(listScroll)
-  //   console.log(1213213)
-  //   const scrollTop = listScroll.scrollTop //页面上卷的高度
-  //   console.log(scrollTop, '页面上卷的高度')
-  //   const wholeHeight = listScroll.scrollHeight //页面底部到顶部的距离
-  //   console.log(wholeHeight, '页面底部到顶部的距离')
-  //   const divHeight = listScroll.clientHeight //页面可视区域的高度
-  //   console.log(divHeight, '页面可视区域的高度')
-  //   const height = wholeHeight - scrollTop - divHeight
-  //   console.log(height, ' 距离页面底部的高度')
-  //   setHeight(height)
-  // }
+  const [lib, setLib] = useState([])
 
   const _handleScroll = useCallback(() => {
     if (!isLoading && height <= 20 && hasMore) {
+      setLoading(true)
       const pageIndex = state.pageIndex + 1
       dispatch({
         type: 'update',
@@ -72,14 +68,15 @@ const Left = () => {
         },
       })
     }
-  }, [hasMore, state.pageIndex])
+  }, [hasMore, state.pageIndex, isLoading])
 
   const getList = async () => {
-    if (isLoading || !hasMore) return
-    setLoading(true)
+    console.log(hasMore, '更多')
+    if (!hasMore) return
 
     const res = await libList({
       ...state,
+      userId: userId,
     })
 
     if (!hasMore || res.data.list.length < 10) {
@@ -115,24 +112,17 @@ const Left = () => {
   //   // });
   // }
 
-  // useEffect(() => {
-  //   _handleScroll()
-  // }, [_listScroll()])
-
   useEffect(() => {
     window.addEventListener('scroll', _handleScroll)
     return () => window.removeEventListener('scroll', _handleScroll)
   }, [_handleScroll])
 
   useEffect(() => {
+    if (!isLogin || !userId) return
     getList().then(() => {
       setLoading(false)
     })
-  }, [state.pageIndex])
-
-  // useEffect(() => {
-  //   _listScroll()
-  // }, [])
+  }, [state.pageIndex, isLogin, userId])
 
   //列表数据
   // const dataone = [
@@ -171,9 +161,11 @@ const Left = () => {
     <div className={style.left}>
       <div className={style.butt}>
         <div className={style.content}>资源知识库</div>
-        <Button onClick={() => triggerShowPublishModal(true)} type="primary" className={style.publishBtn}>
-          新建知识库
-        </Button>
+        {isSelf ? (
+          <Button onClick={() => triggerShowPublishModal(true)} type="primary" className={style.publishBtn}>
+            新建知识库
+          </Button>
+        ) : null}
       </div>
       <div className={style.box}>
         <div className={style.list}>
@@ -190,25 +182,30 @@ const Left = () => {
             locale={locale}
             dataSource={dataList}
             renderItem={(item) => (
-              <List.Item>
-                <List.Item.Meta
+              <List.Item onClick={() => toLineHardDetails(item)} className={style.itemStyle}>
+                {/* <List.Item.Meta
                   avatar={<Avatar src="/src/assets/img/file.png" className={style.fl} />}
                   //后端传过来的是name，其实title更好
-                  title={<a onClick={() => toLineHardDetails(item)}>{item.name}</a>}
+                  title={<a>{item.name}</a>}
                   description={formateTime(item.createTime)}
-                />
+                /> */}
+                <Avatar size="small" className={style.fl} src={require('@/assets/img/file.png').default} />
+                <div className={style.knowledgeInfo}>
+                  <div className={style.title}>{item.name}</div>
+                  <div className={style.creatTime}>{format(item.createTime, 'YYYY-MM-DD')}</div>
+                </div>
               </List.Item>
             )}
           />
         </div>
 
-        <div className={style.spinBox}>
+        {/* <div className={style.spinBox}>
           {hasMore ? (
             <Spin tip="正在加载" className={style.spin} spinning={hasMore} />
           ) : dataList.length > 0 ? (
             <div>没有更多了</div>
           ) : null}
-        </div>
+        </div> */}
       </div>
       {publishModalVisible && (
         <NewSource change={setLib} triggerShowPublishModal={triggerShowPublishModal} visible={publishModalVisible} />

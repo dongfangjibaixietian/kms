@@ -31,9 +31,6 @@ const NewSource = ({ visible, triggerShowPublishModal, change }) => {
   //   }
   // }
 
-  // 可见范围
-  const [viewType, setViewType] = useState(1)
-
   // 新建知识库接口
   const _libCreate = async () => {
     if (title.length < 4) {
@@ -41,7 +38,6 @@ const NewSource = ({ visible, triggerShowPublishModal, change }) => {
       return
     }
     const data = {
-      // viewType,
       title,
       // textType,
     }
@@ -84,19 +80,6 @@ const NewSource = ({ visible, triggerShowPublishModal, change }) => {
             <div className={style.intro}>简介</div>
             <TextArea rows={5} />
           </div>
-
-          <div className={style.visibleInfo}>
-            <div className={style.visible}>可见范围</div>
-            <Select value={viewType} onChange={(type) => setViewType(type)} className={style.select}>
-              <Option value={1}>互联网可见</Option>
-              <Option value={2}>仅自己可见</Option>
-            </Select>
-          </div>
-
-          <div className={style.pageInfo}>
-            <div className={style.page}>封面</div>
-          </div>
-
           <div className={style.createBtn}>
             <Button onClick={_libCreate} className={style.btn} type="primary">
               新建

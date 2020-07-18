@@ -2,7 +2,7 @@
  * @Author       : charm
  * @Date         : 2020-07-14 16:40:05
  * @LastEditors  : charm
- * @LastEditTime : 2020-07-17 17:02:31
+ * @LastEditTime : 2020-07-18 18:18:09
  * @FilePath     : \gworld-pc-share\src\api\user.js
  */
 
@@ -37,7 +37,7 @@ export function userOtherInfo(data) {
   return request({
     url: '/kms/api/user/otherInfo',
     method: 'GET',
-    data,
+    params: data,
   })
 }
 

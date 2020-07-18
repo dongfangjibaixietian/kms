@@ -391,6 +391,16 @@ const ArticleDetails = ({ history }) => {
     }
   }
 
+  // 去用户中心
+  const goToUserCenter = (item) => {
+    window.open(window.location.origin + `/user/center?userId=${item.id}`)
+    // if (isAllowed) {
+    //   history.push(`/user/center?userId=${userInfo.user.id}`)
+    // } else {
+    //   window.open(window.location.origin + `/user/center?userId=${item.id}`)
+    // }
+  }
+
   useEffect(() => {
     if (window.location.search) {
       const searchInfo = getUrlSearch(window.location.search)
@@ -454,7 +464,9 @@ const ArticleDetails = ({ history }) => {
                 </div>
                 <div className={style.otherInfo}>
                   <div className={style.left}>
-                    <span className={style.author}>{detail.createUser.username}</span>
+                    <span className={style.author} onClick={() => goToUserCenter(detail.createUser)}>
+                      {detail.createUser.username}
+                    </span>
                     <span className={style.number}>创建于</span>
                     <span className={style.text}>{format(detail.updateTime, 'YYYY-MM-DD HH:mm:ss')}</span>
                     <span className={style.number}>{detail.viewCount}</span>

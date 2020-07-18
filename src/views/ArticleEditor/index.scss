@@ -78,7 +78,7 @@
     }
 
     .for-toolbar {
-      padding-right: 200px;
+      padding-right: 200px !important;
     }
 
     .md-btn {
@@ -108,7 +108,7 @@
 .toEditor {
   :global {
     .for-toolbar {
-      padding-right: 6px;
+      padding-right: 6px !important;
     }
 
     .for-container .for-editor-edit .for-editor-content {

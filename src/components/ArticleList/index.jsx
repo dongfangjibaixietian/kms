@@ -15,6 +15,10 @@ const ArticleList = forwardRef((props, ref) => {
     window.open(window.location.origin + `/article/detail?id=${item.id}`)
   }
 
+  const goToUserCenter = (item) => {
+    window.open(window.location.origin + `/user/center?userId=${item.id}`)
+  }
+
   const initialState = {
     pageIndex: 1,
     pageSize: 10,
@@ -23,7 +27,6 @@ const ArticleList = forwardRef((props, ref) => {
 
   // 是否还有更多数据
   const [hasMore, setHasMore] = useState(true)
-  const [notRefresh] = useState(props.notRefresh)
   // 加载中
   const [isLoading, setLoading] = useState(false)
   const [dataList, setList] = useState([])
@@ -32,6 +35,7 @@ const ArticleList = forwardRef((props, ref) => {
   const reducer = (state, action) => {
     switch (action.type) {
       case 'update':
+        console.log({ ...state, ...action.payload })
         return { ...state, ...action.payload }
       default:
         throw new Error()
@@ -58,6 +62,7 @@ const ArticleList = forwardRef((props, ref) => {
     (event) => {
       const height = scrollEvent(event)
       if (!isLoading && height <= 20 && hasMore) {
+        setLoading(true)
         const pageIndex = state.pageIndex + 1
         dispatch({
           type: 'update',
@@ -67,12 +72,11 @@ const ArticleList = forwardRef((props, ref) => {
         })
       }
     },
-    [hasMore, state.pageIndex]
+    [hasMore, state.pageIndex, isLoading]
   )
 
   const getList = async () => {
-    if (isLoading || !hasMore) return
-    setLoading(true)
+    if (!hasMore) return
 
     const res = await articleList({
       searchKey: '',
@@ -98,12 +102,11 @@ const ArticleList = forwardRef((props, ref) => {
   }, [_handleScroll])
 
   useEffect(() => {
-    if (!notRefresh) {
-      getList().then(() => {
-        setLoading(false)
-      })
-    }
-  }, [state.pageIndex, props.isEssence, props.isHot, hasMore, searchKey, notRefresh])
+    console.log(hasMore)
+    getList().then(() => {
+      setLoading(false)
+    })
+  }, [state.pageIndex, hasMore])
 
   return (
     <div className={style.articleList} ref={childRef}>
@@ -124,7 +127,9 @@ const ArticleList = forwardRef((props, ref) => {
               <div className={style.articleRelated}>
                 <div className={style.left}>
                   <Avatar size="small" className={style.avatarImg} src={item.createUser.avatar} />
-                  <span className={style.author}>{item.createUser.username}</span>
+                  <span className={style.author} onClick={() => goToUserCenter(item.createUser)}>
+                    {item.createUser.username}
+                  </span>
                   <span className={style.text}>{format(item.updateTime, 'YYYY-MM-DD HH:mm:ss')}</span>
                   <img className={style.text} width={16} src={require('@/assets/img/read.png').default} alt="" />
                   {item.tags.map((tag) => (

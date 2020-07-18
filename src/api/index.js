@@ -2,7 +2,7 @@
  * @Author       : charm
  * @Date         : 2020-07-02 10:53:19
  * @LastEditors  : charm
- * @LastEditTime : 2020-07-16 18:38:10
+ * @LastEditTime : 2020-07-18 17:03:29
  * @FilePath     : \gworld-pc-share\src\api\index.js
  */
 
@@ -32,7 +32,7 @@ const service = new Request({
   handleAccessDenied: {
     statusCode: [401],
     handler(code) {
-      const { setLoginState } = useRootStore().userStore
+      const { setLoginState, setModelVisible } = useRootStore().userStore
       switch (code) {
         case 401:
           message.error('登录过期，请重新登录')
@@ -41,6 +41,7 @@ const service = new Request({
           removeItem('article')
           removeItem('type')
           setLoginState(false)
+          setModelVisible(true)
           break
         case 422:
           message.error('接口参数错误')
