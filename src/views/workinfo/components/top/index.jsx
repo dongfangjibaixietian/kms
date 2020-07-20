@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import { setItem, getItem } from '@/utils/storage'
+import { getItem } from '@/utils/storage'
 import style from './index.scss'
 import EditorialPerson from './../EditorialPerson'
-import { userInfo as userInfoApi, userOtherInfo } from '@/api/user'
+import { userOtherInfo } from '@/api/user'
 import { useRootStore } from '@/utils/customHooks'
 
 const Top = ({ userId, isSelf }) => {
   const [publishModalVisible, setPublishModalVisible] = useState(false)
-  const { setUserInfo, setModelVisible, isLogin } = useRootStore().userStore
+  const { setModelVisible, isLogin } = useRootStore().userStore
   const triggerShowPublishModal = (isShow) => {
     if (!getItem('token') || !isLogin) {
       setModelVisible(true)
@@ -20,7 +20,6 @@ const Top = ({ userId, isSelf }) => {
   // const [currentUserInfo, setCurrentUserInfo] = useState({})
 
   const getUserOtherInfo = async () => {
-    console.log(userId)
     const res = await userOtherInfo({ userId: userId })
     if (res.code === 0) {
       setOtherUserInfo(res.data)
@@ -51,29 +50,9 @@ const Top = ({ userId, isSelf }) => {
   ]
 
   useEffect(() => {
-    console.log('获取用户其他信息')
     userId && getUserOtherInfo()
     // !isLogin && setCurrentUserInfo({})
   }, [isLogin, userId])
-
-  // useEffect(() => {
-  //   console.log(location)
-  //   if (location.data && location.data.id) {
-  //     const searchId = location.data.id
-  //     sessionStorage.setItem('userId', searchId)
-  //     setUserId(searchId)
-  //   } else {
-  //     setUserId(sessionStorage.getItem('userId'))
-  //   }
-  // }, [])
-
-  // useEffect(() => {
-  //   console.log('获取用户信息')
-  //   console.log(isLogin)
-  //   console.log(userInfo)
-  //   if (!isLogin || !userInfo) return
-  //   setCurrentUserInfo(userInfo.user)
-  // }, [userInfo])
 
   return (
     <div className={style.KnowledgeListHeader}>
@@ -83,7 +62,7 @@ const Top = ({ userId, isSelf }) => {
           <img className={style.pic} src={otherUserInfo.avatar} alt="" />
           <div className={style.leftinfo}>
             <div className={style.nm}>{otherUserInfo.nickname}</div>
-            <div className={style.intro}>{otherUserInfo.description}</div>
+            <div className={style.intro}>{otherUserInfo.description ? otherUserInfo.description : '暂无简介'}</div>
             {isSelf ? (
               <div onClick={() => triggerShowPublishModal(true)} className={style.publishBtn}>
                 编辑资料
@@ -97,7 +76,7 @@ const Top = ({ userId, isSelf }) => {
             <div className={style.item} key={item.value}>
               <div className={style.itemValue}>
                 {otherUserInfo[item.value]}
-                {item.value === 'articleCount' ? '篇' : ''}
+                <span style={{ fontSize: '14px' }}>{item.value === 'articleCount' ? '篇' : ''}</span>
               </div>
               <div className={style.itemName}>{item.name}</div>
             </div>

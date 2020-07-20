@@ -50,13 +50,12 @@ const HeaderRight = ({ history }) => {
         setPwd(true)
         break
       case 'user':
-        console.log(history)
         const data = {
           userId: userInfo.user.id,
         }
-        history.push(`/user/center?userId=${userInfo.user.id}`)
+        // history.push(`/user/center?userId=${userInfo.user.id}`)
         // window.open(window.location.origin + `/user/center`)
-        // window.location.href = window.location.origin + `/user/center?userId=${userInfo.user.id}`
+        window.location.href = window.location.origin + `/user/center?userId=${userInfo.user.id}`
         break
 
       default:

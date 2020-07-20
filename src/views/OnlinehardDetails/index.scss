@@ -1,4 +1,4 @@
-.harddrive {
+.hardDrive {
   width: 1140px;
 
   :global {
@@ -7,28 +7,23 @@
     }
   }
 
+  .uploadRole {
+    cursor: pointer;
+
+    &:hover {
+      color: #40a9ff;
+    }
+  }
+
   .memtit {
     display: flex;
     justify-content: space-between;
-    margin-top: 20px;
-    margin-bottom: 15px;
-  }
-
-  .lefthardword {
-    display: flex;
-    justify-content: space-between;
+    padding: 20px 0;
   }
 
   .hardword {
-    width: 215px;
-    height: 24px;
     font-size: 20px;
-    font-family: PingFang-SC-Regular, PingFang-SC;
-    font-weight: 400;
     color: rgba(48, 48, 48, 1);
-    line-height: 24px;
-    margin-top: 11px;
-    margin-bottom: 15px;
   }
 
   .num {
@@ -41,17 +36,15 @@
     margin-top: 2px;
   }
 
-  .operate {
+  .btnGroup {
     display: flex;
     justify-content: space-between;
-    width: 260px;
-    margin-top: 10px;
-    margin-bottom: 10px;
   }
 
   .btn {
     width: 120px;
     height: 32px;
+    margin-left: 15px;
   }
 
   .tablewarp {
@@ -61,6 +54,13 @@
 
   .table {
     padding: 20px 30px;
+    margin-bottom: 30px;
+
+    :global {
+      .ant-table-row {
+        cursor: pointer;
+      }
+    }
   }
 
   .introduction {
@@ -88,10 +88,8 @@
   .memtit1 {
     display: flex;
     justify-content: space-between;
-    margin-top: 20px;
-    margin-bottom: 15px;
     padding-top: 30px;
-    padding-bottom: 10px;
+    padding-bottom: 25px;
   }
 
   .leftmen1 {

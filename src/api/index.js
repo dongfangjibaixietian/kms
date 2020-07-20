@@ -2,26 +2,28 @@
  * @Author       : charm
  * @Date         : 2020-07-02 10:53:19
  * @LastEditors  : charm
- * @LastEditTime : 2020-07-18 17:03:29
+ * @LastEditTime : 2020-07-20 19:31:06
  * @FilePath     : \gworld-pc-share\src\api\index.js
  */
 
 import { Request } from '@gworld/toolset'
 import { getItem, removeItem } from '@/utils/storage'
-import { useRootStore } from '@/utils/customHooks'
 import { message } from 'antd'
+import { userStore } from '@/store'
+
+export function getBaseUrl(pageURL, uri) {
+  console.log('接口路径partBase', uri)
+
+  if (pageURL.includes('gworld.net')) {
+    return 'https://apis.gworld.net'
+  }
+
+  return 'http://kms.api.gworld-inc.com'
+}
 
 const service = new Request({
   namespace: 'gworld-kms',
-  partBase(pageURL, uri) {
-    console.log('接口路径partBase', uri)
-
-    if (pageURL.includes('gworld.net')) {
-      return 'https://apis.gworld.net'
-    }
-
-    return 'http://kms.api.gworld-inc.com'
-  },
+  partBase: getBaseUrl,
   partHeaders(uri) {
     console.log('接口路径partHeaders', uri)
 
@@ -32,7 +34,8 @@ const service = new Request({
   handleAccessDenied: {
     statusCode: [401],
     handler(code) {
-      const { setLoginState, setModelVisible } = useRootStore().userStore
+      console.log(code, 'code')
+      console.log(code === 401)
       switch (code) {
         case 401:
           message.error('登录过期，请重新登录')
@@ -40,8 +43,8 @@ const service = new Request({
           removeItem('user')
           removeItem('article')
           removeItem('type')
-          setLoginState(false)
-          setModelVisible(true)
+          userStore.setLoginState(false)
+          userStore.setModelVisible(true)
           break
         case 422:
           message.error('接口参数错误')

@@ -2,7 +2,7 @@
  * @Author       : charm
  * @Date         : 2020-06-28 16:15:01
  * @LastEditors  : charm
- * @LastEditTime : 2020-07-18 16:42:43
+ * @LastEditTime : 2020-07-20 20:37:57
  * @FilePath     : \gworld-pc-share\src\utils\index.js
  */
 import { getTimestamp } from '@gworld/toolset'
@@ -102,4 +102,80 @@ export const sizeTostr = (size) => {
     return sizestr.substring(0, len) + sizestr.substr(len + 3, 2)
   }
   return sizestr
+}
+
+// 根据后缀判断文件类型
+export const getFileType = (fileName) => {
+  let fileSuffix = ''
+  // 结果
+  let result = ''
+  try {
+    const flieArr = fileName.split('.')
+    fileSuffix = flieArr[flieArr.length - 1]
+  } catch (err) {
+    fileSuffix = ''
+  }
+  // fileName无后缀返回 false
+  if (!fileSuffix) {
+    result = false
+    return result
+  }
+  // 图片格式
+  const imglist = ['png', 'jpg', 'jpeg', 'bmp', 'gif']
+  // 进行图片匹配
+  result = imglist.some(function (item) {
+    return item == fileSuffix
+  })
+  if (result) {
+    result = 'img'
+    return result
+  }
+  // 匹配 excel
+  const excelist = ['xls', 'xlsx']
+  result = excelist.some(function (item) {
+    return item == fileSuffix
+  })
+  if (result) {
+    result = 'excel'
+    return result
+  }
+  // 匹配 word
+  const wordlist = ['doc', 'docx']
+  result = wordlist.some(function (item) {
+    return item == fileSuffix
+  })
+  if (result) {
+    result = 'word'
+    return result
+  }
+  // 匹配 pdf
+  const pdflist = ['pdf']
+  result = pdflist.some(function (item) {
+    return item == fileSuffix
+  })
+  if (result) {
+    result = 'pdf'
+    return result
+  }
+  // 匹配 视频
+  const videolist = ['mp4', 'm2v', 'mkv']
+  result = videolist.some(function (item) {
+    return item == fileSuffix
+  })
+  if (result) {
+    result = 'video'
+    return result
+  }
+  // 匹配 音频
+  const radiolist = ['mp3', 'wav', 'wmv']
+  result = radiolist.some(function (item) {
+    return item == fileSuffix
+  })
+  if (result) {
+    result = 'radio'
+    return result
+  }
+  // 其他 文件类型
+  result = 'other'
+  return result
 }

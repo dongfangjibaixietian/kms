@@ -296,7 +296,6 @@ const ArticleEditor = ({ history, location }) => {
       const mdRawContent = articleContent ? articleContent.rawContent : ''
       setMdValue(mdRawContent)
     }
-    console.log(id)
     id && getArticleDetail()
   }, [id])
 

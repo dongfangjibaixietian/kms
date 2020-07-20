@@ -63,6 +63,11 @@ const userPrivacy = Loadable({
   loading: Loading,
 })
 
+const memberManage = Loadable({
+  loader: () => import(/* webpackChunkName: "member-manage" */ '@/views/MemberManage'),
+  loading: Loading,
+})
+
 // type: home/admin
 const useGetRoutes = () => {
   // 首页路由
@@ -172,12 +177,25 @@ const useGetRoutes = () => {
     ],
   })
 
+  const [memberManageRoutes, setMemberRoutes] = useState({
+    path: '/member',
+    component: PageLayout,
+    children: [
+      {
+        path: '/manage',
+        title: '成员管理',
+        component: memberManage,
+      },
+    ],
+  })
+
   const currentRoutes = useMemo(() => {
     return [
       onlineharddetailsRoutes,
       articleRoutes,
       editorRoutes,
       adminRoutes,
+      memberManageRoutes,
       userRoutes,
       agreementRoutes,
       userPrivacyRoutes,
@@ -204,6 +222,7 @@ const useGetRoutes = () => {
     setAgreementRoutes,
     setPrivacyRoutes,
     setUserRoutes,
+    setMemberRoutes,
   }
 }
 

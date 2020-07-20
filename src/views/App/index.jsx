@@ -8,14 +8,13 @@ import { useRootStore } from '@/utils/customHooks'
 import { userInfo } from '@/api/user'
 import jwtDecode from 'jwt-decode'
 
-const App = () => {
+const App = ({ history }) => {
   const { currentRoutes } = useGetRoutes()
   const { setLoginState, isLogin, setUserInfo } = useRootStore().userStore
 
   Uploader.init()
 
   const getUserInfo = async () => {
-    console.log('获取信息')
     try {
       const user = jwtDecode(getItem('token'))
       const info = await userInfo({
@@ -23,8 +22,8 @@ const App = () => {
       })
       setItem('user', JSON.stringify(info.data))
       setUserInfo(info.data)
-    } catch (error) {
-      console.log(error)
+    } catch (e) {
+      console.log(e)
     }
   }
 

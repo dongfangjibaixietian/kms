@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Tabs } from 'antd'
-import { UpOutlined, DownOutlined } from '@ant-design/icons'
+// import { UpOutlined, DownOutlined } from '@ant-design/icons'
 import MyArticle from './MyArticle/index'
 import MyCollect from './MyCollect/index'
 
@@ -86,7 +86,7 @@ const Right = ({ userId, isSelf }) => {
   return (
     <div className={style.KnowledgeListHeader}>
       <Tabs className={style.tabs} defaultActiveKey="1" onChange={callback} animated={false}>
-        <TabPane tab="文章" key="1" className={style.mypaper}>
+        <TabPane tab={isSelf ? '我的文章' : '文章'} key="1" className={style.mypaper}>
           {/* <div className={style.filtcategory}>
             <div className={style.KnowledgeCategory} onClick={change}>
               {copydata.map((item) => (
@@ -108,7 +108,7 @@ const Right = ({ userId, isSelf }) => {
               )}
             </div>
           </div> */}
-          <MyArticle className={style.articlelist} />
+          <MyArticle className={style.articlelist} userId={userId} />
 
           {/* <div className={style.alltag}>
                 <div className={style.firstrow}>
@@ -202,7 +202,7 @@ const Right = ({ userId, isSelf }) => {
           </div>
           ,
         </TabPane> */}
-        <TabPane tab="收藏" key="4">
+        <TabPane tab={isSelf ? '我的收藏' : '收藏'} key="4">
           <MyCollect className={style.articlelist} userId={userId} isSelf={isSelf} />
         </TabPane>
       </Tabs>

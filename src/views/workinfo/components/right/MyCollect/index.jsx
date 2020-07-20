@@ -20,7 +20,6 @@ const MyCollect = ({ userId, isSelf }) => {
   const reducer = (state, action) => {
     switch (action.type) {
       case 'update':
-        console.log({ ...state, ...action.payload }, 'update_state')
         return { ...state, ...action.payload }
       default:
         throw new Error()
@@ -37,9 +36,9 @@ const MyCollect = ({ userId, isSelf }) => {
   const _handleScroll = useCallback(
     (event) => {
       const height = scrollEvent(event)
-      console.log('hasMore', hasMore)
-      console.log('isloading_hasMore', isLoading)
       if (!isLoading && height <= 20 && hasMore) {
+        setLoading(true)
+
         const pageIndex = state.pageIndex + 1
         dispatch({
           type: 'update',
@@ -49,14 +48,11 @@ const MyCollect = ({ userId, isSelf }) => {
         })
       }
     },
-    [hasMore, state.pageIndex]
+    [hasMore, state.pageInde, isLoading]
   )
 
   const getList = async () => {
-    console.log(isLoading, 'isloading')
-    console.log(hasMore, 'hasMore_isloading')
-    if (isLoading || !hasMore) return
-    setLoading(true)
+    if (!hasMore) return
 
     const res = await articleCollectList({
       ...state,
@@ -71,6 +67,10 @@ const MyCollect = ({ userId, isSelf }) => {
     })
   }
 
+  const goToUserCenter = (item) => {
+    window.open(window.location.origin + `/user/center?userId=${item.id}`)
+  }
+
   useEffect(() => {
     window.addEventListener('scroll', _handleScroll)
     return () => window.removeEventListener('scroll', _handleScroll)
@@ -81,7 +81,7 @@ const MyCollect = ({ userId, isSelf }) => {
     getList().then(() => {
       setLoading(false)
     })
-  }, [state.pageIndex])
+  }, [state.pageIndex, hasMore, userId])
 
   return (
     <div className={style.ArticleList}>
@@ -102,7 +102,9 @@ const MyCollect = ({ userId, isSelf }) => {
               <div className={style.ArticleRelated}>
                 <div className={style.left}>
                   <Avatar size="small" className={style.avatarImg} src={item.createUser.avatar} />
-                  <span className={style.author}>{item.createUser.username}</span>
+                  <span className={style.author} onClick={() => goToUserCenter(item.createUser)}>
+                    {item.createUser.username}
+                  </span>
                   <span className={style.text}>{formateTime(item.updateTime)}</span>
                   <img className={style.text} width={16} src={require('@/assets/img/read.png').default} alt="" />
                   {item.tags.map((tag) => (

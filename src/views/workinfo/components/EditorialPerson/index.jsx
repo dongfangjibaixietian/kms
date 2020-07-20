@@ -12,11 +12,6 @@ import { useRootStore } from '@/utils/customHooks'
 
 const EditorialPerson = ({ visible, triggerShowPublishModal, change }) => {
   const { userInfo } = useRootStore().userStore
-
-  // const userInfo = window.localStorage.getItem(user)
-
-  // console.log(userInfo)
-
   const [title, setTitle] = useState('')
   const [url, setUrl] = useState('')
 

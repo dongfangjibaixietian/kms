@@ -4,7 +4,7 @@ import style from './index.scss'
 import { format } from '@gworld/toolset'
 import { scrollEvent } from '@/utils'
 import { articleList } from '@/api/article'
-const MyArticle = () => {
+const MyArticle = ({ userId }) => {
   const locale = {
     emptyText: '暂无数据',
   }
@@ -21,7 +21,6 @@ const MyArticle = () => {
   const reducer = (state, action) => {
     switch (action.type) {
       case 'update':
-        console.log({ ...state, ...action.payload }, 'update_state')
         return { ...state, ...action.payload }
       default:
         throw new Error()
@@ -59,6 +58,7 @@ const MyArticle = () => {
       ...state,
       isEssence: false,
       isHot: false,
+      userId: userId,
     })
 
     if (!hasMore || res.data.list.length < 10) {
@@ -72,16 +72,21 @@ const MyArticle = () => {
     })
   }
 
+  const goToUserCenter = (item) => {
+    window.open(window.location.origin + `/user/center?userId=${item.id}`)
+  }
+
   useEffect(() => {
     window.addEventListener('scroll', _handleScroll)
     return () => window.removeEventListener('scroll', _handleScroll)
   }, [_handleScroll])
 
   useEffect(() => {
+    if (!userId) return
     getList().then(() => {
       setLoading(false)
     })
-  }, [state.pageIndex, hasMore])
+  }, [state.pageIndex, hasMore, userId])
 
   return (
     <div className={style.ArticleList}>
@@ -102,7 +107,9 @@ const MyArticle = () => {
               <div className={style.ArticleRelated}>
                 <div className={style.left}>
                   <Avatar size="small" className={style.avatarImg} src={item.createUser.avatar} />
-                  <span className={style.author}>{item.createUser.username}</span>
+                  <span className={style.author} onClick={() => goToUserCenter(item.createUser)}>
+                    {item.createUser.username}
+                  </span>
                   <span className={style.text}>{format(item.updateTime, 'YYYY-MM-DD HH:mm:ss')}</span>
                   <img className={style.text} width={16} src={require('@/assets/img/read.png').default} alt="" />
                   {item.tags.map((tag) => (

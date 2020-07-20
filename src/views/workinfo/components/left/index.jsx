@@ -28,7 +28,7 @@ const Left = ({ userId, isSelf }) => {
       message.info('请先申请权限！')
       return
     }
-    window.location.href = window.location.origin + `/online/hard?id=${item.id}`
+    window.location.href = window.location.origin + `/online/hard?hardId=${item.id}`
 
     // window.open(window.location.origin + `/online/hard?id=${item.id}`)
   }
@@ -36,7 +36,6 @@ const Left = ({ userId, isSelf }) => {
   const reducer = (state, action) => {
     switch (action.type) {
       case 'update':
-        console.log({ ...state, ...action.payload }, 'update_state')
         return { ...state, ...action.payload }
       default:
         throw new Error()
@@ -118,7 +117,7 @@ const Left = ({ userId, isSelf }) => {
   }, [_handleScroll])
 
   useEffect(() => {
-    if (!isLogin || !userId) return
+    if (!userId) return
     getList().then(() => {
       setLoading(false)
     })

@@ -81,6 +81,16 @@
       padding-right: 200px !important;
     }
 
+    .for-container {
+      box-shadow: none;
+      border-radius: 0;
+      border: 0;
+    }
+
+    .for-editor {
+      border-radius: 0;
+    }
+
     .md-btn {
       position: absolute;
       top: 0;
