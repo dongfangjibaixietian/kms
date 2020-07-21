@@ -1,8 +1,12 @@
 import React, { useEffect, useState, useCallback, useReducer } from 'react'
-import { List, Avatar, Spin } from 'antd'
-import style from './index.scss'
+import { List, Avatar, Spin, message } from 'antd'
+import { getItem } from '@/utils/storage'
 import { scrollEvent, formateTime } from '@/utils'
-import { articleCollectList } from '@/api/article'
+import { articleCollectList, articleCollect } from '@/api/article'
+import { useRootStore } from '@/utils/customHooks'
+
+import style from './index.scss'
+
 const MyCollect = ({ userId, isSelf }) => {
   const locale = {
     emptyText: '暂无数据',
@@ -25,7 +29,7 @@ const MyCollect = ({ userId, isSelf }) => {
         throw new Error()
     }
   }
-
+  const { setModelVisible, isLogin } = useRootStore().userStore
   // 是否还有更多数据
   const [hasMore, setHasMore] = useState(true)
   // 加载中
@@ -71,6 +75,29 @@ const MyCollect = ({ userId, isSelf }) => {
     window.open(window.location.origin + `/user/center?userId=${item.id}`)
   }
 
+  // 取消收藏文章
+  const cancelCollect = async (e, item) => {
+    e.stopPropagation()
+    if (!getItem('token') || !isLogin) {
+      message.error('请先登录')
+      setModelVisible(true)
+      return
+    }
+    const res = await articleCollect({ id: item.id, isCancel: true, type: 'collect' })
+    if (res.code === 0) {
+      message.success('取消成功')
+      setList([])
+      setHasMore(true)
+      setLoading(false)
+      dispatch({
+        type: 'update',
+        payload: {
+          pageIndex: 1,
+        },
+      })
+    }
+  }
+
   useEffect(() => {
     window.addEventListener('scroll', _handleScroll)
     return () => window.removeEventListener('scroll', _handleScroll)
@@ -114,11 +141,11 @@ const MyCollect = ({ userId, isSelf }) => {
                   ))}
                 </div>
                 {isSelf ? (
-                  <div>
+                  <div onClick={(e) => cancelCollect(e, item)}>
                     {/* <img className={style.img} width={16} src={require('@/assets/img/write.png').default} alt="" />
                   <span>编辑</span> */}
                     <img className={style.img} width={16} src={require('@/assets/img/delete.png').default} alt="" />
-                    {/* <span>删除</span> */}
+                    <span>删除</span>
                   </div>
                 ) : null}
               </div>

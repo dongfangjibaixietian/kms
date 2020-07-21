@@ -1,9 +1,25 @@
-.loginDialog {
+.memberDialog {
   :global {
     .ant-input {
       height: 30px;
     }
 
+    .ant-input-group-addon {
+      padding: 0;
+      border: 0;
+    }
+
+    .ant-modal-body {
+      padding: 20px 0;
+    }
+
+    .ant-tabs-bar {
+      padding: 0 20px;
+    }
+
+    .ant-tabs-content {
+      padding: 0 20px;
+    }
     // 处理输入框自动填充色
     input:-webkit-autofill,
     select:-webkit-autofill {
@@ -15,7 +31,6 @@
     }
 
     .ant-modal-content {
-      background-color: rgba(255, 255, 255, 0.9);
       border-radius: 7px;
     }
 
@@ -52,20 +67,57 @@
   display: flex;
 }
 
-.loginBtn {
-  width: 240px;
-  height: 46px;
-  border-radius: 23px;
-  background-color: #c4c4c4;
-  border: none;
-  display: block;
-  margin: 15px auto;
+.title {
+  padding: 20px 0;
+  color: #303030;
+}
 
-  &:hover {
-    background: linear-gradient(to right, #505562, #000) !important;
-  }
+.memberContainer {
+  border-radius: 4px;
+  overflow: auto;
+  padding: 8px 24px;
+  height: 300px;
+}
 
-  &:focus {
-    background: linear-gradient(to right, #505562, #000) !important;
+.loadingContainer {
+  position: absolute;
+  bottom: 40px;
+  width: 100%;
+  text-align: center;
+}
+
+.memberItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.memberDetail {
+  display: flex;
+  align-items: center;
+
+  .avatarImg {
+    width: 40px;
+    height: 40px;
   }
+}
+
+.memberInfo {
+  margin-left: 10px;
+}
+
+.btn {
+  width: 70px;
+  height: 30px;
+}
+
+.copyBtn {
+  width: 80px;
+  height: 30px;
+  padding: 0;
+}
+
+.checkBox {
+  padding: 20px 0;
 }

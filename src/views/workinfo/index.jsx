@@ -14,6 +14,7 @@ const WorkInfo = ({ history }) => {
   const { isLogin, userInfo } = useRootStore().userStore
   // 区分是他人还是自己用户中心
   const [isSelf, setIsSelf] = useState(false)
+
   useEffect(() => {
     if (window.location.search) {
       const searchInfo = getUrlSearch(window.location.search)

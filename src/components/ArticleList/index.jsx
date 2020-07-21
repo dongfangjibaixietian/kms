@@ -46,6 +46,7 @@ const ArticleList = forwardRef((props, ref) => {
   useImperativeHandle(ref, () => ({
     refresh: () => {
       //需要处理的数据
+      console.log('更新')
       setHasMore(true)
       setLoading(false)
       setList([])
@@ -106,7 +107,7 @@ const ArticleList = forwardRef((props, ref) => {
     getList().then(() => {
       setLoading(false)
     })
-  }, [state.pageIndex, hasMore])
+  }, [state.pageIndex, hasMore, props.isEssence, props.isEssence])
 
   return (
     <div className={style.articleList} ref={childRef}>

@@ -1,14 +1,27 @@
 import React, { useState, useEffect } from 'react'
-import { Table, Button, Modal, Upload, message, Menu, Dropdown } from 'antd'
-import { FileImageOutlined } from '@ant-design/icons'
+import { Table, Button, Modal, Upload, message, Menu, Dropdown, Input } from 'antd'
 import style from './index.scss'
 import NewFils from './NewFils/index.jsx'
-
-import { libFileList, upLoadLib, downloadFile } from '@/api/library'
+import { useRootStore } from '@/utils/customHooks'
+import { libFileList, upLoadLib, downloadFile, removeFile as removeFileApi, renameFile, libDetail } from '@/api/library'
 import { getUrlSearch, sizeTostr, getFileType } from '@/utils'
 import { Uploader, format } from '@gworld/toolset'
 import { randomNum } from '@/utils/index'
 
+const btnGroups = [
+  {
+    text: '重命名',
+    value: 'refresh',
+  },
+  {
+    text: '删除',
+    value: 'del',
+  },
+  // {
+  //   text: '移动文件夹',
+  //   value: 'move',
+  // },
+]
 const OnlinehardDetails = ({ history }) => {
   const [publishModalVisible, setPublishModalVisible] = useState(false)
 
@@ -17,11 +30,12 @@ const OnlinehardDetails = ({ history }) => {
   }
 
   const [dataList, setList] = useState([])
-
+  const { roleCode, setRoleCode } = useRootStore().userStore
   const [id, setOnLineHardId] = useState('')
   const [parentId, setParentId] = useState(0)
   const [editingKey, setEditingKey] = useState({})
-  // const [layerId, setLayerId] = useState('')
+  const [visible, setVisible] = useState(false)
+  const [fileName, setFileName] = useState('')
 
   const getFileList = async () => {
     console.log(parentId)
@@ -33,7 +47,7 @@ const OnlinehardDetails = ({ history }) => {
     // res.data.list.map((item, index) => {
     //   item.key = index
     // })
-    if (parentId !== '0') {
+    if (parentId !== 0) {
       res.data.list.unshift({
         id: 'back',
         createTime: '',
@@ -116,23 +130,34 @@ const OnlinehardDetails = ({ history }) => {
     window.open(window.location.origin + `/user/center?userId=${item.user.id}`)
   }
 
+  const removeFile = async () => {
+    const res = await removeFileApi({
+      fileId: editingKey,
+    })
+    if (res.code === 0) {
+      message.success('删除成功')
+
+      const delIndex = dataList.findIndex((item) => editingKey === item.id)
+      const copyList = [...dataList]
+      copyList.splice(delIndex, 1)
+      setList(copyList)
+    }
+  }
+
   const delFile = () => {
     Modal.confirm({
       title: '',
-      content: `确认要删除此条数据吗`,
+      content: `确认要删除该文件吗？`,
       okText: '确认',
       cancelText: '取消',
       onOk: () => {
-        message.success('删除成功')
-        const delIndex = dataList.findIndex((item) => editingKey === item.id)
-        const copyList = [...dataList]
-        copyList.splice(delIndex, 1)
-        setList(copyList)
+        removeFile()
       },
     })
   }
 
   const menuHandleClick = (item) => {
+    console.log(item)
     // 阻止点击某列触发行的事件
     item.domEvent.stopPropagation()
     switch (item.key) {
@@ -140,25 +165,33 @@ const OnlinehardDetails = ({ history }) => {
         delFile()
         break
       case 'refresh':
+        setVisible(true)
         break
       case 'move':
         break
     }
   }
 
-  const menu = (
-    <Menu className={style.menu} onClick={menuHandleClick}>
-      {/* <Menu.Item className={style.item} key="refresh">
-        重命名
-      </Menu.Item> */}
-      <Menu.Item className={style.item} key="del">
-        删除
-      </Menu.Item>
-      {/* <Menu.Item className={style.item} key="move">
-        移动文件
-      </Menu.Item> */}
-    </Menu>
-  )
+  const filterMenu = () => {
+    console.log(roleCode === 'admin')
+    let viewMenus = []
+    if (roleCode === 'editor') {
+      viewMenus = btnGroups.filter((temp) => temp.value === 'refresh')
+      console.log(viewMenus)
+    } else if (roleCode === 'admin' || roleCode === 'owner') {
+      viewMenus = [...btnGroups]
+    }
+    console.log(viewMenus)
+    return (
+      <Menu className={style.menu} onClick={(e) => menuHandleClick(e)}>
+        {viewMenus.map((item) => (
+          <Menu.Item className={style.item} key={item.value}>
+            {item.text}
+          </Menu.Item>
+        ))}
+      </Menu>
+    )
+  }
 
   // 阻止点击某列触发行的事件
   const dropHandClick = (event, item) => {
@@ -174,14 +207,10 @@ const OnlinehardDetails = ({ history }) => {
       render: (text, item) => {
         return (
           <div>
-            {item.type === 'folder' || item.id === 'back' ? (
-              <img src={require('@/assets/img/file.png').default} className={style.filepng} />
+            {item.id === 'back' ? (
+              <img src={require('@/assets/img/icons/folder.png').default} className={style.filepng} />
             ) : (
-              <FileImageOutlined
-                className="site-form-item-icon"
-                style={{ fontSize: '20px', marginRight: '10px' }}
-                twoToneColor="#eb2f96"
-              />
+              <img src={require(`@/assets/img/icons/${item.type}.png`).default} className={style.filepng} />
             )}
             {text}
           </div>
@@ -238,9 +267,10 @@ const OnlinehardDetails = ({ history }) => {
       title: '',
       dataIndex: 'image',
       render: (text, item) => {
-        if (!item.user) return ''
+        if (!item.user || roleCode === 'normal') return ''
+
         return (
-          <Dropdown overlay={menu} trigger={['click']} onClick={(e) => dropHandClick(e, item)}>
+          <Dropdown overlay={filterMenu()} trigger={['click']} onClick={(e) => dropHandClick(e, item)}>
             <img width={26} height={26} src={require('@/assets/img/operate.png').default} />
           </Dropdown>
         )
@@ -252,8 +282,39 @@ const OnlinehardDetails = ({ history }) => {
     history.push(`/member/manage?hardId=${id}&parentId=${parentId}`)
   }
 
+  const handleOk = async () => {
+    if (fileName === '' || fileName === null || fileName === undefined) {
+      message.error('请输入文件名')
+      return
+    }
+    const res = await renameFile({
+      fileId: editingKey,
+      name: fileName,
+    })
+    if (res.code === 0) {
+      const copyList = [...dataList]
+      setList(() => {
+        return copyList.map((item) => (editingKey === item.id ? { ...item, fileName: fileName } : item))
+      })
+
+      setVisible(false)
+    }
+  }
+
+  const getLibDetail = async () => {
+    const res = await libDetail({
+      libId: id,
+    })
+    if (res.code === 0) {
+      setRoleCode(res.data.role.code)
+    }
+  }
+
   useEffect(() => {
-    id && getFileList()
+    if (id) {
+      getFileList()
+      getLibDetail()
+    }
   }, [id, parentId])
 
   useEffect(() => {
@@ -269,23 +330,23 @@ const OnlinehardDetails = ({ history }) => {
       <div className={style.memtit}>
         <div className={style.hardword}>超G名片设计资料文件库</div>
 
-        <div className={style.operate}>
-          <div className={style.btnGroup}>
-            {!!parentId ? (
+        {roleCode === 'normal' ? null : (
+          <div className={style.operate}>
+            <div className={style.btnGroup}>
               <Button type="primary" className={style.btn} onClick={() => goToMemberCenter()}>
                 成员管理
               </Button>
-            ) : null}
-            <Button className={style.btn} onClick={() => triggerShowPublishModal(true)}>
-              新建文件夹
-            </Button>
-            <Upload {...props}>
-              <Button type="primary" className={style.btn}>
-                上传文件
+              <Button className={style.btn} onClick={() => triggerShowPublishModal(true)}>
+                新建文件夹
               </Button>
-            </Upload>
+              <Upload {...props}>
+                <Button type="primary" className={style.btn}>
+                  上传文件
+                </Button>
+              </Upload>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       <div className={style.tablewarp}>
@@ -320,6 +381,16 @@ const OnlinehardDetails = ({ history }) => {
           visible={publishModalVisible}
         />
       )}
+      <Modal
+        title="修改文件名"
+        cancelText="取消"
+        okText="确认"
+        visible={visible}
+        onOk={handleOk}
+        onCancel={() => setVisible(false)}
+      >
+        <Input placeholder="请输入文件名" value={fileName} onChange={(e) => setFileName(e.target.value)} />
+      </Modal>
     </div>
   )
 }

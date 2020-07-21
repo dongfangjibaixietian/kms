@@ -5,6 +5,10 @@
   font-weight: bold;
 }
 
+.articleSummary {
+  width: 100%;
+}
+
 .hasImg {
   display: flex;
   justify-content: inherit;
@@ -60,6 +64,7 @@
 .ArticleRelated {
   display: flex;
   justify-content: space-between;
+  width: 100%;
   align-items: center;
   font-size: 12px;
   color: #a3a3a3;

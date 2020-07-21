@@ -113,7 +113,8 @@ const HeaderRight = ({ history }) => {
   }
 
   useEffect(() => {
-    if (!isLogin && !userInfo) return
+    if (!isLogin || !userInfo) return
+    console.log(userInfo)
     setUser(userInfo.user)
   }, [userInfo])
 

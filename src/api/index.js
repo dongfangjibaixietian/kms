@@ -2,7 +2,7 @@
  * @Author       : charm
  * @Date         : 2020-07-02 10:53:19
  * @LastEditors  : charm
- * @LastEditTime : 2020-07-20 19:31:06
+ * @LastEditTime : 2020-07-21 09:56:56
  * @FilePath     : \gworld-pc-share\src\api\index.js
  */
 
@@ -45,6 +45,7 @@ const service = new Request({
           removeItem('type')
           userStore.setLoginState(false)
           userStore.setModelVisible(true)
+          window.location.href = window.location.origin + '/'
           break
         case 422:
           message.error('接口参数错误')

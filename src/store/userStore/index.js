@@ -2,7 +2,7 @@
  * @Author       : charm
  * @Date         : 2020-06-28 16:15:01
  * @LastEditors  : charm
- * @LastEditTime : 2020-07-16 13:36:14
+ * @LastEditTime : 2020-07-21 21:03:11
  * @FilePath     : \gworld-pc-share\src\store\userStore\index.js
  */
 
@@ -21,6 +21,9 @@ export class UserStore {
 
   //控制登录还是注册 1:登录 2：注册
   @observable modelType = 1
+
+  //用户角色
+  @observable roleCode = 'editor'
 
   @action.bound
   setUserInfo(data) {
@@ -45,6 +48,11 @@ export class UserStore {
   @action.bound
   setLoginState(data) {
     this.isLogin = data
+  }
+
+  @action.bound
+  setRoleCode(data) {
+    this.roleCode = data
   }
 }
 

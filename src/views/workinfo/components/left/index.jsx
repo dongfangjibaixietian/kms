@@ -1,15 +1,12 @@
 import React, { useEffect, useState, useCallback, useReducer } from 'react'
 import { Button, List, Avatar, Spin, message } from 'antd'
-
-//结合这个插件实现滚动加载功能
-// import InfiniteScroll from 'react-infinite-scroller'
-import style from './index.scss'
+import InfiniteScroll from 'react-infinite-scroller'
 import NewSource from './../Newsource'
-
 import { format } from '@gworld/toolset'
 import { libList } from '@/api/library'
 import { useRootStore } from '@/utils/customHooks'
-// import { hasPrefixSuffix } from 'antd/lib/input/ClearableLabeledInput'
+
+import style from './index.scss'
 
 const Left = ({ userId, isSelf }) => {
   const locale = {
@@ -17,7 +14,7 @@ const Left = ({ userId, isSelf }) => {
   }
   const initialState = {
     pageIndex: 1,
-    pageSize: 20,
+    pageSize: 10,
   }
   const toLineHardDetails = (item) => {
     // const data = {
@@ -29,8 +26,6 @@ const Left = ({ userId, isSelf }) => {
       return
     }
     window.location.href = window.location.origin + `/online/hard?hardId=${item.id}`
-
-    // window.open(window.location.origin + `/online/hard?id=${item.id}`)
   }
 
   const reducer = (state, action) => {
@@ -42,7 +37,6 @@ const Left = ({ userId, isSelf }) => {
     }
   }
 
-  const { isLogin, userInfo } = useRootStore().userStore
   const [publishModalVisible, setPublishModalVisible] = useState(false)
   const triggerShowPublishModal = (isShow) => {
     setPublishModalVisible(isShow)
@@ -54,20 +48,30 @@ const Left = ({ userId, isSelf }) => {
   const [state, dispatch] = useReducer(reducer, initialState)
   const [dataList, setList] = useState([])
 
-  const [lib, setLib] = useState([])
-
-  const _handleScroll = useCallback(() => {
-    if (!isLoading && height <= 20 && hasMore) {
-      setLoading(true)
-      const pageIndex = state.pageIndex + 1
-      dispatch({
-        type: 'update',
-        payload: {
-          pageIndex,
-        },
-      })
-    }
+  const handleInfiniteOnLoad = useCallback(() => {
+    setLoading(true)
+    const pageIndex = state.pageIndex + 1
+    dispatch({
+      type: 'update',
+      payload: {
+        pageIndex,
+      },
+    })
   }, [hasMore, state.pageIndex, isLoading])
+
+  const refresh = () => {
+    //需要处理的数据
+    console.log('更新')
+    setHasMore(true)
+    setLoading(false)
+    setList([])
+    dispatch({
+      type: 'update',
+      payload: {
+        pageIndex: 1,
+      },
+    })
+  }
 
   const getList = async () => {
     console.log(hasMore, '更多')
@@ -86,76 +90,14 @@ const Left = ({ userId, isSelf }) => {
     })
   }
 
-  // handleInfiniteOnLoad = () => {
-  //   setLoading(true)
-  //   if (data.length > 14) {
-  //     message.warning('Infinite List loaded all')
-  //     setLoading(false)
-  //     setHasMore(false)
-
-  //     // this.setState({
-  //     //   hasMore: false,
-  //     //   loading: false,
-  //     // });
-  //     return
-  //   }
-
-  //   getList()
-
-  //   // this.fetchData(res => {
-  //   //   data = data.concat(res.results);
-  //   //   this.setState({
-  //   //     data,
-  //   //     loading: false,
-  //   //   });
-  //   // });
-  // }
-
   useEffect(() => {
-    window.addEventListener('scroll', _handleScroll)
-    return () => window.removeEventListener('scroll', _handleScroll)
-  }, [_handleScroll])
-
-  useEffect(() => {
+    console.log(userId)
     if (!userId) return
     getList().then(() => {
       setLoading(false)
     })
-  }, [state.pageIndex, isLogin, userId])
+  }, [state.pageIndex, userId])
 
-  //列表数据
-  // const dataone = [
-  //   {
-  //     title: '公司美术常用设计规范',
-  //   },
-  //   {
-  //     title: '直播“赞助礼物”资源库',
-  //   },
-  //   {
-  //     title: '超G名片APP特点',
-  //   },
-  //   {
-  //     title: '直播“赞助礼物”资源库',
-  //   },
-  //   {
-  //     title: '公司美术常用设计规范',
-  //   },
-  //   {
-  //     title: '直播“赞助礼物”资源库',
-  //   },
-  //   {
-  //     title: '公司美术常用设计规范',
-  //   },
-  //   {
-  //     title: '超G名片APP特点',
-  //   },
-  //   {
-  //     title: '公司美术常用设计规范',
-  //   },
-  //   {
-  //     title: '直播“赞助礼物”资源库',
-  //   },
-  // ]
   return (
     <div className={style.left}>
       <div className={style.butt}>
@@ -168,26 +110,44 @@ const Left = ({ userId, isSelf }) => {
       </div>
       <div className={style.box}>
         <div className={style.list}>
-          {/* <InfiniteScroll
+          <InfiniteScroll
             initialLoad={false}
-            pageStart={0}
-            loadMore={this.handleInfiniteOnLoad}
+            pageStart={20}
+            loadMore={handleInfiniteOnLoad}
             hasMore={!isLoading && hasMore}
             useWindow={false}
-          > */}
-          <List
+          >
+            <List
+              className={style.scrollList}
+              itemLayout="horizontal"
+              locale={locale}
+              dataSource={dataList}
+              renderItem={(item) => (
+                <List.Item onClick={() => toLineHardDetails(item)} className={style.itemStyle}>
+                  <Avatar size="small" className={style.fl} src={require('@/assets/img/file.png').default} />
+                  <div className={style.knowledgeInfo}>
+                    <div className={style.title}>{item.name}</div>
+                    <div className={style.creatTime}>{format(item.createTime, 'YYYY-MM-DD')}</div>
+                  </div>
+                </List.Item>
+              )}
+            >
+              <div className={style.spinBox}>
+                {hasMore ? (
+                  <Spin tip="正在加载" className={style.spin} spinning={hasMore} />
+                ) : dataList.length > 0 ? (
+                  <div>没有更多了</div>
+                ) : null}
+              </div>
+            </List>
+          </InfiniteScroll>
+          {/* <List
             className={style.scrollList}
             itemLayout="horizontal"
             locale={locale}
             dataSource={dataList}
             renderItem={(item) => (
               <List.Item onClick={() => toLineHardDetails(item)} className={style.itemStyle}>
-                {/* <List.Item.Meta
-                  avatar={<Avatar src="/src/assets/img/file.png" className={style.fl} />}
-                  //后端传过来的是name，其实title更好
-                  title={<a>{item.name}</a>}
-                  description={formateTime(item.createTime)}
-                /> */}
                 <Avatar size="small" className={style.fl} src={require('@/assets/img/file.png').default} />
                 <div className={style.knowledgeInfo}>
                   <div className={style.title}>{item.name}</div>
@@ -195,19 +155,11 @@ const Left = ({ userId, isSelf }) => {
                 </div>
               </List.Item>
             )}
-          />
+          /> */}
         </div>
-
-        {/* <div className={style.spinBox}>
-          {hasMore ? (
-            <Spin tip="正在加载" className={style.spin} spinning={hasMore} />
-          ) : dataList.length > 0 ? (
-            <div>没有更多了</div>
-          ) : null}
-        </div> */}
       </div>
       {publishModalVisible && (
-        <NewSource change={setLib} triggerShowPublishModal={triggerShowPublishModal} visible={publishModalVisible} />
+        <NewSource change={refresh} triggerShowPublishModal={triggerShowPublishModal} visible={publishModalVisible} />
       )}
     </div>
   )

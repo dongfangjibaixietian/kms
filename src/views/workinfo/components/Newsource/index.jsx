@@ -1,35 +1,17 @@
 import React, { useState } from 'react'
 import { Modal, Input, Button, Select, message } from 'antd'
 import { withRouter } from 'react-router-dom'
+import { libCreate } from '@/api/library'
 
 import CloseIcon from '@/assets/svg/close.svg'
 import style from './index.scss'
-import { libCreate } from '@/api/library'
-// import { getTagList as getTagListApi } from '@/service/api'
-
-import { useRootStore } from '@/utils/customHooks'
 
 const { Option } = Select
 
 const NewSource = ({ visible, triggerShowPublishModal, change }) => {
-  const { setArticleBaseInfo } = useRootStore().articleStore
-
-  // const [textType] = useState(1)
-
   const { TextArea } = Input
 
   const [title, setTitle] = useState('')
-
-  // const [tagList, setTaglit] = useState([])
-
-  // const getTagList = async () => {
-  //   try {
-  //     const res = await getTagListApi()
-  //     setTaglit(parseTagListToTree(res.data.tagList))
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
 
   // 新建知识库接口
   const _libCreate = async () => {
@@ -37,25 +19,12 @@ const NewSource = ({ visible, triggerShowPublishModal, change }) => {
       message.error('名称长度不能小于四位')
       return
     }
-    const data = {
-      title,
-      // textType,
-    }
-    console.log(data)
-
     const res = await libCreate({
       name: title,
     })
-    change(res.data)
-
-    setArticleBaseInfo(data)
+    change()
     triggerShowPublishModal(false)
-    window.location.reload()
   }
-
-  // useEffect(() => {
-  //   getTagList()
-  // }, [])
 
   return (
     <Modal

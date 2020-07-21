@@ -10,6 +10,7 @@ import { useRootStore } from '@/utils/customHooks'
 
 const LoginModal = ({ visible, change }) => {
   const [newPassword, setNewPwd] = useState('')
+  const [confirmPwd, setConfirmPwd] = useState('')
   const { setLoginState } = useRootStore().userStore
   const [password, setPassword] = useState('')
   const [pwdForm] = Form.useForm()
@@ -21,16 +22,16 @@ const LoginModal = ({ visible, change }) => {
 
   const restPwd = async () => {
     try {
-      const res = await resetPassword({
-        password: md5(password),
-        newPassword: md5(newPassword),
-      })
-      message.success('密码已修改，请重新登录')
-      removeItem('token')
-      removeItem('user')
-      removeItem('article')
-      setLoginState(false)
-      closeModal()
+      // const res = await resetPassword({
+      //   password: md5(password),
+      //   newPassword: md5(newPassword),
+      // })
+      // message.success('密码已修改，请重新登录')
+      // removeItem('token')
+      // removeItem('user')
+      // removeItem('article')
+      // setLoginState(false)
+      // closeModal()
     } catch (error) {
       console.log(error)
     }
@@ -43,6 +44,7 @@ const LoginModal = ({ visible, change }) => {
           if (value === '' || value === undefined || value === null) {
             return Promise.reject('请输入原密码')
           }
+
           if (getFieldValue('password') === value && value.length >= 6) {
             return Promise.resolve()
           }
@@ -59,7 +61,33 @@ const LoginModal = ({ visible, change }) => {
           if (value === '' || value === undefined || value === null) {
             return Promise.reject('请输入新密码')
           }
+          console.log(getFieldValue('confirmPwd'))
+          console.log(getFieldValue('newPassword'))
+          if (getFieldValue('confirmPwd') !== getFieldValue('newPassword') && value.length >= 6) {
+            return Promise.reject('两次输入密码不一致!')
+          }
           if (getFieldValue('newPassword') === value && value.length >= 6) {
+            return Promise.resolve()
+          }
+          return Promise.reject('密码长度不能小于6')
+        },
+      }),
+    ],
+  }
+
+  const confirmPwdConfig = {
+    rules: [
+      ({ getFieldValue }) => ({
+        validator(rule, value) {
+          if (value === '' || value === undefined || value === null) {
+            return Promise.reject('请再次确认密码')
+          }
+
+          if (getFieldValue('confirmPwd') !== getFieldValue('newPassword')) {
+            return Promise.reject('两次输入密码不一致!')
+          }
+
+          if (getFieldValue('confirmPwd') === value && value.length >= 6) {
             return Promise.resolve()
           }
           return Promise.reject('密码长度不能小于6')
@@ -104,6 +132,16 @@ const LoginModal = ({ visible, change }) => {
             prefix={<LockOutlined className="site-form-item-icon" />}
             type="password"
             placeholder="请输入新密码"
+          />
+        </Form.Item>
+        <Form.Item name="confirmPwd" {...confirmPwdConfig}>
+          <Input
+            value={confirmPwd}
+            allowClear
+            onChange={(e) => setConfirmPwd(e.target.value)}
+            prefix={<LockOutlined className="site-form-item-icon" />}
+            type="password"
+            placeholder="请再次输入新密码"
           />
         </Form.Item>
         <Button type="primary" htmlType="submit" className={style.loginBtn}>

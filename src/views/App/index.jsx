@@ -41,15 +41,18 @@ const App = ({ history }) => {
     const children = []
     const renderRoute = (item, routePath) => {
       const newPath = (item.path ? `${routePath}/${item.path}` : routePath).replace(/\/+/g, '/')
-
       if (item.component && item.children) {
         const childRoutes = renderRoutes(item.children, newPath)
         const Component = item.component
         children.push(
-          <Route key={newPath} path={newPath} render={(props) => <Component {...props}>{childRoutes}</Component>} />
+          <Route
+            key={`${newPath}_${Math.random()}`}
+            path={newPath}
+            render={(props) => <Component {...props}>{childRoutes}</Component>}
+          />
         )
       } else if (item.component) {
-        children.push(<Route key={newPath} component={item.component} path={newPath} exact />)
+        children.push(<Route key={`${newPath}_${Math.random()}`} component={item.component} path={newPath} exact />)
       } else if (item.children) {
         item.children.forEach((route) => renderRoute(route, newPath))
       }
